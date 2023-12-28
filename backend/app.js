@@ -6,7 +6,7 @@ const app = express();
 app.use(express.json())
  
 // database connection
-const dbURI = "mongodb+srv://root:06ueLZLziAFSRInF@cluster0.l1cwdbp.mongodb.net/?retryWrites=true&w=majority";
+const dbURI = "mongodb+srv://root:password@cluster0.l1cwdbp.mongodb.net/?retryWrites=true&w=majority";
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex:true })
   .then((result) => app.listen(3000))
   .catch((err) => console.log(err));
