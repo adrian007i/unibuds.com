@@ -1,18 +1,19 @@
 const User = require("../models/User");
+const handleErrors = require("../validation/User");
 
-module.exports.signup_post = async (req, res) =>{
-    const {name, email, password} = req.body;
-    
-    try{
-        const new_user = await User.create({name, email, password})
+module.exports.signup_post = async (req, res) => {
+    const { email, password, first_name, last_name } = req.body;
+
+    try {
+        const new_user = await User.create({ email, password, first_name, last_name });
         res.status(201).json(new_user);
-        
-    }catch(error){
-        console.log(error)
+
+    } catch (error) { 
+        let errors = handleErrors(error);
+        res.status(201).json(errors); 
     }
 }
-module.exports.login_post = (req, res) =>{
-    res.send('logged in')
-}
 
-// https://www.youtube.com/watch?v=nukNITdis9g&list=PL4cUxeGkcC9iqqESP8335DA5cRFp8loyp&index=5
+module.exports.login_post = (req, res) => {
+    res.send('logged in');
+}
