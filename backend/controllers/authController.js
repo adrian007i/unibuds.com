@@ -61,6 +61,10 @@ module.exports.update_profile_info = async (req, res) => {
     // }
 }
 
+/**
+ * @desc    Login a user
+ * @access  Public 
+ */
 module.exports.login_post = async (req, res) => {
     const { email, password } = req.body;
 
@@ -74,11 +78,23 @@ module.exports.login_post = async (req, res) => {
             email: user.email,
             first_name: user.first_name,
             last_name: user.last_name
-        }); 
+        });
 
     }
     else if (!user)
-        res.status(401).json({ error: "This email is not registered" });
+        res.status(401).json({ message: "This email is not registered" });
     else
-        res.status(401).json({ error: "Invalid email or password" });
+        res.status(401).json({ message: "Invalid email or password" });
 }
+
+/**
+ * @desc    Logout a user
+ * @access  Private 
+ */
+module.exports.logout_post = (req, res) => {
+    res.cookie('jwt', '', {
+        httpOnly: true,
+        expires: new Date(0),
+    });
+    res.status(200).json({ message: 'Logged out successfully' });
+}; 

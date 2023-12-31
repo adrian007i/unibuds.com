@@ -6,5 +6,5 @@ const router = Router();
 router.post("/signup" , authControler.signup_post);
 router.post("/profile" , passport.authenticate('jwt', { session: false }), authControler.update_profile_info);
 router.post("/login" , authControler.login_post);
-
+router.post("/logout" , authControler.logout_post);
 module.exports = router;
