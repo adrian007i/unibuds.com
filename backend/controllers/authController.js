@@ -9,6 +9,7 @@ module.exports.signup_post = async (req, res) => {
         res.status(201).json(new_user);
 
     } catch (error) { 
+        console.log(error)
         let errors = handleErrors(error);
         res.status(201).json(errors); 
     }

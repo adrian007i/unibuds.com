@@ -1,5 +1,5 @@
 const handleErrors = (err) => {
-    let errors = { error: "", password: "", first_name: "", last_name: "" };
+    let errors = { email: "", password: "", first_name: "", last_name: "" };
 
     if (err.code === 11000) { 
         errors.email = "This email exist already"
