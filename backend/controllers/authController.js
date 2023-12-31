@@ -1,7 +1,7 @@
 const User = require("../models/User");
-const handleErrors = require("../validation/User"); 
+const handleErrors = require("../validation/User");
 const generateToken = require('../utils/generateToken');
- 
+
 /**
  * @desc    User registration with email verification
  * @access  Public 
@@ -10,20 +10,19 @@ module.exports.signup_post = async (req, res) => {
     const { email, password, first_name, last_name } = req.body;
 
     try {
-        const new_user = await User.create({ email, password, first_name, last_name }); 
-        
+        const new_user = await User.create({ email, password, first_name, last_name });
+
         // create the jwt
         generateToken(res, new_user._id);
         res.status(201).json({
-            id: new_user.id,
+            _id: new_user._id,
             email: new_user.email,
             first_name: new_user.first_name,
             last_name: new_user.last_name
         });
 
     } catch (error) {
-        console.log(error)
-        let errors = handleErrors(error); 
+        let errors = handleErrors(error);
         res.status(201).json(errors);
     }
 }
@@ -62,6 +61,24 @@ module.exports.update_profile_info = async (req, res) => {
     // }
 }
 
-module.exports.login_post = (req, res) => {
-    res.send('logged in');
+module.exports.login_post = async (req, res) => {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (user && (await user.matchPassword(password))) {
+        generateToken(res, user._id);
+
+        res.json({
+            _id: user._id,
+            email: user.email,
+            first_name: user.first_name,
+            last_name: user.last_name
+        }); 
+
+    }
+    else if (!user)
+        res.status(401).json({ error: "This email is not registered" });
+    else
+        res.status(401).json({ error: "Invalid email or password" });
 }
