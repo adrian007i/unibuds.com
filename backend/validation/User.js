@@ -7,8 +7,7 @@ const handleErrors = (err) => {
 
     if (err._message) {
         Object.values(err.errors).forEach(properties => errors[properties.path] = properties.message);
-    }
-
+    } 
     return errors;
 }
 
