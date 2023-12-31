@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const { isEmail } = require("validator");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcrypt"); 
 
 const userSchema = new mongoose.Schema({
   first_name: {
@@ -24,6 +24,10 @@ const userSchema = new mongoose.Schema({
     required: [true, "Password is required"],
     minlength: [6, "Password too short"],
   },
+  profile: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Profile"
+  }
 });
 
 // Hash the password before saving it to the database

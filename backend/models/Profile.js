@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const profileSchema = new mongoose.Schema({
     bio: {
         type: String,
-        maxlength: 300
+        maxlength: [300 , "Max Length Excceded"]
     },
     profilePicture: {
         type: String,
