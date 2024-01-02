@@ -21,4 +21,3 @@ mongoose.connect(keys["mongoURI"], { useNewUrlParser: true, useUnifiedTopology: 
 // routes
 app.get('/', (req, res) => res.send('Hello, World!')); 
 app.use(authRoutes);
- 

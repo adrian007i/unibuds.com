@@ -1,6 +1,8 @@
 const User = require("../models/User");
 const handleErrors = require("../validation/User");
+const profileValidation = require("../validation/Profile");
 const generateToken = require('../utils/generateToken');
+
 
 /**
  * @desc    User registration with email verification
@@ -25,40 +27,6 @@ module.exports.signup_post = async (req, res) => {
         let errors = handleErrors(error);
         res.status(201).json(errors);
     }
-}
-
-/**
- * @desc    User to update additional details of their profile
- * @access  Private 
- */
-module.exports.update_profile_info = async (req, res) => {
-    console.log(123)
-    // const { profilePicture , major, last_name } = req.body;
-
-    // try {
-    //     const new_user = await User.create({ email, password, first_name, last_name });
-
-    //     // token payload
-    //     const payload = {
-    //         id: new_user.id,
-    //         email: new_user.email,
-    //         firstname: new_user.firstname,
-    //         lastname: new_user.lastname
-    //     };
-
-    //     // create the jwt
-    //     jwt.sign(payload, keys["JWT_HASH"], { expiresIn: 60 * 60 * 24 * 30 * 3 }, (err, token) => {
-    //         if (!err)
-    //             res.json({ success: 'true', token: 'Bearer ' + token });
-    //         else
-    //             res.status(500).json({ server: "Internal Server Error" });
-
-    //     }); 
-
-    // } catch (error) { 
-    //     let errors = handleErrors(error);
-    //     res.status(201).json(errors);
-    // }
 }
 
 /**
@@ -97,4 +65,26 @@ module.exports.logout_post = (req, res) => {
         expires: new Date(0),
     });
     res.status(200).json({ message: 'Logged out successfully' });
-}; 
+};
+
+
+/**
+ * @desc    User to update additional details of their profile
+ * @access  Private 
+ */
+module.exports.update_profile_info = async (req, res) => {
+
+    const user = await User.findOne({ _id: req.user.id });
+
+    const errors = await profileValidation(req.body);
+
+    if (!errors.status)
+        res.status(201).json(errors);
+    else {
+        const profile = { bio, profilePicture, university, major, age, gender, city } = req.body; 
+        user.profile = profile;
+        await user.save();
+
+        res.status(201).json({ "message": "profile updated" }); 
+    } 
+}
