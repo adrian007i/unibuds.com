@@ -10,7 +10,7 @@ html,body{
 }
 
 label{  
-  margin:.8rem 0px 0px .8rem  !important;
+  margin:0px 0px 0px 2px  !important;
   font-weight:400; 
 }
 
@@ -50,6 +50,17 @@ label{
 
 #home  .welcome{
   color:#ddd;
+}
+
+.error span{
+  color:rgb(255, 60, 60);
+  font-size: .7rem;
+  font-family: monospace;
+  margin-left: 2px; 
+}
+
+.error input{
+  border: 2px solid rgb(255, 60, 60);
 }
  
 
