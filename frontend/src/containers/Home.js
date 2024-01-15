@@ -24,9 +24,9 @@ function Home() {
             <div className='bottom'>
                 <Row>
                     <Col>
-                        <Link to="/signup">
+                        <Link to="/register">
                             <div className="d-grid gap-2">
-                                <Button variant="primary" type="button" > Sign up </Button>
+                                <Button variant="primary" type="button" > Register </Button>
                             </div>
                         </Link>
                     </Col>

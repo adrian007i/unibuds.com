@@ -3,20 +3,23 @@ const mongoose = require('mongoose');
 const authRoutes = require("./routes/authRoutes");
 const keys = require("./config/keys.js")
 const cookieParser  = require('cookie-parser');
+const cors = require('cors');
 
 const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
-
-// app.use(passport.initialize());
-// require('./server/config/passport.js')(passport);
  
+const allowed_origins = ["http://localhost:3000"];
+
 // database connection 
 mongoose.connect(keys["mongoURI"], { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex:true })
-  .then((result) => app.listen(3000))
+  .then((result) => app.listen(4000))
   .catch((err) => console.log(err));
 
+  app.use(cors({
+    origin: allowed_origins,
+  }));
 
 // routes
 app.get('/', (req, res) => res.send('Hello, World!')); 

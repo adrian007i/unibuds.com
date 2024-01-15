@@ -7,36 +7,70 @@ import {
 
 import { Link } from "react-router-dom";
 
-function Register() {
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { registerUser } from '../redux/actions/auth';
+
+const Register = ({ registerUser, history, error }) => {
+
+    const [formData, setFormData] = useState({
+        first_name: '',
+        last_name: '',
+        email: '',
+        password: ''
+    });
+
+    const { first_name, last_name, email, password } = formData;
+
+    const onChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const onSubmit = (e) => {
+        e.preventDefault();
+        const newUser = {
+            first_name,
+            last_name,
+            email,
+            password
+        }; 
+        registerUser(newUser, history);
+    };
+
     return (
         <>
-            <Form>
+            <Form onSubmit={onSubmit}>
                 <Row>
                     <Col>
                         <Label>First Name</Label>
-                        <Input type="text" />
+                        <Input type="text" name="first_name" value={first_name} onChange={onChange}  />
                     </Col>
                     <Col>
                         <Label>Last Name</Label>
-                        <Input type="text" />
+                        <Input type="text" name="last_name" value={last_name} onChange={onChange} />
                     </Col>
                 </Row>
 
                 <Label>Email</Label>
-                <Input type="text" />
+                <Input type="text" name="email" value={email} onChange={onChange}/>
 
                 <Label>Password</Label>
-                <Input type="text" />
+                <Input type="password" name="password" value={password} onChange={onChange}/>
 
                 <br />
                 <Button variant="primary" type="submit" >
                     Register
                 </Button>
             </Form>
-            <br/>
+            <br />
             <p>Already Registered? <Link to="/login"> Login</Link></p>
         </>
     );
 }
 
-export default Register;
+
+const mapStateToProps = (state) => ({
+    error: state.auth.error
+  });
+  
+  export default connect(mapStateToProps, { registerUser })(Register);
