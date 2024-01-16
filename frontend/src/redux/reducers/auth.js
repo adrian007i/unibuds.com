@@ -1,4 +1,4 @@
-import { REGISTER_SUCCESS, REGISTER_FAIL,REGISTER_PENDING } from '../constants/auth';
+import { REGISTER_SUCCESS, REGISTER_FAIL, REGISTER_PENDING } from '../constants/auth';
 
 const initialState = {
   user: null,

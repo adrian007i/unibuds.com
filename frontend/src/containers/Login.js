@@ -20,7 +20,7 @@ function Login() {
                 </Button>
             </Form>
             <br/>
-            <p>Don&#39;t have an account? <Link to="/signup"> Sign up</Link></p>
+            <p>Don&#39;t have an account? <Link to="/register"> Sign up</Link></p>
             
         </>
     );

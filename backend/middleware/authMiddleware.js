@@ -5,7 +5,7 @@ const config = require('../config/keys')
 const protect = async (req, res, next) => {
   let token;
 
-  token = req.cookies.jwt;
+  token = req.header('Authorization');
 
   if (token) {
     try {

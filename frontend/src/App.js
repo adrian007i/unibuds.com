@@ -2,17 +2,18 @@ import logo from './logo.svg';
 import './App.css';
 import React from 'react';
 import { Routes, Route, Link } from "react-router-dom";
+
 import Register from './containers/Register';
 import Login from './containers/Login';
 import Home from './containers/Home';
-
-import { Container, Row, Col } from 'react-bootstrap';
+import Profile from './containers/Profile';
+import PrivateRoute from './utils/PrivateRoute'
 
 function App() {
   return (
     <div className='main'>
       <div className="sub-main">
-        <Link to="/" style={{color: "inherit",textDecoration: "none"}}>
+        <Link to="/" style={{ color: "inherit", textDecoration: "none" }}>
           <h1>
             <img src={logo} width="100px" className='margin-auto' alt="" />
             UniBuds
@@ -20,10 +21,15 @@ function App() {
         </Link>
 
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/register" element={<Register />} /> 
+          <Route path="/" element={<Home />} /> 
+          <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="profile" element={<PrivateRoute component={Profile} />} />
+
+          {/* <Route component={Error404} /> */}
         </Routes>
+
+
       </div>
     </div>
 

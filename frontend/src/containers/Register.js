@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { registerUser } from '../redux/actions/auth';
 import { Button, Form, FormControl as Input, FormLabel as Label, Row, Col } from 'react-bootstrap';
 import { Link } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 
 const Register = ({ registerUser, history, errors, user, isAuthenticated, isPending }) => {
+
+    const navigate = useNavigate();
+    useEffect(() => {
+        if(isAuthenticated)
+            navigate("/profile")
+        
+    }, [isAuthenticated]);
+
 
     // local state for form values
     const [formData, setFormData] = useState({
@@ -24,6 +32,7 @@ const Register = ({ registerUser, history, errors, user, isAuthenticated, isPend
     const onSubmit = (e) => {
         e.preventDefault();
         registerUser(formData, history);
+
     };
 
 

@@ -10,5 +10,5 @@ router.post("/signup" , authControler.signup_post);
 router.post("/login" , authControler.login_post);
 router.post("/logout" , authControler.logout_post);
 
-router.post("/profile" ,protect ,  authControler.update_profile_info)
+router.get("/profile" , protect ,  authControler.update_profile_info)
 module.exports = router;

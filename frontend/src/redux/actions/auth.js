@@ -1,9 +1,13 @@
 import axios from 'axios';
-import { REGISTER_SUCCESS, REGISTER_FAIL, REGISTER_PENDING } from '../constants/auth';
+import { REGISTER_SUCCESS, REGISTER_FAIL, REGISTER_PENDING, SET_USER_DATA } from '../constants/auth';
 import { isEmpty, minLength, isValidEmail } from '../../utils/validation';
 
+import setAuthToken from "../../utils/setAuthToken"; 
+
+ 
 // Register User
 export const registerUser = (userData, history) => async (dispatch) => {
+
     try {
 
         dispatch({ type: REGISTER_PENDING });
@@ -21,28 +25,27 @@ export const registerUser = (userData, history) => async (dispatch) => {
 
         if (isEmpty(userData.password)) localErrors.password = 'Required';
         else if (minLength(userData.password, 6)) localErrors.password = 'Too Short';
-
+        
         // check if client side validation failed
-        if (Object.values(localErrors).length > 0) { 
+        if (Object.values(localErrors).length > 0) {
+
             dispatch({
                 type: REGISTER_FAIL,
-                payload:localErrors
-            }); 
+                payload: localErrors
+            });
         }
 
         // client side validation passed
         else {
             const response = await axios.post('http://localhost:4000/signup', userData);
+             
+            localStorage.setItem("jwtToken", response.data.token);
+            setAuthToken(response.data.token); 
 
-            dispatch({
-                type: REGISTER_SUCCESS,
-                payload: response.data
-            }); 
-            console.log(history)
-            history.push('/profile');
+            dispatch({ type: REGISTER_SUCCESS, payload: response.data.user});
         }
-    
-    // server request failed
+
+        // server request failed
     } catch (errors) {
         dispatch({
             type: REGISTER_FAIL,
