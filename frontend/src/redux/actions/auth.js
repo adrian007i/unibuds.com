@@ -1,15 +1,15 @@
 import axios from 'axios';
-import { REGISTER_SUCCESS, REGISTER_FAIL, REGISTER_PENDING, SET_USER_DATA } from '../constants/auth';
+import { REGISTER_FAIL, REGISTER_PENDING, SET_USER } from '../constants/auth';
 import { isEmpty, minLength, isValidEmail } from '../../utils/validation';
 
 import setAuthToken from "../../utils/setAuthToken"; 
+import loadAppData from '../../utils/loadJwtUser';
 
  
 // Register User
 export const registerUser = (userData, history) => async (dispatch) => {
 
-    try {
-
+    try { 
         dispatch({ type: REGISTER_PENDING });
 
         // client side form validation
@@ -40,9 +40,7 @@ export const registerUser = (userData, history) => async (dispatch) => {
             const response = await axios.post('http://localhost:4000/signup', userData);
              
             localStorage.setItem("jwtToken", response.data.token);
-            setAuthToken(response.data.token); 
-
-            dispatch({ type: REGISTER_SUCCESS, payload: response.data.user});
+            loadAppData(response.data.token)
         }
 
         // server request failed
@@ -52,5 +50,9 @@ export const registerUser = (userData, history) => async (dispatch) => {
             payload: errors.response.data
         });
     }
+};
+
+export const setCurrentUser = (decoded) => async (dispatch) => {
+    dispatch({ type: SET_USER, payload: decoded});
 };
 

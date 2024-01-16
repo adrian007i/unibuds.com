@@ -3,7 +3,6 @@ const handleErrors = require("../validation/User");
 const profileValidation = require("../validation/Profile");
 const generateToken = require('../utils/generateToken');
 
-
 /**
  * @desc    User registration with email verification
  * @access  Public 
@@ -15,14 +14,7 @@ module.exports.signup_post = async (req, res) => {
         const new_user = await User.create({ email, password, first_name, last_name });
 
         // create the jwt 
-        res.status(201).json({
-            user: {
-                _id: new_user._id,
-                first_name: new_user.first_name,
-                last_name: new_user.last_name,
-            },
-            token: generateToken(new_user._id)
-        });
+        res.status(201).json({token: generateToken(new_user)});
 
     } catch (error) {
         let errors = handleErrors(error);

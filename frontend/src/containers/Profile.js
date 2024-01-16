@@ -1,8 +1,9 @@
  
-function Profile() {
-    return (
-        <div id="home">
 
+
+function Profile() { 
+    return (
+        <div id="home"> 
                 helloworld
         </div>
     );
