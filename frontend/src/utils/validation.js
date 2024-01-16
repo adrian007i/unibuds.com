@@ -8,7 +8,7 @@ module.exports.isEmpty = (value) => {
 };
 
 module.exports.minLength = (value, len) => {
-  return typeof value === 'string' && value.trim().length >= len
+  return typeof value === 'string' && value.trim().length <= len
 };
 
 

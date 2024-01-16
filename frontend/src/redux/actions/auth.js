@@ -17,12 +17,12 @@ export const registerUser = (userData, history) => async (dispatch) => {
         else if (minLength(userData.last_name, 2)) localErrors.last_name = 'Too Short';
 
         if (isEmpty(userData.email)) localErrors.email = 'Required';
-        else if (isValidEmail(userData.email)) localErrors.email = 'Invalid Email';
+        else if (!isValidEmail(userData.email)) localErrors.email = 'Invalid Email';
 
         if (isEmpty(userData.password)) localErrors.password = 'Required';
-        else if (minLength(userData.password, 2)) localErrors.password = 'Password';
+        else if (minLength(userData.password, 6)) localErrors.password = 'Too Short';
 
-        // check if client side validation passed
+        // check if client side validation failed
         if (Object.values(localErrors).length > 0) { 
             dispatch({
                 type: REGISTER_FAIL,
@@ -30,15 +30,16 @@ export const registerUser = (userData, history) => async (dispatch) => {
             }); 
         }
 
-        // client side validation failed
+        // client side validation passed
         else {
             const response = await axios.post('http://localhost:4000/signup', userData);
+
             dispatch({
                 type: REGISTER_SUCCESS,
                 payload: response.data
-            });
-
-            history.push('/login');
+            }); 
+            console.log(history)
+            history.push('/profile');
         }
     
     // server request failed
