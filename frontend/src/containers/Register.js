@@ -5,7 +5,7 @@ import { Button, Form, FormControl as Input, FormLabel as Label, Row, Col } from
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-const Register = ({ registerUser, history, errors, user, isAuthenticated, isPending }) => {
+const Register = ({ registerUser, errors, user, isAuthenticated, isPending }) => {
 
     const navigate = useNavigate();
     useEffect(() => {
@@ -31,7 +31,7 @@ const Register = ({ registerUser, history, errors, user, isAuthenticated, isPend
     // trigger for when the user submits the form
     const onSubmit = (e) => {
         e.preventDefault();
-        registerUser(formData, history);
+        registerUser(formData);
 
     };
 

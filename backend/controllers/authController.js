@@ -31,17 +31,9 @@ module.exports.login_post = async (req, res) => {
 
     const user = await User.findOne({ email });
 
-    if (user && (await user.matchPassword(password))) {
-        generateToken(res, user._id);
-
-        res.json({
-            _id: user._id,
-            email: user.email,
-            first_name: user.first_name,
-            last_name: user.last_name
-        });
-
-    }
+    if (user && (await user.matchPassword(password))) 
+        res.status(200).json({token: generateToken(user)});
+    
     else if (!user)
         res.status(401).json({ message: "This email is not registered" });
     else

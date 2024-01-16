@@ -1,4 +1,4 @@
-import {SET_USER, REGISTER_SUCCESS, REGISTER_FAIL, REGISTER_PENDING, LOGIN_SUCCESS, LOGIN_FAIL } from '../constants/auth';
+import {SET_USER, REGISTER_FAIL, REGISTER_PENDING, LOGIN_PENDING, LOGIN_FAIL } from '../constants/auth';
 
 const initialState = {
   user: null,
@@ -35,13 +35,13 @@ export const authReducer = (state = initialState, action) => {
           isPending: false
         };
 
-    case LOGIN_SUCCESS:
+    case LOGIN_PENDING:
       return {
         ...state,
-        user: action.payload,
-        isAuthenticated: true,
+        user: {},
+        isAuthenticated: false,
         errors: {},
-        isPending: false
+        isPending: true
       };
     case LOGIN_FAIL:
       return {

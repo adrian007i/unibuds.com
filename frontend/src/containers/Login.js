@@ -1,29 +1,75 @@
-import {
-    Button, Form,
-    FormControl as Input,
-    FormLabel as Label
-} from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { loginUser } from '../redux/actions/auth';
+import { Button, Form, FormControl as Input, FormLabel as Label } from 'react-bootstrap';
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-import { Link} from "react-router-dom";
-function Login() {
+const Login = ({ loginUser, errors, user, isAuthenticated, isPending }) => {
+
+    const navigate = useNavigate();
+    useEffect(() => {
+        if (isAuthenticated)
+            navigate("/profile")
+
+    }, [isAuthenticated]);
+
+
+    // local state for form values
+    const [formData, setFormData] = useState({
+        email: '',
+        password: ''
+    });
+
+    // tracks change of input on form
+    const onChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    // trigger for when the user submits the form
+    const onSubmit = (e) => {
+        e.preventDefault();
+        loginUser(formData);
+
+    };
+
+
     return (
         <>
-            <Form>
-                <Label>Email</Label>
-                <Input type="text" />
+            <Form onSubmit={onSubmit}>
+                <div className={errors.email ? 'error' : ''} >
+                    <Label>Email</Label>
+                    <Input type="text" name="email" value={formData.email} onChange={onChange} />
+                    <span className='error'>{errors.email} &nbsp;</span>
+                </div>
 
-                <Label>Password</Label>
-                <Input type="text" />
-                <br />
-                <Button variant="primary" type="submit" >
-                    Login
+                <div className={errors.password ? 'error' : ''} >
+                    <Label>Password</Label>
+                    <Input type="password" name="password" value={formData.password} onChange={onChange} />
+                    <span className='error'>{errors.password} &nbsp;</span>
+                </div>
+
+                <Button variant="primary" type="submit" disabled={isPending}>
+                    {isPending && "Saving ..."}
+                    {!isPending && "Login"}
                 </Button>
+                <div className={errors.message ? 'error' : ''} >
+                    <span className='error'>{errors.message} &nbsp;</span>
+                </div>
             </Form>
-            <br/>
+            <br />
             <p>Don&#39;t have an account? <Link to="/register"> Sign up</Link></p>
-            
+
         </>
     );
 }
 
-export default Login;
+
+const mapStateToProps = state => ({
+    errors: state.auth.errors,
+    user: state.auth.user,
+    isAuthenticated: state.auth.isAuthenticated,
+    isPending: state.auth.isPending
+});
+
+export default connect(mapStateToProps, { loginUser })(Login);

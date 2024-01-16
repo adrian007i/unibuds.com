@@ -1,13 +1,11 @@
 import axios from 'axios';
-import { REGISTER_FAIL, REGISTER_PENDING, SET_USER } from '../constants/auth';
-import { isEmpty, minLength, isValidEmail } from '../../utils/validation';
-
-import setAuthToken from "../../utils/setAuthToken"; 
+import { LOGIN_FAIL, LOGIN_PENDING, REGISTER_FAIL, REGISTER_PENDING, SET_USER } from '../constants/auth';
+import { isEmpty, minLength, isValidEmail } from '../../utils/validation'; 
 import loadAppData from '../../utils/loadJwtUser';
 
  
 // Register User
-export const registerUser = (userData, history) => async (dispatch) => {
+export const registerUser = (userData) => async (dispatch) => {
 
     try { 
         dispatch({ type: REGISTER_PENDING });
@@ -37,7 +35,7 @@ export const registerUser = (userData, history) => async (dispatch) => {
 
         // client side validation passed
         else {
-            const response = await axios.post('http://localhost:4000/signup', userData);
+            const response = await axios.post('/signup', userData);
              
             localStorage.setItem("jwtToken", response.data.token);
             loadAppData(response.data.token)
@@ -51,6 +49,49 @@ export const registerUser = (userData, history) => async (dispatch) => {
         });
     }
 };
+
+// Login user
+export const loginUser = (userData) => async (dispatch) => {
+
+    try { 
+        dispatch({ type: LOGIN_PENDING });
+
+        // client side form validation
+        const localErrors = {}
+
+        if (isEmpty(userData.email)) localErrors.email = 'Required';
+        else if (!isValidEmail(userData.email)) localErrors.email = 'Invalid Email';
+
+        if (isEmpty(userData.password)) localErrors.password = 'Required';
+        else if (minLength(userData.password, 6)) localErrors.password = 'Too Short';
+        
+        // check if client side validation failed
+        if (Object.values(localErrors).length > 0) {
+
+            dispatch({
+                type: LOGIN_FAIL,
+                payload: localErrors
+            });
+        }
+
+        // client side validation passed
+        else {
+            const response = await axios.post('/login', userData);
+            console.log(response)
+            localStorage.setItem("jwtToken", response.data.token);
+            loadAppData(response.data.token);
+        }
+
+        // server request failed
+    } catch (errors) {
+        console.log(errors)
+        dispatch({
+            type: REGISTER_FAIL,
+            payload: errors.response.data
+        });
+    }
+};
+
 
 export const setCurrentUser = (decoded) => async (dispatch) => {
     dispatch({ type: SET_USER, payload: decoded});

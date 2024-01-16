@@ -9,8 +9,10 @@ import Login from './containers/Login';
 import Home from './containers/Home';
 import Profile from './containers/Profile';
 import PrivateRoute from './utils/PrivateRoute'
-
+import axios from 'axios';
 loadAppData();
+
+axios.defaults.baseURL = "http://localhost:4000/";
 
 function App() {
 
