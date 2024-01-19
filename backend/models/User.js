@@ -63,6 +63,12 @@ const userSchema = new mongoose.Schema({
       city: "",
     },
   },
+  profileSetup : {
+    type: Boolean,
+    default: false
+
+  }
+
 });
 
 userSchema.methods.matchPassword = async function (enteredPassword) {
