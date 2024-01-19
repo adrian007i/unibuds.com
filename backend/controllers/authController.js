@@ -44,20 +44,7 @@ module.exports.login_post = async (req, res) => {
  * @desc    User to update additional details of their profile
  * @access  Private 
  */
-module.exports.update_profile_info = async (req, res) => {
-
-    const user = await User.findOne({ _id: req.user.id });
-    res.status(200).json(user);
-
-    // const errors = await profileValidation(req.body);
-
-    // if (!errors.status)
-    //     res.status(201).json(errors);
-    // else {
-    //     const profile = { bio, profilePicture, university, major, age, gender, city } = req.body; 
-    //     user.profile = profile;
-    //     await user.save();
-
-    //     res.status(201).json({ "message": "profile updated" }); 
-    // } 
+module.exports.get_profile_info = async (req, res) => {  
+    const user = await User.findOne({ _id: req.query.user_id}).select('-password');;
+    res.status(200).json(user); 
 }

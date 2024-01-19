@@ -23,13 +23,13 @@ import search from './icons/search.png';
 
 
 
-import { logoutUser } from './redux/actions/auth'
+import { logoutUser } from './redux/actions/authActions'
 
 loadAppData();
 
 axios.defaults.baseURL = "http://localhost:4000/";
 
-function App({ logoutUser, isAuthenticated, user }) {
+function App({ logoutUser, isAuthenticated }) {
 
   return (
     <div className='main'>
@@ -41,7 +41,6 @@ function App({ logoutUser, isAuthenticated, user }) {
               <NavLink to="/chats"  >
                 <img src={logo} width="50px" alt="" />
               </NavLink>
-              <small>{user.first_name}</small>
             </div>
             <div id='right'>
               <NavLink to="/chats" activeClassName="active">

@@ -1,4 +1,4 @@
-import {SET_USER, REGISTER_FAIL, REGISTER_PENDING, LOGIN_PENDING, LOGIN_FAIL, LOGOUT_USER } from '../constants/auth';
+import {SET_USER, REGISTER_FAIL, REGISTER_PENDING, LOGIN_PENDING, LOGIN_FAIL, LOGOUT_USER } from '../constants/authConstants';
 
 const initialState = {
   user: null,

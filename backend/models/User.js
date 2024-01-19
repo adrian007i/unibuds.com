@@ -65,8 +65,7 @@ const userSchema = new mongoose.Schema({
   },
   profileSetup : {
     type: Boolean,
-    default: false
-
+    default: false 
   }
 
 });

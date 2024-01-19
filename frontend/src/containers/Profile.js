@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { registerUser } from '../redux/actions/auth';
+import { getProfileData } from '../redux/actions/profileActions';
 import { Button, Form, FormControl as Input, FormLabel as Label, Row, Col } from 'react-bootstrap';
 import { Link } from "react-router-dom"; 
 
-const Register = ({ registerUser, errors, isPending }) => {
+const Profile = ({ getProfileData, profile, user_id }) => {
 
 
     // local state for form values
@@ -15,6 +15,12 @@ const Register = ({ registerUser, errors, isPending }) => {
         password: ''
     });
 
+    useEffect (() =>{ 
+        if(profile === null){
+            getProfileData(user_id);
+        } 
+    },[]);
+
     // tracks change of input on form
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -23,13 +29,13 @@ const Register = ({ registerUser, errors, isPending }) => {
     // trigger for when the user submits the form
     const onSubmit = (e) => {
         e.preventDefault();
-        registerUser(formData);
+        // registerUser(formData);
 
     };
 
     return (
         <>
-            <Form onSubmit={onSubmit}>
+            {/* <Form onSubmit={onSubmit}>
                 <Row>
                     <Col>
                         <div className={errors.first_name ? 'error' : ''} >
@@ -66,7 +72,7 @@ const Register = ({ registerUser, errors, isPending }) => {
                     {isPending && "Saving ..."}
                     {!isPending && "Register"}
                 </Button>
-            </Form>
+            </Form> */}
             <br />
             <p>Already Registered? <Link to="/login"> Login</Link></p>
 
@@ -78,10 +84,9 @@ const Register = ({ registerUser, errors, isPending }) => {
 
 
 
-const mapStateToProps = state => ({
-    errors: state.auth.errors,
-    isAuthenticated: state.auth.isAuthenticated,
-    isPending: state.auth.isPending
+const mapStateToProps = state => ({ 
+    profile: state.profile.data,
+    user_id: state.auth.user._id
 });
 
-export default connect(mapStateToProps, { registerUser })(Register);
+export default connect(mapStateToProps, { getProfileData })(Profile);

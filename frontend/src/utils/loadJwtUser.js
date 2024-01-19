@@ -3,7 +3,7 @@ import store from '../redux/store';
 // user actions 
 import { jwtDecode } from "jwt-decode";
 import setAuthToken from './setAuthToken';
-import { setCurrentUser } from '../redux/actions/auth';
+import { setCurrentUser } from '../redux/actions/authActions';
 
 const loadAppData = () => {
 

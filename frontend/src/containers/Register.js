@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { registerUser } from '../redux/actions/auth';
+import { registerUser } from '../redux/actions/authActions';
 import { Button, Form, FormControl as Input, FormLabel as Label, Row, Col } from 'react-bootstrap';
 import { Link } from "react-router-dom"; 
 
