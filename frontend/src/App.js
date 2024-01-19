@@ -1,13 +1,16 @@
 import logo from './logo.svg';
 import './App.css';
 import React from 'react';
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, NavLink } from "react-router-dom";
 import loadAppData from './utils/loadJwtUser';
 
 import Register from './containers/Register';
 import Login from './containers/Login';
 import Home from './containers/PublicHome';
 import Profile from './containers/Profile';
+import Chat from './containers/Chat';
+import Search from './containers/Search';
+
 import PrivateRoute from './utils/PrivateRoute';
 import PublicRoute from './utils/PublicRoute';
 
@@ -20,13 +23,13 @@ import search from './icons/search.png';
 
 
 
-import {logoutUser} from './redux/actions/auth'
+import { logoutUser } from './redux/actions/auth'
 
 loadAppData();
 
 axios.defaults.baseURL = "http://localhost:4000/";
 
-function App({logoutUser, isAuthenticated, user }) {
+function App({ logoutUser, isAuthenticated, user }) {
 
   return (
     <div className='main'>
@@ -35,22 +38,22 @@ function App({logoutUser, isAuthenticated, user }) {
         {(isAuthenticated &&
           <div className='nav'>
             <div id="left">
-              <Link to="/chats"  >
+              <NavLink to="/chats"  >
                 <img src={logo} width="50px" alt="" />
-              </Link> 
+              </NavLink>
               <small>{user.first_name}</small>
             </div>
             <div id='right'>
-              <Link to="/chats" className='active' >
+              <NavLink to="/chats" activeClassName="active">
                 <img src={chat} alt='chat' title='chat' />
-              </Link>
-              <Link to="/search">
+              </NavLink >
+              <NavLink to="/search" activeClassName="active">
                 <img src={search} alt='search' title='search' />
-              </Link>
-              <Link to="/profile">
+              </NavLink>
+              <NavLink to="/profile" activeClassName="active">
                 <img src={profile} alt='profile' title='profile' />
-              </Link>
-              <button onClick={logoutUser} style={{background: "transparent", border: "none"}} >
+              </NavLink>
+              <button onClick={logoutUser} style={{ background: "transparent", border: "none" }} >
                 <img src={signOut} alt='signout' title='signout' />
               </button>
             </div>
@@ -62,21 +65,19 @@ function App({logoutUser, isAuthenticated, user }) {
               UniBuds { }
             </h1>
           </Link>
-
-
         }
-
 
         <Routes>
           <Route path="/" element={<PublicRoute component={Home} />} />
           <Route path="/register" element={<PublicRoute component={Register} />} />
           <Route path="/login" element={<PublicRoute component={Login} />} />
 
-
+          <Route path="chats" element={<PrivateRoute component={Chat} />} />
           <Route path="profile" element={<PrivateRoute component={Profile} />} />
+          <Route path="search" element={<PrivateRoute component={Search} />} />
 
           {/* <Route element={<Home />} /> */}
-        </Routes> 
+        </Routes>
       </div>
     </div>
 
@@ -90,4 +91,4 @@ const mapStateToProps = state => ({
   isPending: state.auth.isPending
 });
 
-export default connect(mapStateToProps, {logoutUser})(App);
+export default connect(mapStateToProps, { logoutUser })(App);
