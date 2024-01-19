@@ -41,19 +41,6 @@ module.exports.login_post = async (req, res) => {
 }
 
 /**
- * @desc    Logout a user
- * @access  Private 
- */
-module.exports.logout_post = (req, res) => {
-    res.cookie('jwt', '', {
-        httpOnly: true,
-        expires: new Date(0),
-    });
-    res.status(200).json({ message: 'Logged out successfully' });
-};
-
-
-/**
  * @desc    User to update additional details of their profile
  * @access  Private 
  */

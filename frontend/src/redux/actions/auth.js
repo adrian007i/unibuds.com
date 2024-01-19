@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { LOGIN_FAIL, LOGIN_PENDING, REGISTER_FAIL, REGISTER_PENDING, SET_USER } from '../constants/auth';
+import { LOGIN_FAIL, LOGIN_PENDING, REGISTER_FAIL, REGISTER_PENDING, SET_USER, LOGOUT_USER } from '../constants/auth';
 import { isEmpty, minLength, isValidEmail } from '../../utils/validation'; 
 import loadAppData from '../../utils/loadJwtUser';
+import setAuthToken  from '../../utils/setAuthToken';
 
- 
 // Register User
 export const registerUser = (userData) => async (dispatch) => {
 
@@ -77,14 +77,12 @@ export const loginUser = (userData) => async (dispatch) => {
         // client side validation passed
         else {
             const response = await axios.post('/login', userData);
-            console.log(response)
             localStorage.setItem("jwtToken", response.data.token);
             loadAppData(response.data.token);
         }
 
         // server request failed
     } catch (errors) {
-        console.log(errors)
         dispatch({
             type: REGISTER_FAIL,
             payload: errors.response.data
@@ -97,3 +95,15 @@ export const setCurrentUser = (decoded) => async (dispatch) => {
     dispatch({ type: SET_USER, payload: decoded});
 };
 
+
+export const logoutUser = () => dispatch => {  
+  
+    // remove token from localstorage
+    localStorage.removeItem("jwtToken");
+  
+    // this will delete the authtoken from future requests
+    setAuthToken(false);
+
+    // this will need to be updated to clear all data from state
+    dispatch({ type: LOGOUT_USER });
+  };  

@@ -18,11 +18,15 @@ import chat from './icons/chat.png';
 import profile from './icons/profile.png';
 import search from './icons/search.png';
 
+
+
+import {logoutUser} from './redux/actions/auth'
+
 loadAppData();
 
 axios.defaults.baseURL = "http://localhost:4000/";
 
-function App({ isAuthenticated, user }) {
+function App({logoutUser, isAuthenticated, user }) {
 
   return (
     <div className='main'>
@@ -33,21 +37,22 @@ function App({ isAuthenticated, user }) {
             <div id="left">
               <Link to="/chats"  >
                 <img src={logo} width="50px" alt="" />
-              </Link>
+              </Link> 
+              <small>{user.first_name}</small>
             </div>
             <div id='right'>
               <Link to="/chats" className='active' >
                 <img src={chat} alt='chat' title='chat' />
               </Link>
-              <Link to="/chats">
+              <Link to="/search">
                 <img src={search} alt='search' title='search' />
               </Link>
-              <Link to="/chats">
+              <Link to="/profile">
                 <img src={profile} alt='profile' title='profile' />
               </Link>
-              <Link to="/chats">
+              <button onClick={logoutUser} style={{background: "transparent", border: "none"}} >
                 <img src={signOut} alt='signout' title='signout' />
-              </Link>
+              </button>
             </div>
           </div>
         ) ||
@@ -71,12 +76,7 @@ function App({ isAuthenticated, user }) {
           <Route path="profile" element={<PrivateRoute component={Profile} />} />
 
           {/* <Route element={<Home />} /> */}
-        </Routes>
-
-
-
-
-
+        </Routes> 
       </div>
     </div>
 
@@ -90,4 +90,4 @@ const mapStateToProps = state => ({
   isPending: state.auth.isPending
 });
 
-export default connect(mapStateToProps, {})(App);
+export default connect(mapStateToProps, {logoutUser})(App);

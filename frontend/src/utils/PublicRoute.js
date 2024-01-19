@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 
 const PublicRoute = ({ component: Component, isAuthenticated, user }) => {
-    return isAuthenticated ? <Navigate to="/chats" /> : <Component user={user} />;
+    return isAuthenticated ? <Navigate to="/profile" /> : <Component user={user} />;
 };
 
 // Map state to props

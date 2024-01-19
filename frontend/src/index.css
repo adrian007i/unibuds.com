@@ -5,8 +5,7 @@
 }
 
 html,body{
-  background-color: #1B1B1D !important;
-  overflow: hidden;
+  background-color: #1B1B1D !important; 
 }
 
 label{  
@@ -64,3 +63,20 @@ label{
 }
  
 
+.nav #right img{
+  height:40px;
+  width: 40px; 
+  padding: 5px; 
+  margin-left:8px; 
+  border-radius: 5px;
+  border: 1px solid grey; 
+}
+
+.nav #right>.active>img{
+  background-color: rgb(0, 63, 122);
+}
+.nav{
+  display: flex;
+  justify-content: space-between;
+  
+}
