@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const { isEmail } = require("validator");
-const bcrypt = require("bcrypt"); 
+const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema({
   first_name: {
@@ -24,50 +24,37 @@ const userSchema = new mongoose.Schema({
     required: [true, "Required"],
     minlength: [6, "At least 6 characters"],
   },
-  profile: {
-    type: {
-      bio: {
-        type: String,
-        maxlength: [300, "Max Length Exceeded"],
-      },
-      profilePicture: {
-        type: String,
-        required: [true, "Profile Picture Required"],
-      },
-      university: {
-        type: String,
-      },
-      major: {
-        type: String,
-      },
-      age: {
-        type: Number,
-        required: [true, "Age required"],
-      },
-      gender: {
-        type: String,
-        enum: ["male", "female", "other"],
-        default: "other",
-      },
-      city: {
-        type: String,
-      },
-    },
-    default: {
-      bio: "",
-      profilePicture: "None", 
-      university: "",
-      major: "",
-      age: 0,
-      gender: "other",
-      city: "",
-    },
+  bio: {
+    type: String,
+    maxlength: [300, "Max Length Exceeded"],
+    default:""
   },
-  profileSetup : {
-    type: Boolean,
-    default: false 
-  }
-
+  profilePicture: {
+    type: String,
+    default:""
+  },
+  university: {
+    type: String,
+    default:""
+  },
+  major: {
+    type: String,
+    default:""
+  },
+  age: {
+    type: Number,
+    default: 0,
+    required: [true, "Age required"],
+  },
+  gender: {
+    type: String,
+    enum: ["male", "female","other", ""],
+    default: "",
+  },
+  city: {
+    type: String,
+    default:""
+  },
 });
 
 userSchema.methods.matchPassword = async function (enteredPassword) {
@@ -78,7 +65,7 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
 userSchema.pre("save", async function (next) {
   // Generate a salt
   const salt = await bcrypt.genSalt();
-  this.password = await bcrypt.hash(this.password, salt); 
+  this.password = await bcrypt.hash(this.password, salt);
   next();
 });
 
