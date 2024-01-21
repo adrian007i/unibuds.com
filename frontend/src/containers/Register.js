@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { registerUser } from '../redux/actions/authActions';
 import { Button, Form, FormControl as Input, FormLabel as Label, Row, Col } from 'react-bootstrap';
-import { Link } from "react-router-dom"; 
+import { Link } from 'react-router-dom';
 
-const Register = ({ registerUser, errors,  isPending }) => {
+const Register = ({ registerUser, errors, isPending }) => {
 
 
     // local state for form values
@@ -34,14 +34,14 @@ const Register = ({ registerUser, errors,  isPending }) => {
                     <Col>
                         <div className={errors.first_name ? 'error' : ''} >
                             <Label>First Name</Label>
-                            <Input type="text" name="first_name" value={formData.first_name} onChange={onChange} />
+                            <Input type='text' name='first_name' value={formData.first_name} onChange={onChange} />
                             <span>{errors.first_name} &nbsp; </span>
                         </div>
                     </Col>
                     <Col>
                         <div className={errors.last_name ? 'error' : ''} >
                             <Label>Last Name</Label>
-                            <Input type="text" name="last_name" value={formData.last_name} onChange={onChange} />
+                            <Input type='text' name='last_name' value={formData.last_name} onChange={onChange} />
                             <span className='error'>{errors.last_name} &nbsp;</span>
                         </div>
                     </Col>
@@ -49,26 +49,26 @@ const Register = ({ registerUser, errors,  isPending }) => {
 
                 <div className={errors.email ? 'error' : ''} >
                     <Label>Email</Label>
-                    <Input type="text" name="email" value={formData.email} onChange={onChange} />
+                    <Input type='text' name='email' value={formData.email} onChange={onChange} />
                     <span className='error'>{errors.email} &nbsp;</span>
                 </div>
 
                 <div className={errors.password ? 'error' : ''} >
                     <Label>Password</Label>
-                    <Input type="password" name="password" value={formData.password} onChange={onChange} />
+                    <Input type='password' name='password' value={formData.password} onChange={onChange} />
                     <span className='error'>{errors.password} &nbsp;</span>
                 </div>
 
                 <br />
 
 
-                <Button variant="primary" type="submit" disabled={isPending}>
-                    {isPending && "Saving ..."}
-                    {!isPending && "Register"}
+                <Button variant='primary' type='submit' disabled={isPending}>
+                    {isPending && 'Saving ...'}
+                    {!isPending && 'Register'}
                 </Button>
             </Form>
             <br />
-            <p>Already Registered? <Link to="/login"> Login</Link></p>
+            <p>Already Registered? <Link to='/login'> Login</Link></p>
 
         </>
     );
@@ -80,8 +80,6 @@ const Register = ({ registerUser, errors,  isPending }) => {
 
 const mapStateToProps = state => ({
     errors: state.auth.errors,
-    user: state.auth.user,
-    isAuthenticated: state.auth.isAuthenticated,
     isPending: state.auth.isPending
 });
 

@@ -1,13 +1,13 @@
 const User = require("../models/User");
 const handleErrors = require("../validation/User");
-const profileValidation = require("../validation/Profile");
+// const profileValidation = require("../validation/Profile");
 const generateToken = require('../utils/generateToken');
 
 /**
  * @desc    User registration with email verification
  * @access  Public 
  */
-module.exports.signup_post = async (req, res) => {
+module.exports.register = async (req, res) => {
     const { email, password, first_name, last_name } = req.body;
 
     try {
@@ -26,7 +26,7 @@ module.exports.signup_post = async (req, res) => {
  * @desc    Login a user
  * @access  Public 
  */
-module.exports.login_post = async (req, res) => {
+module.exports.login = async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
@@ -41,31 +41,30 @@ module.exports.login_post = async (req, res) => {
 }
 
 /**
- * @desc    Fetch profile data
+ * @desc    Fetch user data
  * @access  Private 
  */
-module.exports.get_profile_info = async (req, res) => {
-    const user = await User.findOne({ _id: req.query.user_id }).select('-password');;
+module.exports.get_user = async (req, res) => {
+    const user = await User.findOne({ _id: req.query.user_id }).select('-password');
     res.status(200).json(user);
 }
 
 /**
- * @desc    Fetch profile data
+ * @desc    Update user data
  * @access  Private 
  */
-module.exports.set_profile_info = async (req, res) => {
-    // const user = await User.findOne({ _id: req.query.user_id }).select('-password');; 
+module.exports.set_user = async (req, res) => {  
 
     User.findByIdAndUpdate(req.body._id, req.body, { new: false })
         .then(updatedUser => {
             if (updatedUser) {
-                console.log('User updated successfully:', updatedUser);
+                res.status(200).json({ success: true });
             } else {
-                console.log('User not found');
+                res.status(401).json({ message: "User Not Found" });
             }
         })
         .catch(error => {
-            console.error('Error updating user:', error);
+            res.status(401).json({ message: "Server error occured" });
         });
     // res.status(200).json(user);
 }

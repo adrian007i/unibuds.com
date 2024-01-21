@@ -7,7 +7,7 @@ import loadAppData from './utils/loadJwtUser';
 import Register from './containers/Register';
 import Login from './containers/Login';
 import Home from './containers/PublicHome';
-import Profile from './containers/Profile';
+import User from './containers/User';
 import Chat from './containers/Chat';
 import Search from './containers/Search';
 
@@ -72,7 +72,7 @@ function App({ logoutUser, isAuthenticated }) {
           <Route path="/login" element={<PublicRoute component={Login} />} />
 
           <Route path="chats" element={<PrivateRoute component={Chat} />} />
-          <Route path="profile" element={<PrivateRoute component={Profile} />} />
+          <Route path="user" element={<PrivateRoute component={User} />} />
           <Route path="search" element={<PrivateRoute component={Search} />} />
 
           {/* <Route element={<Home />} /> */}

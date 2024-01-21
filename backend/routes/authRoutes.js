@@ -6,9 +6,9 @@ const storage = require("../middleware/storeImage");
 
 
 const router = Router(); 
-router.post("/signup" , authControler.signup_post); 
-router.post("/login" , authControler.login_post);
+router.post("/register" , authControler.register); 
+router.post("/login" , authControler.login);
 
-router.get("/get_profile" , protect ,  authControler.get_profile_info);
-router.post("/set_profile" , protect ,  authControler.set_profile_info);
+router.get("/get_user" , protect ,  authControler.get_user);
+router.post("/set_user" , protect ,  authControler.set_user);
 module.exports = router;

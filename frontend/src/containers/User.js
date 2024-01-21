@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { getProfileData, updateProfile } from '../redux/actions/profileActions';
+import { getUserData, setUserData } from '../redux/actions/userActions';
 import { Text, Button, Form, FormControl as Input, FormLabel as Label, Row, Col } from 'react-bootstrap';
-import { Link } from "react-router-dom";
 import profilepic from '../icons/profile.png';
 
-const Profile = ({ getProfileData,updateProfile, profile, user_id, errors, get_data_pending, set_data_pending }) => {
+const User = ({ getUserData, setUserData, user, user_id, errors, get_user_pending, set_user_pending }) => {
 
 
     // local state for form values
@@ -13,14 +12,14 @@ const Profile = ({ getProfileData,updateProfile, profile, user_id, errors, get_d
 
     useEffect(() => {
         const fetchData = async () => {
-            if (profile === null)
-                await getProfileData(user_id);
+            if (user === null)
+                await getUserData(user_id);
             else
-                setFormData(profile);
+                setFormData(user);
         };
 
         fetchData();
-    }, [profile]);
+    }, [user]);
 
     // tracks change of input on form
     const onChange = (e) => {
@@ -30,14 +29,14 @@ const Profile = ({ getProfileData,updateProfile, profile, user_id, errors, get_d
     // trigger for when the user submits the form
     const onSubmit = (e) => {
         e.preventDefault();
-        updateProfile(formData)
+        setUserData(formData)
 
     };
 
     return (
 
         <>
-            {(!get_data_pending && profile != null &&
+            {(!get_user_pending && user != null &&
 
                 <div>
                     <Form onSubmit={onSubmit}>
@@ -132,9 +131,9 @@ const Profile = ({ getProfileData,updateProfile, profile, user_id, errors, get_d
                             </div>
                         </Row> */}
 
-                        <Button variant="primary" type="submit" disabled={set_data_pending}>
-                            {set_data_pending && "Saving ..."}
-                            {!set_data_pending && "Update Profile"}
+                        <Button variant="primary" type="submit" disabled={set_user_pending}>
+                            {set_user_pending && "Saving ..."}
+                            {!set_user_pending && "Update"}
                         </Button>
                     </Form>
                 </div>
@@ -147,14 +146,14 @@ const Profile = ({ getProfileData,updateProfile, profile, user_id, errors, get_d
     );
 }
 
- 
+
 
 const mapStateToProps = state => ({
-    profile: state.profile.data,
-    user_id: state.auth.user._id,
-    errors: state.profile.errors,
-    get_data_pending: state.profile.get_data_pending,
-    set_data_pending: state.profile.set_data_pending
+    user: state.user.data,
+    user_id: state.auth.token_data._id,
+    errors: state.user.errors,
+    get_user_pending: state.user.get_user_pending,
+    set_user_pending: state.user.set_user_pending
 });
 
-export default connect(mapStateToProps, { getProfileData, updateProfile})(Profile);
+export default connect(mapStateToProps, { getUserData, setUserData })(User);

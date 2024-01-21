@@ -1,29 +1,16 @@
 const isEmpty = require("./is-empty");
 
-const profileValidation = (profile) => {
-    let errors = { status : true , profilePicture: "", age: "", gender: "" };
+const handleErrors = (err) => {
+    let errors = { email: "", password: "", first_name: "", last_name: "" };
 
-    if (isEmpty(profile.bio)) {
-        errors.bio = "Bio is required";
-        errors.status = false;
+    if (err.code === 11000) { 
+        errors.email = "This email exist already"
     }
 
-    if (isEmpty(profile.profilePicture)) {
-        errors.profilePicture = "Profile Picture is required";
-        errors.status = false;
-    }
-
-    if (isEmpty(profile.age)) {
-        errors.age = "Age is required";
-        errors.status = false;
-    }
-
-    if (isEmpty(profile.gender)) {
-        errors.gender = "Gender is required";
-        errors.status = false;
-    }
-
+    if (err._message) {
+        Object.values(err.errors).forEach(properties => errors[properties.path] = properties.message);
+    } 
     return errors;
-};
+}
 
 module.exports = profileValidation;

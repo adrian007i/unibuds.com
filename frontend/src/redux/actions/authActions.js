@@ -1,13 +1,13 @@
 import axios from 'axios';
 import { LOGIN_FAIL, LOGIN_PENDING, REGISTER_FAIL, REGISTER_PENDING, SET_USER, LOGOUT_USER } from '../constants/authConstants';
-import { isEmpty, minLength, isValidEmail } from '../../utils/validation'; 
+import { isEmpty, minLength, isValidEmail } from '../../utils/validation';
 import loadAppData from '../../utils/loadJwtUser';
-import setAuthToken  from '../../utils/setAuthToken';
+import setAuthToken from '../../utils/setAuthToken';
 
 // Register User
 export const registerUser = (userData) => async (dispatch) => {
 
-    try { 
+    try {
         dispatch({ type: REGISTER_PENDING });
 
         // client side form validation
@@ -23,7 +23,7 @@ export const registerUser = (userData) => async (dispatch) => {
 
         if (isEmpty(userData.password)) localErrors.password = 'Required';
         else if (minLength(userData.password, 6)) localErrors.password = 'Too Short';
-        
+
         // check if client side validation failed
         if (Object.values(localErrors).length > 0) {
 
@@ -35,8 +35,8 @@ export const registerUser = (userData) => async (dispatch) => {
 
         // client side validation passed
         else {
-            const response = await axios.post('/signup', userData);
-             
+            const response = await axios.post('/register', userData);
+
             localStorage.setItem("jwtToken", response.data.token);
             loadAppData(response.data.token)
         }
@@ -53,7 +53,7 @@ export const registerUser = (userData) => async (dispatch) => {
 // Login user
 export const loginUser = (userData) => async (dispatch) => {
 
-    try { 
+    try {
         dispatch({ type: LOGIN_PENDING });
 
         // client side form validation
@@ -64,7 +64,7 @@ export const loginUser = (userData) => async (dispatch) => {
 
         if (isEmpty(userData.password)) localErrors.password = 'Required';
         else if (minLength(userData.password, 6)) localErrors.password = 'Too Short';
-        
+
         // check if client side validation failed
         if (Object.values(localErrors).length > 0) {
 
@@ -90,20 +90,20 @@ export const loginUser = (userData) => async (dispatch) => {
     }
 };
 
-
+// set user details in redux state
 export const setCurrentUser = (decoded) => async (dispatch) => {
-    dispatch({ type: SET_USER, payload: decoded});
+    dispatch({ type: SET_USER, payload: decoded });
 };
 
+// logout user
+export const logoutUser = () => dispatch => {
 
-export const logoutUser = () => dispatch => {  
-  
     // remove token from localstorage
     localStorage.removeItem("jwtToken");
-  
+
     // this will delete the authtoken from future requests
     setAuthToken(false);
 
     // this will need to be updated to clear all data from state
     dispatch({ type: LOGOUT_USER });
-  };  
+};  

@@ -1,30 +1,30 @@
 import axios from 'axios';
-import { GET_PROFILE_SUCCESS, GET_PROFILE_PENDING, SET_PROFILE_PENDING, SET_PROFILE_FAIL, SET_PROFILE_SUCCESS } from '../constants/profileConstants';
 import { isEmpty, minLength, isValidEmail } from '../../utils/validation';
 
-export const getProfileData = (user_id) => async (dispatch) => {
+import {
+    GET_USER_SUCCESS,
+    GET_USER_PENDING,
+    SET_USER_PENDING,
+    SET_USER_FAIL,
+    SET_USER_SUCCESS
+} from '../constants/userConstants';
 
-    try {
-        dispatch({ type: GET_PROFILE_PENDING });
-        const response = await axios.get('/get_profile?user_id=' + user_id); 
-        dispatch({ type: GET_PROFILE_SUCCESS, payload : response.data });
+// fetches the user details
+export const getUserData = (user_id) => async (dispatch) => {
 
-
-
-        // server request failed
-    } catch (errors) {
-
-    }
+    dispatch({ type: GET_USER_PENDING });
+    const response = await axios.get('/get_user?user_id=' + user_id);
+    dispatch({ type: GET_USER_SUCCESS, payload: response.data });
 };
 
-export const updateProfile = (profileData) => async (dispatch) => { 
-    try { 
-        dispatch({ type: SET_PROFILE_PENDING });
+export const setUserData = (userData) => async (dispatch) => {
+    try {
+        dispatch({ type: SET_USER_PENDING });
 
 
-        const response = await axios.post('/set_profile', profileData);
+        const response = await axios.post('/set_user', userData);
         console.log(response);
-        dispatch({ type: SET_PROFILE_SUCCESS });
+        dispatch({ type: SET_USER_SUCCESS });
 
         // client side form validation
         // const localErrors = {}
@@ -39,7 +39,7 @@ export const updateProfile = (profileData) => async (dispatch) => {
 
         // if (isEmpty(userData.password)) localErrors.password = 'Required';
         // else if (minLength(userData.password, 6)) localErrors.password = 'Too Short';
-        
+
         // // check if client side validation failed
         // if (Object.values(localErrors).length > 0) {
 
@@ -52,7 +52,7 @@ export const updateProfile = (profileData) => async (dispatch) => {
         // // client side validation passed
         // else {
         //     const response = await axios.post('/signup', userData);
-             
+
         //     localStorage.setItem("jwtToken", response.data.token);
         //     loadAppData(response.data.token)
         // }
@@ -61,7 +61,7 @@ export const updateProfile = (profileData) => async (dispatch) => {
     } catch (errors) {
         console.log(errors)
         dispatch({
-            type: SET_PROFILE_FAIL,
+            type: SET_USER_FAIL,
             payload: errors.response.data
         });
     }
