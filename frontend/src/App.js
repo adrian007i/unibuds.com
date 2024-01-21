@@ -32,40 +32,40 @@ axios.defaults.baseURL = "http://localhost:4000/";
 function App({ logoutUser, isAuthenticated }) {
 
   return (
-    <div className='main'>
-      <div className="sub-main">
+    <div className="main">
 
-        {(isAuthenticated &&
-          <div className='nav'>
-            <div id="left">
-              <NavLink to="/chats"  >
-                <img src={logo} width="50px" alt="" />
-              </NavLink>
-            </div>
-            <div id='right'>
-              <NavLink to="/chats" activeClassName="active">
-                <img src={chat} alt='chat' title='chat' />
-              </NavLink >
-              <NavLink to="/search" activeClassName="active">
-                <img src={search} alt='search' title='search' />
-              </NavLink>
-              <NavLink to="/profile" activeClassName="active">
-                <img src={profile} alt='profile' title='profile' />
-              </NavLink>
-              <button onClick={logoutUser} style={{ background: "transparent", border: "none" }} >
-                <img src={signOut} alt='signout' title='signout' />
-              </button>
-            </div>
+      {(isAuthenticated &&
+        <div className='nav'>
+          <div id="left">
+            <NavLink to="/chats"  >
+              <img src={logo} width="50px" alt="" />
+            </NavLink>
           </div>
-        ) ||
-          <Link to="/" style={{ color: "inherit", textDecoration: "none" }}>
-            <h1>
-              <img src={logo} width="100px" className='margin-auto' alt="" />
-              UniBuds { }
-            </h1>
-          </Link>
-        }
+          <div id='right'>
+            <NavLink to="/chats" activeClassName="active">
+              <img src={chat} alt='chat' title='chat' />
+            </NavLink >
+            <NavLink to="/search" activeClassName="active">
+              <img src={search} alt='search' title='search' />
+            </NavLink>
+            <NavLink to="/profile" activeClassName="active">
+              <img src={profile} alt='profile' title='profile' />
+            </NavLink>
+            <button onClick={logoutUser} style={{ background: "transparent", border: "none" }} >
+              <img src={signOut} alt='signout' title='signout' />
+            </button>
+          </div>
+        </div>
+      ) ||
+        <Link to="/" style={{ color: "inherit", textDecoration: "none" }}>
+          <h1>
+            <img src={logo} width="100px" className='margin-auto' alt="" />
+            UniBuds { }
+          </h1>
+        </Link>
+      }
 
+      <div id='pages'>
         <Routes>
           <Route path="/" element={<PublicRoute component={Home} />} />
           <Route path="/register" element={<PublicRoute component={Register} />} />

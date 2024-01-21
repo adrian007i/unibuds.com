@@ -1,82 +1,104 @@
-*{
-  padding:0px;
-  margin:0px;
+* {
+  padding: 0px;
+  margin: 0px;
   font-family: sans-serif, Arial, Helvetica;
+
 }
 
-html,body{
-  background-color: #1B1B1D !important; 
+::-webkit-scrollbar {
+  width: 0px;
 }
 
-label{  
-  margin:0px 0px 0px 2px  !important;
-  font-weight:400; 
+/* ::-webkit-scrollbar-thumb {
+  background-color: #888;
+} */
+
+
+html,
+body {
+  background-color: #1B1B1D !important;
 }
 
-.main{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  overflow: none;
+body {
+  position: fixed;
+  height: 100%
 }
 
-.sub-main{
-  color:#8A9198;
+label {
+  margin: 0px 0px 0px 2px !important;
+  font-weight: 400;
+}
+
+.main {
+  color: #8A9198;
   background-color: #323234; 
-  height: 100%; 
-  padding: 10px; 
-}  
+  padding: 10px;
+  position: fixed;
+  height: 100%;    
+  width: 350px; 
+  border-radius: 10px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 
-@media only screen and (min-width: 500px) {
-  .sub-main {
-    width: 350px;
-    height: 500px;
-    border-radius: 10px;
+.main .nav {
+  height: 40px;
+}
+
+.main #pages {
+  overflow-y: scroll !important;
+  overflow-x: hidden !important;
+  height: calc(100% - 40px) !important;
+}
+
+@media only screen and (max-width: 500px) {
+  .main {
+    width: 100%;
+    height: 100%;
+    border-radius: unset;
   }
 }
 
-#home{ 
-  height: 80%;
-  position: relative;
-}
-
-#home .bottom{
+#home .bottom {
   position: absolute;
-  bottom:0px;
-  width: 100%;
+  bottom: 20px;    
+  width: 94%;
+} 
+
+#home .welcome {
+  color: #ddd;
 }
 
-#home  .welcome{
-  color:#ddd;
-}
 
-.error span{
-  color:rgb(255, 60, 60);
+
+.error span {
+  color: rgb(255, 60, 60);
   font-size: .7rem;
   font-family: monospace;
-  margin-left: 2px; 
+  margin-left: 2px;
 }
 
-.error input{
+.error input {
   border: 2px solid rgb(255, 60, 60);
 }
- 
 
-.nav #right img{
-  height:40px;
-  width: 40px; 
-  padding: 5px; 
-  margin-left:8px; 
+
+.nav #right img {
+  height: 40px;
+  width: 40px;
+  padding: 5px;
+  margin-left: 8px;
   border-radius: 5px;
-  border: 1px solid grey; 
+  border: 1px solid grey;
 }
 
-.nav #right>.active>img{
+.nav #right>.active>img {
   background-color: rgb(0, 63, 122);
 }
-.nav{
+
+.nav {
   display: flex;
   justify-content: space-between;
-  
+
 }
