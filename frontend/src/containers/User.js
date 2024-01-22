@@ -75,7 +75,7 @@ const User = ({ getUserData, setUserData, user, user_id, errors, get_user_pendin
                             <Col>
                                 <div className={errors.age ? 'error' : ''} >
                                     <Label>DOB</Label>
-                                    <Input type="date" name="age" value={formData.age} onChange={onChange} />
+                                    <Input type="date" name="dob" value={formData.dob ? (formData.dob).slice(0,10) : ""}  onChange={onChange} />
                                     <span>{errors.age} &nbsp; </span>
                                 </div>
                             </Col>
@@ -102,13 +102,13 @@ const User = ({ getUserData, setUserData, user, user_id, errors, get_user_pendin
                                 </div>
                             </Col>
                             <Col>
-                                <div className={errors.location ? 'error' : ''} >
+                                <div className={errors.campus_location ? 'error' : ''} >
                                     <Label>Campus Location</Label>
-                                    <Form.Select value={formData.location} name="location" onChange={onChange} >
+                                    <Form.Select value={formData.campus_location} name="campus_location" onChange={onChange} >
                                         <option value="">Select</option>
                                         <option value="ccc">I gotta add these</option>
                                     </Form.Select>
-                                    <span className='error'>{errors.email} &nbsp;</span>
+                                    <span className='error'>{errors.campus_location} &nbsp;</span>
                                 </div>
 
                             </Col>

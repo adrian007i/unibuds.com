@@ -8,6 +8,7 @@ import {
     SET_USER_FAIL,
     SET_USER_SUCCESS
 } from '../constants/userConstants';
+ 
 
 // fetches the user details
 export const getUserData = (user_id) => async (dispatch) => {
@@ -24,7 +25,7 @@ export const setUserData = (userData) => async (dispatch) => {
 
         const response = await axios.post('/set_user', userData);
         console.log(response);
-        dispatch({ type: SET_USER_SUCCESS });
+        dispatch({ type: SET_USER_SUCCESS, payload : userData });
 
         // client side form validation
         // const localErrors = {}
@@ -58,7 +59,7 @@ export const setUserData = (userData) => async (dispatch) => {
         // }
 
         // server request failed
-    } catch (errors) {
+    } catch (errors) { 
         console.log(errors)
         dispatch({
             type: SET_USER_FAIL,

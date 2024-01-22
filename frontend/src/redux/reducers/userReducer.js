@@ -40,7 +40,8 @@ export const userReducer = (state = initialState, action) => {
     case SET_USER_SUCCESS:
       return {
         ...state,
-        set_user_pending: false
+        set_user_pending: false,
+        data: action.payload
       };
     default:
       return state;

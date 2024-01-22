@@ -27,34 +27,40 @@ const userSchema = new mongoose.Schema({
   bio: {
     type: String,
     maxlength: [300, "Max Length Exceeded"],
-    default:""
+    default: ""
   },
   profilePicture: {
     type: String,
-    default:""
+    default: ""
   },
   university: {
     type: String,
-    default:""
+    default: ""
   },
   major: {
     type: String,
-    default:""
+    default: ""
   },
-  age: {
-    type: Number,
-    default: 0,
-    required: [true, "Age required"],
+  dob: {
+    type: Date,
   },
   gender: {
     type: String,
-    enum: ["male", "female","other", ""],
+    enum: ["male", "female", "other", ""],
     default: "",
   },
-  city: {
+  campus_location: {
     type: String,
-    default:""
+    default: ""
   },
+  email_verfied: {
+    type: Boolean,
+    default: false
+  },
+  dateCreated: {
+    type: Date,
+    default: Date.now,
+  }, 
 });
 
 userSchema.methods.matchPassword = async function (enteredPassword) {

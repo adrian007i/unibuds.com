@@ -1,6 +1,5 @@
 const User = require("../models/User");
 const handleErrors = require("../validation/User");
-// const profileValidation = require("../validation/Profile");
 const generateToken = require('../utils/generateToken');
 
 /**
@@ -17,7 +16,7 @@ module.exports.register = async (req, res) => {
         res.status(201).json({ token: generateToken(new_user) });
 
     } catch (error) {
-        let errors = handleErrors(error);
+        let errors = handleErrors(error, 'create');
         res.status(400).json(errors);
     }
 }
@@ -45,7 +44,7 @@ module.exports.login = async (req, res) => {
  * @access  Private 
  */
 module.exports.get_user = async (req, res) => {
-    const user = await User.findOne({ _id: req.query.user_id }).select('-password');
+    const user = await User.findOne({ _id: req.user._id }).select('-password');
     res.status(200).json(user);
 }
 
@@ -53,19 +52,30 @@ module.exports.get_user = async (req, res) => {
  * @desc    Update user data
  * @access  Private 
  */
-module.exports.set_user = async (req, res) => {  
+module.exports.set_user = async (req, res) => {
+    const user = await User.findOne({ _id: req.user._id });
 
-    User.findByIdAndUpdate(req.body._id, req.body, { new: false })
-        .then(updatedUser => {
-            if (updatedUser) {
-                res.status(200).json({ success: true });
-            } else {
-                res.status(401).json({ message: "User Not Found" });
-            }
-        })
-        .catch(error => {
-            res.status(401).json({ message: "Server error occured" });
-        });
-    // res.status(200).json(user);
+    if (user) {
+
+        // for security we remove any unwanted fields
+        delete req.body._id;
+        delete req.body.password;
+        delete req.body.__v;
+
+        // Save the updated user back to the database
+        try { 
+
+            // Update user fields
+            Object.assign(user, req.body);
+
+            await user.save();
+            res.status(200).json({ success: true });
+        } catch (error) { 
+            let errors = handleErrors(error, 'update');
+            res.status(403).json(errors);
+        }
+    } else {
+        console.log('User not found');
+    }
 }
 

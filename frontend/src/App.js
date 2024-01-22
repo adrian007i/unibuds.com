@@ -72,7 +72,7 @@ function App({ logoutUser, isAuthenticated }) {
           <Route path="/login" element={<PublicRoute component={Login} />} />
 
           <Route path="chats" element={<PrivateRoute component={Chat} />} />
-          <Route path="user" element={<PrivateRoute component={User} />} />
+          <Route path="profile" element={<PrivateRoute component={User} />} />
           <Route path="search" element={<PrivateRoute component={Search} />} />
 
           {/* <Route element={<Home />} /> */}
