@@ -22,25 +22,24 @@ module.exports.get_chats = async (req, res) => {
  */
 module.exports.send_message = async (req, res) => {
 
-    // clients[key].forEach((client) => client.send(message));
+    const { message } = req.body;
+    const user_key = req.body.user2;  
+    req.app.locals.clients[user_key].forEach((client) => client.send(message));
 
     try {
 
         const user1 = new mongoose.Types.ObjectId(req.body.user1);
         const user2 = new mongoose.Types.ObjectId(req.body.user2);
-        const new_chat = false;
+        let new_chat = false;
 
         // check an see if a chat convo exist between the 2 users
-        const chat = await Chat.findOne({
+        let chat = await Chat.findOne({
             $or: [
                 { $and: [{ user1: user1 }, { user2: user2 }] },
                 { $and: [{ user1: user2 }, { user2: user1 }] }
             ]
 
         });
-
-
-
         // if it does not exist, store their user ids in the database
         if (!chat) {
             new_chat = true

@@ -8,8 +8,7 @@ const enableWs = require('express-ws');
 // CUSTOM IMPORTS
 const { protectRaw } = require('./middleware/authMiddleware');
 const authRoutes = require('./routes/authRoutes');
-const chatRoutes = require('./routes/chatRoutes');
-const User = require('./models/User');
+const chatRoutes = require('./routes/chatRoutes'); 
 
 // CONFIGURE SECRETS USING DOTENV
 require('dotenv').config();
@@ -25,7 +24,7 @@ app.use(cookieParser());
 app.use(cors({ origin: ['http://127.0.0.1:5500', 'HTTPS://127.0.0.1:3000'] }));
 
 // WEB SOCKET CLIENTS 
-const clients = {};
+clients = app.locals.clients = {};
 
 // CONNECT TO MONGOOSE DATABASE
 mongoose.connect(process.env.mongoURI)
@@ -46,7 +45,7 @@ mongoose.connect(process.env.mongoURI)
       clients[user_key] = clients[user_key] || [];
 
       // Add the new client to the clients list
-      clients[user_key].push(ws);
+      clients[user_key].push(ws); 
 
       // Remove the client from the clients list when it disconnects
       ws.on('close', function () {
@@ -67,19 +66,4 @@ mongoose.connect(process.env.mongoURI)
 // ROUTES
 app.get('/', (req, res) => res.send('Hello, World!'));
 app.use(authRoutes);
-app.use(chatRoutes);
-
-
-
-
-
-// app.post('/api/send/:key', function (req, res) {
-//   console.log(123)
-//   console.log(req.body);
-//   const { message } = req.body;
-
-//   const key = 'a'
-
-//   clients[key].forEach((client) => client.send(message));
-//   res.json({ success: true });
-// });
+app.use(chatRoutes); 
