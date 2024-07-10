@@ -1,5 +1,5 @@
 const Chat = require("../models/Chat");
-const mongoose = require('mongoose');
+const mongoose = require('mongoose'); 
 
 /**
  * @desc    Get all chats for a particular user
@@ -23,7 +23,11 @@ module.exports.get_chats = async (req, res) => {
 module.exports.send_message = async (req, res) => {
 
     const { message } = req.body;
-    const user_key = req.body.user2;  
+
+    // deterime who will recieve the message
+    const user_key = req.body.reciever === 'user1' ? req.body.user1 : req.body.user2;
+
+    // use web socket to broadcast the message
     req.app.locals.clients[user_key].forEach((client) => client.send(message));
 
     try {
