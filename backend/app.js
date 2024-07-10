@@ -3,11 +3,13 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const enableWs = require('express-ws')
+const enableWs = require('express-ws');
 
 // CUSTOM IMPORTS
+const { protectRaw } = require('./middleware/authMiddleware');
 const authRoutes = require('./routes/authRoutes');
 const chatRoutes = require('./routes/chatRoutes');
+const User = require('./models/User');
 
 // CONFIGURE SECRETS USING DOTENV
 require('dotenv').config();
@@ -23,21 +25,42 @@ app.use(cookieParser());
 app.use(cors({ origin: ['http://127.0.0.1:5500', 'HTTPS://127.0.0.1:3000'] }));
 
 // WEB SOCKET CLIENTS 
-const clients = new Map();
+const clients = {};
 
 // CONNECT TO MONGOOSE DATABASE
 mongoose.connect(process.env.mongoURI)
-  
-  //SETUP WEB SOCKET CONNECTION AT /
-  .then(result => {app.ws('/', function (ws, req) {
-      // todo
+
+  //SETUP WEB SOCKET CONNECTION AT /wss
+  .then(result => {
+    app.ws('/:user_key', async function (ws, req) {
+
+      // ensure user JWT and user ID is valid when authenticating 
+      const user_key = req.params.user_key;
+      let protect = await protectRaw(req.header('Authorization'));
+
+      if (!protect.authenticated || user_key !== protect.user._id.toString()) {
+        ws.close();
+        return;
+      }
+
+      clients[user_key] = clients[user_key] || [];
+
+      // Add the new client to the clients list
+      clients[user_key].push(ws);
+
+      // Remove the client from the clients list when it disconnects
+      ws.on('close', function () {
+        clients[user_key] = clients[user_key].filter((client) => client !== ws); 
+        console.log('client disconnected');
+      });
+
+      // }); 
     });
   })
-  // START THE SERVER
-  .then((result) => app.listen(4000)) 
+  .then((result) => app.listen(4000))
   .catch((err) => console.log(err));
 
- 
+
 
 
 
@@ -48,27 +71,14 @@ app.use(chatRoutes);
 
 
 
-// app.ws("/:key", function (ws, req) {
-//   const key = req.params.key;
-//   clients[key] = clients[key] || [];
 
-//   // Add the new client to the clients list
-//   clients[key].push(ws);
 
-//   // Remove the client from the clients list when it disconnects
-//   ws.on("close", function () {
-//     clients[key] = clients[key].filter((client) => client !== ws);
-
-//     console.log("client disconnected");
-//   });
-// });
- 
-// app.post("/api/send/:key", function (req, res) {
+// app.post('/api/send/:key', function (req, res) {
 //   console.log(123)
 //   console.log(req.body);
 //   const { message } = req.body;
 
-//   const key = "a"
+//   const key = 'a'
 
 //   clients[key].forEach((client) => client.send(message));
 //   res.json({ success: true });
