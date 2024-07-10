@@ -7,7 +7,7 @@ const enableWs = require('express-ws')
 
 // CUSTOM IMPORTS
 const authRoutes = require('./routes/authRoutes');
-// const authRoutes = require('./routes/authRoutes');
+const chatRoutes = require('./routes/chatRoutes');
 
 // CONFIGURE SECRETS USING DOTENV
 require('dotenv').config();
@@ -44,7 +44,7 @@ mongoose.connect(process.env.mongoURI)
 // ROUTES
 app.get('/', (req, res) => res.send('Hello, World!'));
 app.use(authRoutes);
-// app.use(chatRoutes);
+app.use(chatRoutes);
 
 
 
