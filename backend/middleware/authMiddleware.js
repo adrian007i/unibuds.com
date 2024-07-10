@@ -2,30 +2,40 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 require('dotenv').config();
 
-const protect = async (req, res, next) => {
-  let token;
-
-  token = req.header('Authorization');
+const protectRaw = async (token, user) => {
 
   if (token) {
     try {
       const decoded = jwt.verify(token, process.env.JWT_HASH);
 
       const user = await User.findById(decoded._id).select('-password');
-      if (user){
-        req.user = user
-        next();
-      } 
+      if (user) {
+        return { "authenticated": true, "user": user }
+      }
 
       else
-        res.status(401).json({ message: 'Not authorized, token failed' });
+        return { message: 'Not authorized, token failed' };
 
     } catch (error) {
-      res.status(401).json({ message: 'Not authorized, token failed' });
+      return { message: 'Not authorized, token failed' };
     }
 
   } else {
-    res.status(401).json({ message: 'Not authorized, no token' });
+    return { message: 'Not authorized, no token' }
   }
 }
-module.exports = protect; 
+
+const protect = async (req, res, next) => {
+  let token = req.header('Authorization');
+  let raw = await protectRaw(token);
+
+  if (raw.authenticated){ 
+    req.user = raw.user;
+    next()
+  }
+    
+  else
+    res.status(401).json({ message: raw.message });
+}
+
+module.exports = {protect, protectRaw}; 

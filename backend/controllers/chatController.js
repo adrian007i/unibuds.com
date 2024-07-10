@@ -2,8 +2,8 @@ const Chat = require("../models/Chat");
 const mongoose = require('mongoose');
 
 /**
- * @desc    Login a user
- * @access  Public 
+ * @desc    Get all chats for a particular user
+ * @access  Private 
  */
 module.exports.get_chats = async (req, res) => {
 
@@ -21,6 +21,8 @@ module.exports.get_chats = async (req, res) => {
  * @access  Private 
  */
 module.exports.send_message = async (req, res) => {
+
+    // clients[key].forEach((client) => client.send(message));
 
     try {
 
