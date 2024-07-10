@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const config = require('../config/keys')
+require('dotenv').config();
 
 const protect = async (req, res, next) => {
   let token;
@@ -9,7 +9,7 @@ const protect = async (req, res, next) => {
 
   if (token) {
     try {
-      const decoded = jwt.verify(token, config["JWT_HASH"]);
+      const decoded = jwt.verify(token, process.env.JWT_HASH);
 
       const user = await User.findById(decoded._id).select('-password');
       if (user){

@@ -1,8 +1,8 @@
-const User = require("../models/User");
-const handleErrors = require("../validation/User");
+const User = require('../models/User');
+const handleErrors = require('../validation/User');
 const generateToken = require('../utils/generateToken');
 
-/**
+/** 
  * @desc    User registration with email verification
  * @access  Public 
  */
@@ -61,8 +61,7 @@ module.exports.set_user = async (req, res) => {
         delete req.body._id;
         delete req.body.password;
         delete req.body.__v;
-
-        // Save the updated user back to the database
+ 
         try { 
 
             // Update user fields
@@ -70,6 +69,7 @@ module.exports.set_user = async (req, res) => {
 
             await user.save();
             res.status(200).json({ success: true });
+            
         } catch (error) { 
             let errors = handleErrors(error, 'update');
             res.status(403).json(errors);
