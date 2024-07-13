@@ -20,12 +20,12 @@ module.exports.get_chats = async (req, res) => {
  * @desc    Send a message from User A to User B
  * @access  Private 
  */
-module.exports.send_message = async (req, res) => {
-
+module.exports.send_message = async (req, res) => { 
+    
     const { message } = req.body;
 
     // deterime who will recieve the message
-    const user_key = req.body.reciever === 'user1' ? req.body.user1 : req.body.user2;
+    const user_key = req.user.id === req.body.user1 ? req.body.user2 : req.body.user1;
 
     // use web socket to broadcast the message
     req.app.locals.clients[user_key].forEach((client) => client.send(message));
