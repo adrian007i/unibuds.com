@@ -4,7 +4,7 @@ import { registerUser } from '../../redux/actions/authActions';
 import { Button, Form, FormControl as Input, FormLabel as Label, Row, Col } from 'react-bootstrap';
 import { Link } from "react-router-dom"; 
 
-const People = ({ errors, isPending }) => {
+const Chat = ({ errors, isPending }) => {
 
  
 
@@ -26,4 +26,4 @@ const mapStateToProps = state => ({
     isPending: state.auth.isPending
 });
 
-export default connect(mapStateToProps, {   })(People);
+export default connect(mapStateToProps, {   })(Chat);

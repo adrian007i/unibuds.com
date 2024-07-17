@@ -7,8 +7,8 @@ import Register from './containers/Auth/Register';
 import Login from './containers/Auth/Login';
 import Home from './containers/PublicHome';
 import User from './containers/Auth/User';
-import People from './containers/Chat/People';
-import Search from './containers/Search';
+import Chats from './containers/Chat/Chats'; 
+import Chat from './containers/Chat/Chat'; 
 
 import PrivateRoute from './utils/PrivateRoute';
 import PublicRoute from './utils/PublicRoute';
@@ -17,8 +17,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import signOut from './icons/signout.png';
 import chat from './icons/chat.png';
-import profile from './icons/profile.png';
-import search from './icons/search.png';
+import profile from './icons/profile.png'; 
 
 
 
@@ -43,10 +42,7 @@ function App({ logoutUser, isAuthenticated }) {
           <div id='right'>
             <NavLink to="/chats" className={({isActive}) => (isActive ? "active" : '')}>
               <img src={chat} alt='chat' title='chat' />
-            </NavLink >
-            <NavLink to="/search"className={({isActive}) => (isActive ? "active" : '')}>
-              <img src={search} alt='search' title='search' />
-            </NavLink>
+            </NavLink > 
             <NavLink to="/profile" className={({isActive}) => (isActive ? "active" : '')}>
               <img src={profile} alt='profile' title='profile' />
             </NavLink>
@@ -70,9 +66,9 @@ function App({ logoutUser, isAuthenticated }) {
           <Route path="/register" element={<PublicRoute component={Register} />} />
           <Route path="/login" element={<PublicRoute component={Login} />} />
 
-          <Route path="chats" element={<PrivateRoute component={People} />} />
-          <Route path="profile" element={<PrivateRoute component={User} />} />
-          <Route path="search" element={<PrivateRoute component={Search} />} />
+          <Route path="/chats" element={<PrivateRoute component={Chats} />} />
+          <Route path="/chat:chat_id" element={<PrivateRoute component={Chat} />} />
+          <Route path="/profile" element={<PrivateRoute component={User} />} /> 
 
           {/* <Route element={<Home />} /> */}
         </Routes>

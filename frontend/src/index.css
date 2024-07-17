@@ -30,7 +30,7 @@ label {
 .main {
   color: #8A9198;
   background-color: #323234; 
-  padding: 10px;
+  /* padding: 10px; */
   position: fixed;
   height: 100%;    
   width: 350px; 
