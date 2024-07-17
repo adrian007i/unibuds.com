@@ -15,6 +15,7 @@ function Home() {
                 
                 <hr/>
                 <p>
+                    
                     ✅ &nbsp; No Dating! Just Friends <br />
                     ✅ &nbsp; No Download <br />
                     ✅ &nbsp; Completely Free

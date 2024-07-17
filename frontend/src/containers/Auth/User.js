@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { getUserData, setUserData } from '../redux/actions/userActions';
+import { getUserData, setUserData } from '../../redux/actions/userActions';
 import { Text, Button, Form, FormControl as Input, FormLabel as Label, Row, Col } from 'react-bootstrap';
-import profilepic from '../icons/profile.png';
-
+import profilepic from '../../icons/profile.png';
+ 
 const User = ({ getUserData, setUserData, user, user_id, errors, get_user_pending, set_user_pending }) => {
 
 

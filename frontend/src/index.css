@@ -5,19 +5,17 @@
 
 }
 
-::-webkit-scrollbar {
-  width: 0px;
-}
-
-/* ::-webkit-scrollbar-thumb {
-  background-color: #888;
-} */
-
-
 html,
 body {
   background-color: #1B1B1D !important;
 }
+
+
+::-webkit-scrollbar {
+  width: 0px;
+}
+ 
+
 
 body {
   position: fixed;

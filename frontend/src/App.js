@@ -1,14 +1,13 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from './logo.svg'; 
 import React from 'react';
 import { Routes, Route, Link, NavLink } from "react-router-dom";
 import loadAppData from './utils/loadJwtUser';
 
-import Register from './containers/Register';
-import Login from './containers/Login';
+import Register from './containers/Auth/Register';
+import Login from './containers/Auth/Login';
 import Home from './containers/PublicHome';
-import User from './containers/User';
-import Chat from './containers/Chat';
+import User from './containers/Auth/User';
+import People from './containers/Chat/People';
 import Search from './containers/Search';
 
 import PrivateRoute from './utils/PrivateRoute';
@@ -42,13 +41,13 @@ function App({ logoutUser, isAuthenticated }) {
             </NavLink>
           </div>
           <div id='right'>
-            <NavLink to="/chats" activeClassName="active">
+            <NavLink to="/chats" className={({isActive}) => (isActive ? "active" : '')}>
               <img src={chat} alt='chat' title='chat' />
             </NavLink >
-            <NavLink to="/search" activeClassName="active">
+            <NavLink to="/search"className={({isActive}) => (isActive ? "active" : '')}>
               <img src={search} alt='search' title='search' />
             </NavLink>
-            <NavLink to="/profile" activeClassName="active">
+            <NavLink to="/profile" className={({isActive}) => (isActive ? "active" : '')}>
               <img src={profile} alt='profile' title='profile' />
             </NavLink>
             <button onClick={logoutUser} style={{ background: "transparent", border: "none" }} >
@@ -71,7 +70,7 @@ function App({ logoutUser, isAuthenticated }) {
           <Route path="/register" element={<PublicRoute component={Register} />} />
           <Route path="/login" element={<PublicRoute component={Login} />} />
 
-          <Route path="chats" element={<PrivateRoute component={Chat} />} />
+          <Route path="chats" element={<PrivateRoute component={People} />} />
           <Route path="profile" element={<PrivateRoute component={User} />} />
           <Route path="search" element={<PrivateRoute component={Search} />} />
 

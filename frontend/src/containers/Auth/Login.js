@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { loginUser } from '../redux/actions/authActions';
+import { loginUser } from '../../redux/actions/authActions';
 import { Button, Form, FormControl as Input, FormLabel as Label } from 'react-bootstrap';
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";  
 
 const Login = ({ loginUser, errors, isPending }) => {
 
