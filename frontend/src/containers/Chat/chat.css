@@ -1,51 +1,63 @@
-.find_bud_btn{
-    width: 100%;
-    text-align: center; 
-    font-size: 28px;
+.chat_small {
+    height: 40px;
+    padding-top: 1px;
+    padding-bottom: 0px; 
+    position: fixed;
 }
 
-.find_bud_btn img{
-    height: 35px;
-}
-.chat{
-    width: 100%;
-    height: 50px;
-    text-align: left;
-    padding-left: 10px; 
-    padding-top: 5px;
-    border: unset;
-    border-bottom: 1px solid #ddd;
-    display: flex; 
-    align-items: center;
-    text-decoration: none;
-    color: #333;
-    background-color: #fff;
-}
- 
-.propic{
-    background-color: black;
+.chat_small .propic {
     border-radius: 50%;
     height: 40px;
-    width: 40px;
-    vertical-align: center;
-    text-align: center;  
-    overflow: hidden;
+
 }
 
-.name{
-    font-weight: bold;
-    padding-left: 10px;
-    padding-top: 3px;
-    margin-bottom: auto;
+.chat_small .propic>img {
+    height: 110%;
 }
 
-.propic img{
-    height: 100%;
+.user {
+    height: 35px;
 }
 
-.msg_time{
-    margin-left: auto;
-    margin-top: auto;
-    font-size: 14px;
-    margin-right: 5px;
+.msg_box {
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+}
+
+.msg_box_flex {
+    display: flex;
+}
+
+.msg,
+.send {
+    border-radius: unset !important;
+}
+
+.messages {
+    background-color: #eee;
+}
+
+.msg {
+    padding: 5px;
+    border-radius: 20px !important;
+    width: max-content;
+    max-width: 80%;
+}
+
+.recieve {
+    background-color: white;
+    color: #444;
+    margin-left: 10px;
+    clear: right;
+
+}
+
+.send {
+    background-color: rgb(46, 46, 255);
+    color: #ddd;
+    margin-right: 10px; 
+    float: right;
+    clear: right;
+
 }
