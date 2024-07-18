@@ -3,22 +3,14 @@ import { connect } from 'react-redux';
 import { getUserData, setUserData } from '../../redux/actions/userActions';
 import { Text, Button, Form, FormControl as Input, FormLabel as Label, Row, Col } from 'react-bootstrap';
 import profilepic from '../../icons/profile.png';
- 
 const User = ({ getUserData, setUserData, user, user_id, errors, get_user_pending, set_user_pending }) => {
 
 
     // local state for form values
-    const [formData, setFormData] = useState({});
+    const [formData, setFormData] = useState(null);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            if (user === null)
-                await getUserData(user_id);
-            else
-                setFormData(user);
-        };
-
-        fetchData();
+    useEffect(() => {   
+        !user ?   getUserData(user_id) : setFormData(user); 
     }, [user]);
 
     // tracks change of input on form
@@ -30,13 +22,12 @@ const User = ({ getUserData, setUserData, user, user_id, errors, get_user_pendin
     const onSubmit = (e) => {
         e.preventDefault();
         setUserData(formData)
-
     };
 
     return (
 
         <>
-            {(!get_user_pending && user != null &&
+            {(!get_user_pending && user &&
 
                 <div>
                     <Form onSubmit={onSubmit}>
@@ -49,7 +40,7 @@ const User = ({ getUserData, setUserData, user, user_id, errors, get_user_pendin
                         <Row>
                             <Col>
                                 <div className={errors.bio ? 'error' : ''} >
-                                    <Form.Control name="bio" as="textarea" rows={3} value={formData.bio} onChange={onChange} placeholder='Tell us about yourself' />
+                                    <Form.Control name="bio" as="textarea" rows={3} value={!formData || formData.bio} onChange={onChange} placeholder='Tell us about yourself' />
                                     <span>{errors.bio} &nbsp; </span>
                                 </div>
                             </Col>
@@ -58,14 +49,14 @@ const User = ({ getUserData, setUserData, user, user_id, errors, get_user_pendin
                             <Col>
                                 <div className={errors.first_name ? 'error' : ''} >
                                     <Label>First Name</Label>
-                                    <Input type="text" name="first_name" value={formData.first_name} onChange={onChange} />
+                                    <Input type="text" name="first_name" value={!formData || formData.first_name} onChange={onChange} />
                                     <span>{errors.first_name} &nbsp; </span>
                                 </div>
                             </Col>
                             <Col>
                                 <div className={errors.last_name ? 'error' : ''} >
                                     <Label>Last Name</Label>
-                                    <Input type="text" name="last_name" value={formData.last_name} onChange={onChange} />
+                                    <Input type="text" name="last_name" value={!formData || formData.last_name} onChange={onChange} />
                                     <span className='error'>{errors.last_name} &nbsp;</span>
                                 </div>
                             </Col>
@@ -75,14 +66,14 @@ const User = ({ getUserData, setUserData, user, user_id, errors, get_user_pendin
                             <Col>
                                 <div className={errors.age ? 'error' : ''} >
                                     <Label>DOB</Label>
-                                    <Input type="date" name="dob" value={formData.dob ? (formData.dob).slice(0,10) : ""}  onChange={onChange} />
+                                    <Input type="date" name="dob" value={formData && formData.dob ? (formData.dob).slice(0,10) : ""}  onChange={onChange} />
                                     <span>{errors.age} &nbsp; </span>
                                 </div>
                             </Col>
                             <Col>
                                 <div className={errors.gender ? 'error' : ''} >
                                     <Label>Gender</Label>
-                                    <Form.Select value={formData.gender} name="gender" onChange={onChange} >
+                                    <Form.Select value={!formData || formData.gender} name="gender" onChange={onChange} >
                                         <option value="">Select</option>
                                         <option value="male">male</option>
                                         <option value="female">female</option>
@@ -97,14 +88,14 @@ const User = ({ getUserData, setUserData, user, user_id, errors, get_user_pendin
                             <Col>
                                 <div className={errors.major ? 'error' : ''} >
                                     <Label>Major</Label>
-                                    <Input type="text" name="major" value={formData.major} onChange={onChange} />
+                                    <Input type="text" name="major" value={!formData || formData.major} onChange={onChange} />
                                     <span className='error'>{errors.major} &nbsp;</span>
                                 </div>
                             </Col>
                             <Col>
                                 <div className={errors.campus_location ? 'error' : ''} >
                                     <Label>Campus Location</Label>
-                                    <Form.Select value={formData.campus_location} name="campus_location" onChange={onChange} >
+                                    <Form.Select value={!formData || formData.campus_location} name="campus_location" onChange={onChange} >
                                         <option value="">Select</option>
                                         <option value="ccc">I gotta add these</option>
                                     </Form.Select>
@@ -117,7 +108,7 @@ const User = ({ getUserData, setUserData, user, user_id, errors, get_user_pendin
                             <Col>
                                 <div className={errors.email ? 'error' : ''} >
                                     <Label>Email</Label>
-                                    <Input type="text" name="email" value={formData.email} onChange={onChange} />
+                                    <Input type="text" name="email" value={!formData || formData.email} onChange={onChange} />
                                     <span className='error'>{errors.email} &nbsp;</span>
                                 </div>
                             </Col>
