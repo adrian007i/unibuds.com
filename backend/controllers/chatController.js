@@ -5,13 +5,13 @@ const mongoose = require('mongoose');
  * @desc    Get all chats for a particular user
  * @access  Private 
  */
-module.exports.get_chats = async (req, res) => {
+module.exports.get_chats = async (req, res) => { 
 
-    const _id = new mongoose.Types.ObjectId(req.body._id);
+    const _id = new mongoose.Types.ObjectId(req.user._id);
 
     const chats = await Chat.find({
         $or: [{ user1: _id }, { user2: _id }]
-    });
+    }); 
 
     res.status(200).json({ 'success': true, 'chats': chats });
 }
