@@ -2,15 +2,15 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 require('dotenv').config();
 
-const protectRaw = async (token, user) => {
+const protectRaw = async (token) => {
 
   if (token) {
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_HASH);
+    try { 
+      
+      const user_decoded = jwt.verify(token, process.env.JWT_HASH);
 
-      const user = await User.findById(decoded._id).select('-password');
-      if (user) {
-        return { 'authenticated': true, 'user': user }
+      if (user_decoded) {
+        return { 'authenticated': true, 'user': user_decoded }
       }
 
       else

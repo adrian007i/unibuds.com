@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+// STORES USER1 & USER2 OF THE CHAT
 const chat = new mongoose.Schema({
   user1: {
     type: Schema.Types.ObjectId,

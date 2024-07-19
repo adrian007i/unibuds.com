@@ -7,6 +7,7 @@ const generateToken = require('../utils/generateToken');
  * @access  Public 
  */
 module.exports.register = async (req, res) => {
+
     const { email, password, first_name, last_name } = req.body;
 
     try {
@@ -28,8 +29,10 @@ module.exports.register = async (req, res) => {
 module.exports.login = async (req, res) => {
     const { email, password } = req.body;
 
+    // find the user by email
     const user = await User.findOne({ email });
 
+    // ensure the password is correct
     if (user && (await user.matchPassword(password)))
         res.status(200).json({ token: generateToken(user) });
 
