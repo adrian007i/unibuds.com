@@ -1,4 +1,4 @@
-const Chat = require("../models/Chat");
+const Chat = require('../models/Chat');
 const mongoose = require('mongoose'); 
 
 /**
@@ -20,16 +20,19 @@ module.exports.get_chats = async (req, res) => {
  * @desc    Send a message from User A to User B
  * @access  Private 
  */
-module.exports.send_message = async (req, res) => { 
-    
+module.exports.send_message = async (req, res) => {   
     const { message } = req.body;
+    
 
     // deterime who will recieve the message
     const user_key = req.user.id === req.body.user1 ? req.body.user2 : req.body.user1;
-
+    
+    try {
     // use web socket to broadcast the message
     req.app.locals.clients[user_key].forEach((client) => client.send(message));
-
+    }catch { 
+        console.log('User Not Currently Online')
+    }
     try {
 
         const user1 = new mongoose.Types.ObjectId(req.body.user1);

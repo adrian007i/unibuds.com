@@ -10,7 +10,7 @@ const protectRaw = async (token, user) => {
 
       const user = await User.findById(decoded._id).select('-password');
       if (user) {
-        return { "authenticated": true, "user": user }
+        return { 'authenticated': true, 'user': user }
       }
 
       else

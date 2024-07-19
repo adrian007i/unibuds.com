@@ -34,9 +34,9 @@ module.exports.login = async (req, res) => {
         res.status(200).json({ token: generateToken(user) });
 
     else if (!user)
-        res.status(401).json({ message: "This email is not registered" });
+        res.status(401).json({ message: 'This email is not registered' });
     else
-        res.status(401).json({ message: "Invalid email or password" });
+        res.status(401).json({ message: 'Invalid email or password' });
 }
 
 /**

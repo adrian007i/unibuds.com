@@ -1,57 +1,57 @@
-const mongoose = require("mongoose");
-const { isEmail } = require("validator");
-const bcrypt = require("bcrypt");
+const mongoose = require('mongoose');
+const { isEmail } = require('validator');
+const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
   first_name: {
     type: String,
-    required: [true, "Required"],
-    minlength: [2, "Too Short"],
+    required: [true, 'Required'],
+    minlength: [2, 'Too Short'],
   },
   last_name: {
     type: String,
-    required: [true, "Required"],
-    minlength: [2, "Too Short"],
+    required: [true, 'Required'],
+    minlength: [2, 'Too Short'],
   },
   email: {
     type: String,
-    required: [true, "Required"],
-    unique: [true, "Email Exist"],
-    validate: [isEmail, "Invalid Email"],
+    required: [true, 'Required'],
+    unique: [true, 'Email Exist'],
+    validate: [isEmail, 'Invalid Email'],
   },
   password: {
     type: String,
-    required: [true, "Required"],
-    minlength: [6, "At least 6 characters"],
+    required: [true, 'Required'],
+    minlength: [6, 'At least 6 characters'],
   },
   bio: {
     type: String,
-    maxlength: [300, "Max Length Exceeded"],
-    default: ""
+    maxlength: [300, 'Max Length Exceeded'],
+    default: ''
   },
   profilePicture: {
     type: String,
-    default: ""
+    default: ''
   },
   university: {
     type: String,
-    default: ""
+    default: ''
   },
   major: {
     type: String,
-    default: ""
+    default: ''
   },
   dob: {
     type: Date,
   },
   gender: {
     type: String,
-    enum: ["male", "female", "other", ""],
-    default: "",
+    enum: ['male', 'female', 'other', ''],
+    default: '',
   },
   campus_location: {
     type: String,
-    default: ""
+    default: ''
   },
   email_verfied: {
     type: Boolean,
@@ -68,11 +68,11 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
 };
 
 // Hash the password before saving it to the database
-userSchema.pre("save", async function (next) {
+userSchema.pre('save', async function (next) {
   // Generate a salt
   const salt = await bcrypt.genSalt();
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model('User', userSchema);
