@@ -1,8 +1,27 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const Schema = mongoose.Schema; 
+
+const MAX_MESSAGES = 3;
+
+// SCHEMA DEFINATION FOR A MESSAGE
+const messageSchema = new mongoose.Schema({
+  sender: {
+    type: Number, 
+    required: [true, 'Required']
+  }, 
+  msg: {
+    type: String,
+    required: [true, 'Required'],
+    maxlength: [200, 'Max Length Exceeded'],
+  }, 
+  timestamp: {
+    type: Date,
+    default: Date.now
+  }
+});
 
 // STORES USER1 & USER2 OF THE CHAT
-const chat = new mongoose.Schema({
+const chatSchema = new Schema({
   user1: {
     type: Schema.Types.ObjectId,
     ref: 'User',
@@ -13,10 +32,22 @@ const chat = new mongoose.Schema({
     ref: 'User',
     required: [true, 'Required']
   },
+  msg_index: {
+    type: Number, 
+    default: 0
+  },
+  messages: {
+    type: [messageSchema]
+  },
   last_message: {
     type: Date, 
-    required: true 
-  },
+
+  }
+}); 
+
+chatSchema.pre('save', function(next) {
+  this.last_message = Date.now();
+  next();
 });
 
-module.exports = mongoose.model('Chat', chat);
+module.exports = mongoose.model('Chat', chatSchema);
