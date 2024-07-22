@@ -43,7 +43,7 @@ module.exports.get_messages = async (req, res) => {
  */
 module.exports.send_message = async (req, res) => {
 
-    // deterime who will recieve the message
+    // DETERMINE THE RECIEVER OF THE MESSAGE
     const user_key = req.user.id === req.body.user1 ? req.body.user2 : req.body.user1;
 
     try {
