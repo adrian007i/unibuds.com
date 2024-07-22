@@ -3,8 +3,9 @@ import {
   } from '../constants/chatsConstants';
   
   const initialState = {
-    chats: [],
-    isPending: false, 
+    chats: null,
+    loading_chats: false,
+    sending_msg: true 
   };
   
   export const chatsReducer = (state = initialState, action) => {
@@ -12,13 +13,13 @@ import {
       case GET_CHATS_PENDING:
         return {
           ...state,
-          isPending: true
+          loading_chats: true
         };
       case GET_CHATS_SUCCESS: 
         return {
           ...state,
           chats: action.payload,
-          isPending: false
+          loading_chats: false
         };
       default:
         return state;

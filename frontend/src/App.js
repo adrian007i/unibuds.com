@@ -27,16 +27,16 @@ loadAppData();
 
 axios.defaults.baseURL = "http://localhost:4000/";
 
-function App({ logoutUser, isAuthenticated }) {
+function App({ logoutUser, auth}) {
 
   return (
-    <div className="main">
+    <div className="main"> 
 
-      {(isAuthenticated &&
+      {(auth.isAuthenticated &&
         <div className='nav'>
           <div id="left">
             <NavLink to="/chats"  >
-              <img src={logo} width="50px" alt="" />
+              <img src={logo} width="50px" alt=""  /> {auth.token_data._id}
             </NavLink>
           </div>
           <div id='right'>
@@ -79,9 +79,8 @@ function App({ logoutUser, isAuthenticated }) {
 }
 
 const mapStateToProps = state => ({
-  errors: state.auth.errors,
-  user: state.auth.user,
-  isAuthenticated: state.auth.isAuthenticated,
+  errors: state.auth.errors, 
+  auth: state.auth,
   isPending: state.auth.isPending
 });
 
