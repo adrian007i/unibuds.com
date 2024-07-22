@@ -14,28 +14,29 @@ module.exports.get_chats = async (req, res) => {
     .find({
         $or: [{ user1: _id }, { user2: _id }]
     })
-    .select("_id , last_message")
-    .sort({'last_message': 'desc'})
+    .skip(0)
+    .limit(10)
+    .sort({'last_message': 'desc'}) 
     res.status(200).json({ 'success': true, 'chats': chats });
 }
 
-/**
- * @desc    Get all messages for a particular user
- * @access  Private 
- */
-module.exports.get_messages = async (req, res) => {
+// /**
+//  * @desc    Get all messages for a particular user
+//  * @access  Private 
+//  */
+// module.exports.get_messages = async (req, res) => {
 
      
-    const chat_id = new mongoose.Types.ObjectId(req.params.chat_id);
-    const messages = await Chat.findById(chat_id);
+//     const chat_id = new mongoose.Types.ObjectId(req.params.chat_id);
+//     const messages = await Chat.findById(chat_id);
      
-    // ensure user is able to access the chat
-    if(messages.user1._id.toString() === req.user._id || messages.user2._id.toString() === req.user._id)
-        res.status(200).json({ 'success': true, 'messages': messages });
-    else
-        res.status(400).json({'success': false, error: "Not authorized"});
+//     // ensure user is able to access the chat
+//     if(messages.user1._id.toString() === req.user._id || messages.user2._id.toString() === req.user._id)
+//         res.status(200).json({ 'success': true, 'messages': messages });
+//     else
+//         res.status(400).json({'success': false, error: "Not authorized"});
         
-}
+// }
 
 /**
  * @desc    Send a message from User A to User B
