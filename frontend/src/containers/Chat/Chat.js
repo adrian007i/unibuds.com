@@ -10,19 +10,21 @@ import { sendMessage } from '../../redux/actions/chatsActions';
 
 const Chat = ({ sendMessage, chats }) => {
 
-    const { chat_id } = useParams();
-
+    const { chat_id } = useParams(); 
     const [new_msg, set_new_msg] = useState("");
- 
+    
+    useEffect(()=>{
+        console.log("rendering took place")
+    },[chats])
 
     const onSubmit = (e) => {
         e.preventDefault();
 
         // document.getElementsByClassName("messages")[0].append(`<div className='msg recieve'>${new_msg}</div>`);
         sendMessage({
-            "message": new_msg,
-            "user1": "",
-            "user2": "",
+            "msg": new_msg,
+            "user1": chats[chat_id].user1,
+            "user2": chats[chat_id].user2,
             "chat_id": chat_id
         });
         set_new_msg("")
@@ -33,13 +35,13 @@ const Chat = ({ sendMessage, chats }) => {
             <div className="user">
                 <NavLink className='chat chat_small' to="/chat/1234567890">
                     <div className='propic'><img src={profilepic} alt="" /></div>
-                    <div className='name'>Alia {chat_id}</div>
+                    <div className='name'>Alia</div>
 
                 </NavLink>
             </div>
             <div className="messages">  
                 {chats[chat_id].messages.map((msg, index) =>
-                   <div key={index} className='msg recieve'>{msg.msg}eee</div>
+                   <div key={index} className='msg recieve'>{msg.msg}</div>
                 )}
             </div>
 

@@ -19,8 +19,7 @@ const Chats = ({ chats }) => {
                         <img src={search} alt="" /> Find Buddies
                     </Button>
 
-                    {chats.map((chat, index) => (
-                        // 66988e952ffb3d2cac66ea1c
+                    {chats.map((chat, index) => ( 
                         <NavLink key={index} className='chat' to={"/chat/" + index}>
                             <div className='propic'><img src={profilepic} alt="" /></div>
                             <div className='name'>Alia

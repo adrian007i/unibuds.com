@@ -1,5 +1,6 @@
 const Chat = require('../models/Chat');
 const mongoose = require('mongoose');
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 const MAX_MESSAGES = 3;
 
@@ -10,6 +11,7 @@ const MAX_MESSAGES = 3;
 module.exports.get_chats = async (req, res) => {
 
     const _id = new mongoose.Types.ObjectId(req.user._id);
+    // await sleep(1000)
     const chats = await Chat
     .find({
         $or: [{ user1: _id }, { user2: _id }]
@@ -18,6 +20,7 @@ module.exports.get_chats = async (req, res) => {
     .limit(10)
     .sort({'last_message': 'desc'}) 
     res.status(200).json({ 'success': true, 'chats': chats });
+
 }
 
 // /**

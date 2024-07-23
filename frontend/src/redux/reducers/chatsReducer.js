@@ -5,7 +5,6 @@ import {
 
 const initialState = {
   chats: null,
-  // new_messages: [], // {"chat_id" , "new_messages"}  we do not want to re-render all messages
   loading_chats: false,
   sending_msg: false
 };
@@ -26,15 +25,21 @@ export const chatsReducer = (state = initialState, action) => {
     case SET_SEND_MESSAGE_PENDING:
       return {
         ...state,
-        chats: action.payload,
         sending_msg: true
       };
-      case SET_SEND_MESSAGE_SUCCESS:
-        return {
-          ...state,
-          chats: action.payload,
-          sending_msg: true
-        };
+    case SET_SEND_MESSAGE_SUCCESS:
+      const updatedChats = [...state.chats];
+      
+      updatedChats[action.payload.chat_id] = {
+        ...updatedChats[action.payload.chat_id], 
+        messages: [...updatedChats[action.payload.chat_id].messages, {msg: action.payload.msg}]
+      };
+ 
+      return {
+        ...state,
+        chats: updatedChats,
+        sending_msg: false
+      };
 
     default:
       return state;
