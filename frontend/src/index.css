@@ -100,3 +100,7 @@ label {
   justify-content: space-between;
 
 }
+
+.logo{
+  filter: invert()
+}

@@ -9,8 +9,8 @@ import Register from './containers/Auth/Register';
 import Login from './containers/Auth/Login';
 import Home from './containers/PublicHome';
 import User from './containers/Auth/User';
-import Chats from './containers/Chat/Chats'; 
-import Chat from './containers/Chat/Chat'; 
+import Chats from './containers/Chat/Chats';
+import Chat from './containers/Chat/Chat';
 
 import PrivateRoute from './utils/PrivateRoute';
 import PublicRoute from './utils/PublicRoute';
@@ -18,8 +18,8 @@ import PublicRoute from './utils/PublicRoute';
 // ICONS
 import signOut from './icons/signout.png';
 import chat from './icons/chat.png';
-import profile from './icons/profile.png'; 
-import logo from './logo.svg'; 
+import profile from './icons/profile.png';
+import logo from './logo.png';
 
 
 import { logoutUser } from './redux/actions/authActions'
@@ -29,26 +29,26 @@ axios.defaults.baseURL = 'http://localhost:4000/';
 
 loadAppData();
 
-function App({ logoutUser, auth, chats}) {
+function App({ logoutUser, auth, chats }) {
 
- if(!chats && auth.isAuthenticated)
-  return <h1>laoding</h1>
+  if (!chats && auth.isAuthenticated)
+    return <h1>laoding</h1>
 
   return (
-    <div className='main'> 
+    <div className='main'>
 
       {(auth.isAuthenticated &&
         <div className='nav'>
           <div id='left'>
             <NavLink to='/chats'  >
-              <img src={logo} width='50px' alt=''  /> {auth.tokenData._id}
+              <img src={logo} width='50px' alt='' className='logo'/> {auth.tokenData._id}
             </NavLink>
           </div>
           <div id='right'>
-            <NavLink to='/chats' className={({isActive}) => (isActive ? 'active' : '')}>
+            <NavLink to='/chats' className={({ isActive }) => (isActive ? 'active' : '')}>
               <img src={chat} alt='chat' title='chat' />
-            </NavLink > 
-            <NavLink to='/profile' className={({isActive}) => (isActive ? 'active' : '')}>
+            </NavLink >
+            <NavLink to='/profile' className={({ isActive }) => (isActive ? 'active' : '')}>
               <img src={profile} alt='profile' title='profile' />
             </NavLink>
             <button onClick={logoutUser} style={{ background: 'transparent', border: 'none' }} >
@@ -58,10 +58,12 @@ function App({ logoutUser, auth, chats}) {
         </div>
       ) ||
         <Link to='/' style={{ color: 'inherit', textDecoration: 'none' }}>
-          <h1>
-            <img src={logo} width='100px' className='margin-auto' alt='' />
-            UniBuds { }
-          </h1>
+          <div className='text-center'>
+            <br />
+            <img src={logo} width='80px' className='logo'/>
+            <h1>UniBuds</h1>
+          </div>
+          <hr />
         </Link>
       }
 
@@ -73,7 +75,7 @@ function App({ logoutUser, auth, chats}) {
 
           <Route path='/chats' element={<PrivateRoute component={Chats} />} />
           <Route path='/chat/:chatId' element={<PrivateRoute component={Chat} />} />
-          <Route path='/profile' element={<PrivateRoute component={User} />} />  
+          <Route path='/profile' element={<PrivateRoute component={User} />} />
         </Routes>
       </div>
     </div>
@@ -81,8 +83,8 @@ function App({ logoutUser, auth, chats}) {
   );
 }
 
-const mapStateToProps = state => ({ 
-  auth: state.auth, 
+const mapStateToProps = state => ({
+  auth: state.auth,
   chats: state.chats.chats
 });
 

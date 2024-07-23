@@ -9,10 +9,8 @@ function Home() {
     return (
         <div id='home'>
 
-            <div className='top'>
+            <div className='top'>  
                 <p className='welcome'>Welcome to UniBuds, the only free platform to connect with students at your university</p>
-                
-                <hr/>
                 <p>
                     
                     ✅ &nbsp; No Dating! Just Friends <br />
