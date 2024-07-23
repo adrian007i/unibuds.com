@@ -1,5 +1,5 @@
 import logo from './logo.svg'; 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route, Link, NavLink } from "react-router-dom";
 import loadAppData from './utils/loadJwtUser';
 
@@ -23,11 +23,16 @@ import profile from './icons/profile.png';
 
 import { logoutUser } from './redux/actions/authActions'
 
-loadAppData();
+
 
 axios.defaults.baseURL = "http://localhost:4000/";
 
-function App({ logoutUser, auth}) {
+loadAppData();
+
+function App({ logoutUser, auth, chats}) {
+
+ if(!chats)
+  return <h1>laoding</h1>
 
   return (
     <div className="main"> 
@@ -81,7 +86,8 @@ function App({ logoutUser, auth}) {
 const mapStateToProps = state => ({
   errors: state.auth.errors, 
   auth: state.auth,
-  isPending: state.auth.isPending
+  isPending: state.auth.isPending,
+  chats: state.chats.chats
 });
 
 export default connect(mapStateToProps, { logoutUser })(App);

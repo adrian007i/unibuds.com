@@ -4,6 +4,7 @@ import store from '../redux/store';
 import { jwtDecode } from "jwt-decode";
 import setAuthToken from './setAuthToken';
 import { setCurrentUser } from '../redux/actions/authActions';
+import { getChats } from '../redux/actions/chatsActions';
 
 const loadAppData = () => {
 
@@ -14,9 +15,10 @@ const loadAppData = () => {
             const decoded = jwtDecode(jwt);
             store.dispatch(setCurrentUser(decoded));
             setAuthToken(jwt);
+            store.dispatch(getChats()); 
         }
         catch {
-            localStorage.removeItem("jwtToken");
+            // localStorage.removeItem("jwtToken");
         }
     }
 };
