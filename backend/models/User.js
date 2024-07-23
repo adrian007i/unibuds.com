@@ -4,12 +4,12 @@ const bcrypt = require('bcrypt');
 
 // USER PROFILE
 const userSchema = new mongoose.Schema({
-  first_name: {
+  firstName: {
     type: String,
     required: [true, 'Required'],
     minlength: [2, 'Too Short'],
   },
-  last_name: {
+  lastName: {
     type: String,
     required: [true, 'Required'],
     minlength: [2, 'Too Short'],
@@ -50,11 +50,11 @@ const userSchema = new mongoose.Schema({
     enum: ['male', 'female', 'other', ''],
     default: '',
   },
-  campus_location: {
+  campusLocation: {
     type: String,
     default: ''
   },
-  email_verfied: {
+  emailVerified: {
     type: Boolean,
     default: false
   },

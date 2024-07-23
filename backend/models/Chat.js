@@ -32,21 +32,21 @@ const chatSchema = new Schema({
     ref: 'User',
     required: [true, 'Required']
   },
-  msg_index: {
+  msgIndex: {
     type: Number, 
     default: 0
   },
   messages: {
     type: [messageSchema]
   },
-  last_message: {
+  lastMessage: {
     type: Date, 
 
   }
 }); 
 
 chatSchema.pre('save', function(next) {
-  this.last_message = Date.now();
+  this.lastMessage = Date.now();
   next();
 });
 
