@@ -31,25 +31,25 @@ mongoose.connect(process.env.mongoURI)
 
   //SETUP WEB SOCKET CONNECTION AT /wss
   .then(result => {
-    app.ws('/:user_key', async function (ws, req) {
+    app.ws('/:userKey', async function (ws, req) {
 
       // ensure user JWT and user ID is valid when authenticating 
-      const user_key = req.params.user_key;
+      const userKey = req.params.userKey;
       let protect = await protectRaw(req.header('Authorization'));
 
-      if (!protect.authenticated || user_key !== protect.user._id.toString()) {
+      if (!protect.authenticated || userKey !== protect.user._id.toString()) {
         ws.close();
         return;
       }
 
-      clients[user_key] = clients[user_key] || [];
+      clients[userKey] = clients[userKey] || [];
 
       // Add the new client to the clients list
-      clients[user_key].push(ws); 
+      clients[userKey].push(ws); 
 
       // Remove the client from the clients list when it disconnects
       ws.on('close', function () {
-        clients[user_key] = clients[user_key].filter((client) => client !== ws); 
+        clients[userKey] = clients[userKey].filter((client) => client !== ws); 
         console.log('client disconnected');
       });
 

@@ -18,7 +18,7 @@ module.exports.get_chats = async (req, res) => {
     })
     .skip(0)
     .limit(10)
-    .sort({'last_message': 'desc'}) 
+    .sort({'lastMessage': 'desc'}) 
     res.status(200).json({ 'success': true, 'chats': chats });
 
 }
@@ -37,7 +37,7 @@ module.exports.get_chats = async (req, res) => {
 //     if(messages.user1._id.toString() === req.user._id || messages.user2._id.toString() === req.user._id)
 //         res.status(200).json({ 'success': true, 'messages': messages });
 //     else
-//         res.status(400).json({'success': false, error: "Not authorized"});
+//         res.status(400).json({'success': false, error: 'Not authorized'});
         
 // }
 
@@ -48,28 +48,28 @@ module.exports.get_chats = async (req, res) => {
 module.exports.send_message = async (req, res) => {
 
     // DETERMINE THE RECIEVER OF THE MESSAGE
-    const user_key = req.user.id === req.body.user1 ? req.body.user2 : req.body.user1;
+    const userKey = req.user.id === req.body.user1 ? req.body.user2 : req.body.user1;
 
     try {
         // use web socket to broadcast the message
-        req.app.locals.clients[user_key].forEach((client) => client.send(req.body.message));
+        req.app.locals.clients[userKey].forEach((client) => client.send(req.body.message));
     } catch {
         // send and email here
         console.log('User Not Currently Online')
     }
 
     try {
-        let msg_index = 0;
+        let msgIndex = 0;
         let chat;  
 
-        if (req.body.chat_id) {
+        if (req.body.chatId) {
 
-            const chat_id = new mongoose.Types.ObjectId(req.body.chat_id);
+            const chatId = new mongoose.Types.ObjectId(req.body.chatId);
 
             // check an see if a chat convo exist between the 2 users , TODO use redis to speed up this
-            chat = await Chat.findById(chat_id);
-            msg_index = chat.msg_index;
-            if (!chat) throw ("Invalid Chat ID")
+            chat = await Chat.findById(chatId);
+            msgIndex = chat.msgIndex;
+            if (!chat) throw ('Invalid Chat ID')
 
         } else { 
             const user1 = new mongoose.Types.ObjectId(req.body.user1);
@@ -81,14 +81,14 @@ module.exports.send_message = async (req, res) => {
         const sender = (req.user._id === req.body.user1 ? 1 : 2);
 
         // STORE THE MESSAGE IN THE NEXT CIRCULAR ARRAY POSITION
-        chat.messages[msg_index] = {sender: sender , msg : req.body.message }
+        chat.messages[msgIndex] = {sender: sender , msg : req.body.message }
         
         // WE ARE LIMITING MESSAGES TO A FIXED AMOUNT DUE TO SERVER COST
         // HERE WE DETERMINE THE NEXT INDEX POSITION WHEN THE CIRCULAR ARRAY BECOMES FULL
-        if(msg_index === MAX_MESSAGES)
-            chat.msg_index = 0 
+        if(msgIndex === MAX_MESSAGES)
+            chat.msgIndex = 0 
         else
-            chat.msg_index++;
+            chat.msgIndex++;
         
         await chat.save();
 
