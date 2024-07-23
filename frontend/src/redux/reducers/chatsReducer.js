@@ -31,10 +31,10 @@ export const chatsReducer = (state = initialState, action) => {
     case SET_SEND_MESSAGE_SUCCESS:
       const updatedChats = [...state.chats];
 
-      updatedChats[action.payload.chat_id] = {
-        ...updatedChats[action.payload.chat_id],
-        messages: [...updatedChats[action.payload.chat_id].messages, { msg: action.payload.msg }]
-      };
+      updatedChats[action.payload.chatId] = {
+        ...updatedChats[action.payload.chatId],
+        messages: [...updatedChats[action.payload.chatId].messages, { msg: action.payload.msg }]
+      }; 
 
       return {
         ...state,

@@ -8,13 +8,13 @@ import { getUserData, setUserData } from '../../redux/actions/userActions';
 // PRO PIC
 import profilepic from '../../icons/profile.png';
 
-const User = ({ getUserData, setUserData, user, user_id, errors, get_user_pending, set_user_pending }) => {
+const User = ({ getUserData, setUserData, userId, user,  errors , setUserPending, getUserPending}) => {
 
     // local state for form values
     const [formData, setFormData] = useState(null);
 
     useEffect(() => {   
-        !user ?   getUserData(user_id) : setFormData(user); 
+        !user ?   getUserData(userId) : setFormData(user); 
     }, [user]);
 
     // tracks change of input on form
@@ -31,7 +31,7 @@ const User = ({ getUserData, setUserData, user, user_id, errors, get_user_pendin
     return (
 
         <>
-            {(!get_user_pending && user &&
+            {(!getUserPending && user &&
 
                 <div>
                     <Form onSubmit={onSubmit}>
@@ -51,17 +51,17 @@ const User = ({ getUserData, setUserData, user, user_id, errors, get_user_pendin
                         </Row>
                         <Row>
                             <Col>
-                                <div className={errors.first_name ? 'error' : ''} >
+                                <div className={errors.firstName ? 'error' : ''} >
                                     <Label>First Name</Label>
-                                    <Input type="text" name="first_name" value={!formData || formData.first_name} onChange={onChange} />
-                                    <span>{errors.first_name} &nbsp; </span>
+                                    <Input type="text" name="firstName" value={!formData || formData.firstName} onChange={onChange} />
+                                    <span>{errors.firstName} &nbsp; </span>
                                 </div>
                             </Col>
                             <Col>
-                                <div className={errors.last_name ? 'error' : ''} >
+                                <div className={errors.lastName ? 'error' : ''} >
                                     <Label>Last Name</Label>
-                                    <Input type="text" name="last_name" value={!formData || formData.last_name} onChange={onChange} />
-                                    <span className='error'>{errors.last_name} &nbsp;</span>
+                                    <Input type="text" name="last_name" value={!formData || formData.lastName} onChange={onChange} />
+                                    <span className='error'>{errors.lastName} &nbsp;</span>
                                 </div>
                             </Col>
                         </Row>
@@ -97,13 +97,13 @@ const User = ({ getUserData, setUserData, user, user_id, errors, get_user_pendin
                                 </div>
                             </Col>
                             <Col>
-                                <div className={errors.campus_location ? 'error' : ''} >
+                                <div className={errors.campusLocation ? 'error' : ''} >
                                     <Label>Campus Location</Label>
-                                    <Form.Select value={!formData || formData.campus_location} name="campus_location" onChange={onChange} >
+                                    <Form.Select value={!formData || formData.campusLocation} name="campusLocation" onChange={onChange} >
                                         <option value="">Select</option>
                                         <option value="ccc">I gotta add these</option>
                                     </Form.Select>
-                                    <span className='error'>{errors.campus_location} &nbsp;</span>
+                                    <span className='error'>{errors.campusLocation} &nbsp;</span>
                                 </div>
 
                             </Col>
@@ -126,9 +126,9 @@ const User = ({ getUserData, setUserData, user, user_id, errors, get_user_pendin
                             </div>
                         </Row> */}
 
-                        <Button variant="primary" type="submit" disabled={set_user_pending}>
-                            {set_user_pending && "Saving ..."}
-                            {!set_user_pending && "Update"}
+                        <Button variant="primary" type="submit" disabled={setUserPending}>
+                            {setUserPending && "Saving ..."}
+                            {!setUserPending && "Update"}
                         </Button>
                     </Form>
                 </div>
@@ -144,7 +144,10 @@ const User = ({ getUserData, setUserData, user, user_id, errors, get_user_pendin
 
 
 const mapStateToProps = state => ({
+    userId: state.auth._id,
     user: state.user.data, 
+    setUserPending: state.user.setUserPending,
+    getUserPending: state.user.getUserPending,
     errors: state.user.errors,
 });
 

@@ -18,8 +18,8 @@ const Chat = ({ sendMessage, chats }) => {
     
     // useEffect(()=>{
     //     console.log('rendering took place for '+ chat_id)
-    // },[chats])
-
+    // },[chats]) 
+    
     const onSubmit = (e) => {
         e.preventDefault();
         // TODO: fix so messages dont re-render the entire dataset
