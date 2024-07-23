@@ -24,6 +24,9 @@ export const registerUser = (userData) => async (dispatch) => {
         if (isEmpty(userData.password)) localErrors.password = 'Required';
         else if (minLength(userData.password, 6)) localErrors.password = 'Too Short';
 
+        if(userData.profilePicture === '/proPicDefault.jpg')
+            localErrors.profilePicture = 'Picture Required';
+
         // check if client side validation failed
         if (Object.values(localErrors).length > 0) {
 

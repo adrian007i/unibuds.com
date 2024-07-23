@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Button, Form, FormControl as Input, FormLabel as Label, Row, Col } from 'react-bootstrap';
-import { Link } from 'react-router-dom'; 
+import { Link } from 'react-router-dom';
 
 // CUSTOM
 import { registerUser } from '../../redux/actions/authActions';
+import camera from '../../icons/camera.png';
 
 const Register = ({ registerUser, errors, isPending }) => {
 
@@ -15,6 +16,7 @@ const Register = ({ registerUser, errors, isPending }) => {
         lastName: '',
         email: '',
         password: '',
+        profilePicture: '/proPicDefault.jpg'
     });
 
     // tracks change of input on form
@@ -22,16 +24,36 @@ const Register = ({ registerUser, errors, isPending }) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const handleChangeImage = e => {
+        if (e.target.files.length === 0)
+            setFormData({ ...formData, profilePicture: '/proPicDefault.jpg' });
+        else
+            setFormData({ ...formData, profilePicture: URL.createObjectURL(e.target.files[0]) });
+    }
+
+
     // trigger for when the user submits the form
     const onSubmit = (e) => {
         e.preventDefault();
-        registerUser(formData);
-
+        registerUser(formData); 
     };
 
     return (
         <>
             <Form onSubmit={onSubmit}>
+
+                <div className={errors.profilePicture ? 'text-center error' : 'text-center'} >
+                    <div className='text-center'>
+                        <label className='profilePicPreview' htmlFor='proPicture' style={{ backgroundImage: `url(${formData.profilePicture})` }} >
+                            <Input type='file' name='profilePicture' id='proPicture' onChange={handleChangeImage} />
+                            <img src={camera} />
+                        </label>
+                    </div>
+                    <span className='error'>{errors.profilePicture}</span>
+                </div>
+                <br />
+
+
                 <Row>
                     <Col>
                         <div className={errors.firstName ? 'error' : ''} >

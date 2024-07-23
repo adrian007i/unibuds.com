@@ -41,7 +41,7 @@ function App({ logoutUser, auth, chats }) {
         <div className='nav'>
           <div id='left'>
             <NavLink to='/chats'  >
-              <img src={logo} width='50px' alt='' className='logo'/> {auth.tokenData._id}
+              <img src={logo} height='30px' alt='' className='logo'/>
             </NavLink>
           </div>
           <div id='right'>
@@ -58,10 +58,10 @@ function App({ logoutUser, auth, chats }) {
         </div>
       ) ||
         <Link to='/' style={{ color: 'inherit', textDecoration: 'none' }}>
-          <div className='text-center'>
+          <div>
             <br />
-            <img src={logo} width='80px' className='logo'/>
-            <h1>UniBuds</h1>
+            <img src={logo} width='50px' className='logo'/>
+            <h1 className='d-inline'>UniBuds</h1>
           </div>
           <hr />
         </Link>

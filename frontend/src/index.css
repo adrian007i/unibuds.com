@@ -104,3 +104,33 @@ label {
 .logo{
   filter: invert()
 }
+
+
+.profilePicPreview{
+  height: 150px;
+  width: 150px; 
+  border-radius: 50%;
+  overflow: hidden; 
+  cursor:pointer;
+  background-size: contain;
+  position: relative;
+}
+
+.profilePicPreview input{
+  display: none; 
+}
+ 
+.profilePicPreview img{ 
+  width: 35px;
+  position: absolute;
+  bottom: 10px; 
+  left: 60px;
+  background-color: #555;
+  padding: 5px;
+  border: 1px solid #555;
+  border-radius: 3px;
+}
+
+.error .profilePicPreview{ 
+  border: 3px solid red; 
+}
