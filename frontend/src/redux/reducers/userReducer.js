@@ -8,39 +8,41 @@ import {
 
 const initialState = {
   data: null,
-  get_user_pending: false,
-  set_user_pending: false,
+  getUserPending: false,
+  setUserPending: false,
   errors: {}
 };
 
+
+// this reducer is used to store user info when they are logged in
 export const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_USER_PENDING:
       return {
         ...state,
-        get_user_pending: true
+        getUserPending: true
       };
     case GET_USER_SUCCESS:
       return {
         ...state,
         data: action.payload,
-        get_user_pending: false
+        getUserPending: false
       };
     case SET_USER_FAIL:
       return {
         ...state,
         errors: action.payload,
-        set_user_pending: false
+        setUserPending: false
       };
     case SET_USER_PENDING:
       return {
         ...state,
-        set_user_pending: true
+        setUserPending: true
       };
     case SET_USER_SUCCESS:
       return {
         ...state,
-        set_user_pending: false,
+        setUserPending: false,
         data: action.payload
       };
     default:

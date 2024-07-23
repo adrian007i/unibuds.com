@@ -1,7 +1,7 @@
 import { SET_USER, REGISTER_FAIL, REGISTER_PENDING, LOGIN_PENDING, LOGIN_FAIL, LOGOUT_USER } from '../constants/authConstants';
 
 const initialState = {
-  token_data: null,
+  tokenData: null,
   isAuthenticated: false,
   errors: {},
   isPending: false
@@ -12,7 +12,7 @@ export const authReducer = (state = initialState, action) => {
     case REGISTER_PENDING:
       return {
         ...state,
-        token_data: null,
+        tokenData: null,
         isAuthenticated: false,
         errors: {},
         isPending: true
@@ -20,7 +20,7 @@ export const authReducer = (state = initialState, action) => {
     case REGISTER_FAIL:
       return {
         ...state,
-        token_data: null,
+        tokenData: null,
         isAuthenticated: false,
         errors: action.payload,
         isPending: false
@@ -29,7 +29,7 @@ export const authReducer = (state = initialState, action) => {
     case SET_USER:
       return {
         ...state,
-        token_data: action.payload,
+        tokenData: action.payload,
         isAuthenticated: true,
         errors: {},
         isPending: false
@@ -38,7 +38,7 @@ export const authReducer = (state = initialState, action) => {
     case LOGIN_PENDING:
       return {
         ...state,
-        token_data: {},
+        tokenData: {},
         isAuthenticated: false,
         errors: {},
         isPending: true
@@ -46,7 +46,7 @@ export const authReducer = (state = initialState, action) => {
     case LOGIN_FAIL:
       return {
         ...state,
-        token_data: null,
+        tokenData: null,
         isAuthenticated: false,
         errors: action.payload,
         isPending: false
@@ -54,7 +54,7 @@ export const authReducer = (state = initialState, action) => {
     case LOGOUT_USER:
       return {
         ...state,
-        token_data: null,
+        tokenData: null,
         isAuthenticated: false,
         errors: {},
         isPending: false

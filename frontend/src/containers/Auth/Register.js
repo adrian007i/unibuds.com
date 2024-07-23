@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { registerUser } from '../../redux/actions/authActions';
 import { Button, Form, FormControl as Input, FormLabel as Label, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom'; 
+
+// CUSTOM
+import { registerUser } from '../../redux/actions/authActions';
 
 const Register = ({ registerUser, errors, isPending }) => {
 
 
     // local state for form values
     const [formData, setFormData] = useState({
-        first_name: '',
-        last_name: '',
+        firstName: '',
+        lastName: '',
         email: '',
-        password: ''
+        password: '',
     });
 
     // tracks change of input on form
@@ -32,17 +34,17 @@ const Register = ({ registerUser, errors, isPending }) => {
             <Form onSubmit={onSubmit}>
                 <Row>
                     <Col>
-                        <div className={errors.first_name ? 'error' : ''} >
+                        <div className={errors.firstName ? 'error' : ''} >
                             <Label>First Name</Label>
-                            <Input type='text' name='first_name' value={formData.first_name} onChange={onChange} />
-                            <span>{errors.first_name} &nbsp; </span>
+                            <Input type='text' name='firstName' value={formData.firstName} onChange={onChange} />
+                            <span>{errors.firstName} &nbsp; </span>
                         </div>
                     </Col>
                     <Col>
-                        <div className={errors.last_name ? 'error' : ''} >
+                        <div className={errors.lastName ? 'error' : ''} >
                             <Label>Last Name</Label>
-                            <Input type='text' name='last_name' value={formData.last_name} onChange={onChange} />
-                            <span className='error'>{errors.last_name} &nbsp;</span>
+                            <Input type='text' name='lastName' value={formData.lastName} onChange={onChange} />
+                            <span className='error'>{errors.lastName} &nbsp;</span>
                         </div>
                     </Col>
                 </Row>

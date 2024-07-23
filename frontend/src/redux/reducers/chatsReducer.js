@@ -5,40 +5,41 @@ import {
 
 const initialState = {
   chats: null,
-  loading_chats: false,
-  sending_msg: false
+  loadingChats: false,
+  sendingMsg: false
 };
 
+// STORES ALL THE CHAT INFO FOR A PARTICULAR USER
 export const chatsReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_CHATS_PENDING:
       return {
         ...state,
-        loading_chats: true
+        loadingChats: true
       };
     case GET_CHATS_SUCCESS:
       return {
         ...state,
         chats: action.payload,
-        loading_chats: false
+        loadingChats: false
       }
     case SET_SEND_MESSAGE_PENDING:
       return {
         ...state,
-        sending_msg: true
+        sendingMsg: true
       };
     case SET_SEND_MESSAGE_SUCCESS:
       const updatedChats = [...state.chats];
-      
+
       updatedChats[action.payload.chat_id] = {
-        ...updatedChats[action.payload.chat_id], 
-        messages: [...updatedChats[action.payload.chat_id].messages, {msg: action.payload.msg}]
+        ...updatedChats[action.payload.chat_id],
+        messages: [...updatedChats[action.payload.chat_id].messages, { msg: action.payload.msg }]
       };
- 
+
       return {
         ...state,
         chats: updatedChats,
-        sending_msg: false
+        sendingMsg: false
       };
 
     default:

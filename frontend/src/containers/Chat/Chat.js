@@ -1,53 +1,56 @@
-import React, { useState, useEffect, useSearchParams } from 'react';
+import React, { useState, memo } from 'react';
 import { connect } from 'react-redux';
-import { Button, Form, FormControl as Input, FormLabel as Label, Row, Col } from 'react-bootstrap';
-import { Link, NavLink, useParams } from "react-router-dom";
-import "./chats.css"
-import "./chat.css";
-import profilepic from '../../icons/Alia.jpg';
-import formatDate from '../../utils/formatDate';
+import { Button,  FormControl as Input} from 'react-bootstrap';
+import { NavLink, useParams } from 'react-router-dom';
+
+// CUSTOM
+// import formatDate from '../../utils/formatDate';
 import { sendMessage } from '../../redux/actions/chatsActions';
+
+import './chat.css';
+import profilepic from '../../icons/Alia.jpg';
+
 
 const Chat = ({ sendMessage, chats }) => {
 
-    const { chat_id } = useParams(); 
-    const [new_msg, set_new_msg] = useState("");
+    const { chatId} = useParams(); 
+    const [newMsg, setNewMsg] = useState('');
     
-    useEffect(()=>{
-        console.log("rendering took place")
-    },[chats])
+    // useEffect(()=>{
+    //     console.log('rendering took place for '+ chat_id)
+    // },[chats])
 
     const onSubmit = (e) => {
         e.preventDefault();
-
-        // document.getElementsByClassName("messages")[0].append(`<div className='msg recieve'>${new_msg}</div>`);
+        // TODO: fix so messages dont re-render the entire dataset
+        // document.getElementsByClassName('messages')[0].append(`<div className='msg recieve'>${new_msg}</div>`);
         sendMessage({
-            "msg": new_msg,
-            "user1": chats[chat_id].user1,
-            "user2": chats[chat_id].user2,
-            "chat_id": chat_id
+            'msg': newMsg,
+            'user1': chats[chatId].user1,
+            'user2': chats[chatId].user2,
+            'chatId': chatId
         });
-        set_new_msg("")
+        setNewMsg('')
     };
 
     return (
         <>
-            <div className="user">
-                <NavLink className='chat chat_small' to="/chat/1234567890">
-                    <div className='propic'><img src={profilepic} alt="" /></div>
+            <div className='user'>
+                <NavLink className='chat chat_small' to='/chat/1234567890'>
+                    <div className='propic'><img src={profilepic} alt='' /></div>
                     <div className='name'>Alia</div>
 
                 </NavLink>
             </div>
-            <div className="messages">  
-                {chats[chat_id].messages.map((msg, index) =>
+            <div className='messages'>  
+                {chats[chatId].messages.map((msg, index) =>
                    <div key={index} className='msg recieve'>{msg.msg}</div>
                 )}
             </div>
 
-            <div className="msg_box">
-                <div className="msg_box_flex">
-                    <Input className='input_msg' onChange={e => { set_new_msg(e.target.value) }} value={new_msg} placeholder='Enter Message Here'></Input>
+            <div className='msg_box'>
+                <div className='msg_box_flex'>
+                    <Input className='input_msg' onChange={e => { setNewMsg(e.target.value) }} value={newMsg} placeholder='Enter Message Here'></Input>
                     <Button className='send' type='button' onClick={onSubmit}>Send</Button>
                 </div>
             </div>
@@ -66,4 +69,4 @@ const mapStateToProps = state => ({
 
 });
 
-export default connect(mapStateToProps, { sendMessage })(Chat);
+export default connect(mapStateToProps, { sendMessage })(memo(Chat));

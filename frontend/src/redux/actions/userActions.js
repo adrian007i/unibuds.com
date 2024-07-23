@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { isEmpty, minLength, isValidEmail } from '../../utils/validation';
 
 import {
     GET_USER_SUCCESS,
@@ -21,42 +20,9 @@ export const getUserData = (user_id) => async (dispatch) => {
 export const setUserData = (userData) => async (dispatch) => {
     try {
         dispatch({ type: SET_USER_PENDING });
-
-
-        const response = await axios.post('/set_user', userData);
-        console.log(response);
-        dispatch({ type: SET_USER_SUCCESS, payload : userData });
-
-        // client side form validation
-        // const localErrors = {}
-        // if (isEmpty(userData.first_name)) localErrors.first_name = 'Required';
-        // else if (minLength(userData.first_name, 2)) localErrors.first_name = 'Too Short';
-
-        // if (isEmpty(userData.last_name)) localErrors.last_name = 'Required';
-        // else if (minLength(userData.last_name, 2)) localErrors.last_name = 'Too Short';
-
-        // if (isEmpty(userData.email)) localErrors.email = 'Required';
-        // else if (!isValidEmail(userData.email)) localErrors.email = 'Invalid Email';
-
-        // if (isEmpty(userData.password)) localErrors.password = 'Required';
-        // else if (minLength(userData.password, 6)) localErrors.password = 'Too Short';
-
-        // // check if client side validation failed
-        // if (Object.values(localErrors).length > 0) {
-
-        //     dispatch({
-        //         type: REGISTER_FAIL,
-        //         payload: localErrors
-        //     });
-        // }
-
-        // // client side validation passed
-        // else {
-        //     const response = await axios.post('/signup', userData);
-
-        //     localStorage.setItem("jwtToken", response.data.token);
-        //     loadAppData(response.data.token)
-        // }
+        // TODO need to do user validation here
+        await axios.post('/set_user', userData);
+        dispatch({ type: SET_USER_SUCCESS, payload : userData }); 
 
         // server request failed
     } catch (errors) { 

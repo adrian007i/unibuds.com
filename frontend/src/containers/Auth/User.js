@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { getUserData, setUserData } from '../../redux/actions/userActions';
-import { Text, Button, Form, FormControl as Input, FormLabel as Label, Row, Col } from 'react-bootstrap';
-import profilepic from '../../icons/profile.png';
-const User = ({ getUserData, setUserData, user, user_id, errors, get_user_pending, set_user_pending }) => {
+import { Button, Form, FormControl as Input, FormLabel as Label, Row, Col } from 'react-bootstrap';
 
+// CUSTOM
+import { getUserData, setUserData } from '../../redux/actions/userActions';
+
+// PRO PIC
+import profilepic from '../../icons/profile.png';
+
+const User = ({ getUserData, setUserData, user, user_id, errors, get_user_pending, set_user_pending }) => {
 
     // local state for form values
     const [formData, setFormData] = useState(null);
@@ -140,11 +144,8 @@ const User = ({ getUserData, setUserData, user, user_id, errors, get_user_pendin
 
 
 const mapStateToProps = state => ({
-    user: state.user.data,
-    user_id: state.auth.token_data._id,
+    user: state.user.data, 
     errors: state.user.errors,
-    get_user_pending: state.user.get_user_pending,
-    set_user_pending: state.user.set_user_pending
 });
 
 export default connect(mapStateToProps, { getUserData, setUserData })(User);

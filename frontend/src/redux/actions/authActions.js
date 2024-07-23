@@ -12,11 +12,11 @@ export const registerUser = (userData) => async (dispatch) => {
 
         // client side form validation
         const localErrors = {}
-        if (isEmpty(userData.first_name)) localErrors.first_name = 'Required';
-        else if (minLength(userData.first_name, 2)) localErrors.first_name = 'Too Short';
+        if (isEmpty(userData.firstName)) localErrors.firstName = 'Required';
+        else if (minLength(userData.firstName, 2)) localErrors.firstName = 'Too Short';
 
-        if (isEmpty(userData.last_name)) localErrors.last_name = 'Required';
-        else if (minLength(userData.last_name, 2)) localErrors.last_name = 'Too Short';
+        if (isEmpty(userData.lastName)) localErrors.lastName = 'Required';
+        else if (minLength(userData.lastName, 2)) localErrors.lastName = 'Too Short';
 
         if (isEmpty(userData.email)) localErrors.email = 'Required';
         else if (!isValidEmail(userData.email)) localErrors.email = 'Invalid Email';
@@ -37,7 +37,7 @@ export const registerUser = (userData) => async (dispatch) => {
         else {
             const response = await axios.post('/register', userData);
 
-            localStorage.setItem("jwtToken", response.data.token);
+            localStorage.setItem('jwtToken', response.data.token);
             loadAppData(response.data.token)
         }
 
@@ -77,7 +77,7 @@ export const loginUser = (userData) => async (dispatch) => {
         // client side validation passed
         else {
             const response = await axios.post('/login', userData);
-            localStorage.setItem("jwtToken", response.data.token);
+            localStorage.setItem('jwtToken', response.data.token);
             loadAppData(response.data.token);
         }
 
@@ -99,7 +99,7 @@ export const setCurrentUser = (decoded) => async (dispatch) => {
 export const logoutUser = () => dispatch => {
 
     // remove token from localstorage
-    localStorage.removeItem("jwtToken");
+    localStorage.removeItem('jwtToken');
 
     // this will delete the authtoken from future requests
     setAuthToken(false);

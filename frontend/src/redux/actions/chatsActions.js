@@ -18,8 +18,6 @@ export const getChats = () => async (dispatch) => {
 export const sendMessage = (payload) => async (dispatch) => {  
     dispatch({ type: SET_SEND_MESSAGE_PENDING }); 
     // const response = await axios.post('/send_message/', msg); 
- 
-
     dispatch({ type: SET_SEND_MESSAGE_SUCCESS, payload : payload});
 };
 

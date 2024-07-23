@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 
 const PrivateRoute = ({ component: Component, isAuthenticated, user}) => { 
-    return isAuthenticated ? <Component user={user} /> : <Navigate to="/" />;
+    return isAuthenticated ? <Component user={user} /> : <Navigate to='/' />;
 };
 
 // Map state to props

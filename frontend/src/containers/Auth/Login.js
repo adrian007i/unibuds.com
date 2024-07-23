@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { loginUser } from '../../redux/actions/authActions';
 import { Button, Form, FormControl as Input, FormLabel as Label } from 'react-bootstrap';
-import { Link } from "react-router-dom";  
+import { Link } from 'react-router-dom';  
+
+// CUSTOM
+import { loginUser } from '../../redux/actions/authActions';
 
 const Login = ({ loginUser, errors, isPending }) => {
 
@@ -29,26 +31,26 @@ const Login = ({ loginUser, errors, isPending }) => {
             <Form onSubmit={onSubmit}>
                 <div className={errors.email ? 'error' : ''} >
                     <Label>Email</Label>
-                    <Input type="text" name="email" value={formData.email} onChange={onChange} />
+                    <Input type='text' name='email' value={formData.email} onChange={onChange} />
                     <span className='error'>{errors.email} &nbsp;</span>
                 </div>
 
                 <div className={errors.password ? 'error' : ''} >
                     <Label>Password</Label>
-                    <Input type="password" name="password" value={formData.password} onChange={onChange} />
+                    <Input type='password' name='password' value={formData.password} onChange={onChange} />
                     <span className='error'>{errors.password} &nbsp;</span>
                 </div>
 
-                <Button variant="primary" type="submit" disabled={isPending}>
-                    {isPending && "Saving ..."}
-                    {!isPending && "Login"}
+                <Button variant='primary' type='submit' disabled={isPending}>
+                    {isPending && 'Saving ...'}
+                    {!isPending && 'Login'}
                 </Button>
                 <div className={errors.message ? 'error' : ''} >
                     <span className='error'>{errors.message} &nbsp;</span>
                 </div>
             </Form>
             <br />
-            <p>Don&#39;t have an account? <Link to="/register"> Sign up</Link></p>
+            <p>Don&#39;t have an account? <Link to='/register'> Sign up</Link></p>
 
         </>
     );
