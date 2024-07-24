@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Register from './containers/Auth/Register';
 import Login from './containers/Auth/Login';
 import Home from './containers/PublicHome';
-import User from './containers/Auth/User';
+import User from './containers/User/User';
 import Chats from './containers/Chat/Chats';
 import Chat from './containers/Chat/Chat';
 
@@ -69,9 +69,10 @@ function App() {
           <Route path='/register' element={<PublicRoute component={Register} />} />
           <Route path='/login' element={<PublicRoute component={Login} />} />
 
+          <Route path='/profile' element={<PrivateRoute component={User} />} /> 
           {/* <Route path='/chats' element={<PrivateRoute component={Chats} />} />
-          <Route path='/chat/:chatId' element={<PrivateRoute component={Chat} />} />
-          <Route path='/profile' element={<PrivateRoute component={User} />} /> */}
+          <Route path='/chat/:chatId' element={<PrivateRoute component={Chat} />} />*/}
+          
         </Routes>
       </div>
     </div>

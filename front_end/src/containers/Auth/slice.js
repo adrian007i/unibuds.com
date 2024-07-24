@@ -1,9 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-
-
-import Validate from '../../utils/validation';
-import setAuthToken from '../../utils/setAuthToken';
+ 
+import Validate from '../../utils/validation'; 
 import { loadAppData, destoryAppData } from '../../utils/loadJwtUser';
 
 const initialState = {

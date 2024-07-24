@@ -1,21 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { Button, Form, FormControl as Input, FormLabel as Label, Row, Col } from 'react-bootstrap';
-
-// CUSTOM
-import { getUserData, setUserData } from '../../redux/actions/userActions';
+import { getUserData, setUserData } from './slice';
 
 // PRO PIC
 import profilepic from '../../icons/profile.png';
 
-const User = ({ getUserData, setUserData, userId, user,  errors , setUserPending, getUserPending}) => {
+const User = () => {
+
+    const dispatch = useDispatch();
+    const { data, errors, setUserPending, getUserPending } = useSelector(state => state.user);
 
     // local state for form values
-    const [formData, setFormData] = useState(null);
+    const [formData, setFormData] = useState({
+        bio: '',
+        firstName: '',
+        lastName: '',
+        dob: '',
+        gender: '',
+        major: '',
+        campusLocation: '',
+        email: ''
+    });
 
-    useEffect(() => {   
-        !user ?   getUserData(userId) : setFormData(user); 
-    }, [user]);
+    useEffect(() => {
+        !data ? dispatch(getUserData()) : setFormData(data);
+    }, [data]);
 
     // tracks change of input on form
     const onChange = (e) => {
@@ -25,13 +35,13 @@ const User = ({ getUserData, setUserData, userId, user,  errors , setUserPending
     // trigger for when the user submits the form
     const onSubmit = (e) => {
         e.preventDefault();
-        setUserData(formData)
+        dispatch(setUserData(formData));
     };
 
     return (
 
         <>
-            {(!getUserPending && user &&
+            {(!getUserPending && data &&
 
                 <div>
                     <Form onSubmit={onSubmit}>
@@ -70,7 +80,7 @@ const User = ({ getUserData, setUserData, userId, user,  errors , setUserPending
                             <Col>
                                 <div className={errors.age ? 'error' : ''} >
                                     <Label>DOB</Label>
-                                    <Input type="date" name="dob" value={formData && formData.dob ? (formData.dob).slice(0,10) : ""}  onChange={onChange} />
+                                    <Input type="date" name="dob" value={formData && formData.dob ? (formData.dob).slice(0, 10) : ""} onChange={onChange} />
                                     <span>{errors.age} &nbsp; </span>
                                 </div>
                             </Col>
@@ -119,12 +129,12 @@ const User = ({ getUserData, setUserData, userId, user,  errors , setUserPending
                         </Row>
 
                         {/* <Row>
-                            <div className={errors.password ? 'error' : ''} >
-                                <Label>Password</Label>
-                                <Input type="password" name="password" value={formData.password} onChange={onChange} />
-                                <span className='error'>{errors.password} &nbsp;</span>
-                            </div>
-                        </Row> */}
+                        <div className={errors.password ? 'error' : ''} >
+                            <Label>Password</Label>
+                            <Input type="password" name="password" value={formData.password} onChange={onChange} />
+                            <span className='error'>{errors.password} &nbsp;</span>
+                        </div>
+                    </Row> */}
 
                         <Button variant="primary" type="submit" disabled={setUserPending}>
                             {setUserPending && "Saving ..."}
@@ -143,12 +153,6 @@ const User = ({ getUserData, setUserData, userId, user,  errors , setUserPending
 
 
 
-const mapStateToProps = state => ({
-    userId: state.auth._id,
-    user: state.user.data, 
-    setUserPending: state.user.setUserPending,
-    getUserPending: state.user.getUserPending,
-    errors: state.user.errors,
-});
+    ;
 
-export default connect(mapStateToProps, { getUserData, setUserData })(User);
+export default User;
