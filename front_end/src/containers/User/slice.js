@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-import Validate from '../../utils/validation';
+import axios from 'axios'; 
 
 const initialState = {
   data: null,
@@ -24,7 +23,8 @@ export const getUserData = createAsyncThunk('auth/getUserData', async (user, thu
 // Set User profile data
 export const setUserData = createAsyncThunk('auth/setUserData', async (user, thunkAPI) => {
   try {
-    const response = await axios.post('/set_user', user);
+    
+    await axios.post('/set_user', user);
     thunkAPI.fulfillWithValue(user);
     return user;
 
