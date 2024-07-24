@@ -1,27 +1,27 @@
-import React from 'react';
-import { connect } from 'react-redux'; 
+import React, { useEffect } from 'react';
+import { connect, useSelector } from 'react-redux'; 
 import { Button } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 
 // CUSTOM
-import { getChats } from '../../redux/actions/chatsActions';
 import formatDate from '../../utils/formatDate';
 
 import profilepic from '../../icons/Alia.jpg';
 import search from '../../icons/search.png';
-import './chats.css'
+import './chats.css';
 
-const Chats = ({ chats }) => {
+const Chats = () => {
 
+    const {data} = useSelector(state => state.chat); 
+    
     return (
         <>
             {
                 <div>
                     <Button className='find_bud_btn'>
                         <img src={search} alt='' /> Find Buddies
-                    </Button>
-
-                    {chats.map((chat, index) => ( 
+                    </Button> 
+                    {data && data.map((chat, index) => (  
                         <NavLink key={index} className='chat' to={'/chat/' + index}>
                             <div className='propic'><img src={profilepic} alt='' /></div>
                             <div className='name'>Alia
@@ -35,14 +35,6 @@ const Chats = ({ chats }) => {
             }
         </>
     );
-}
+} 
 
-
-
-
-
-const mapStateToProps = state => ({
-    chats: state.chats.chats
-});
-
-export default connect(mapStateToProps, { getChats })(Chats);
+export default Chats

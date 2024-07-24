@@ -10,11 +10,12 @@ import App from './App';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import { setCurrentUser } from './containers/Auth/slice';
-
+import { getChats } from './containers/Chat/slice';
 
 const Main = () => {
   const dispatch = useDispatch();
-  dispatch(setCurrentUser(localStorage.getItem("jwtToken")))
+  dispatch(setCurrentUser(localStorage.getItem("jwtToken")));
+  dispatch(getChats())
   return <App />
 }
 
