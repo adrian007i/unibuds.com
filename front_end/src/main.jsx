@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { Provider } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import { store } from './state/store';
 import { useDispatch } from 'react-redux'; 
 import { BrowserRouter } from 'react-router-dom';
@@ -15,7 +15,11 @@ import { getChats } from './containers/Chat/slice';
 const Main = () => {
   const dispatch = useDispatch();
   dispatch(setCurrentUser(localStorage.getItem("jwtToken")));
-  dispatch(getChats())
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
+  
+  if(isAuthenticated)
+    dispatch(getChats())
+
   return <App />
 }
 

@@ -1,19 +1,21 @@
 import React, { useState, memo } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { Button,  FormControl as Input} from 'react-bootstrap';
 import { NavLink, useParams } from 'react-router-dom';
 
 // CUSTOM
 // import formatDate from '../../utils/formatDate';
-import { sendMessage } from '../../redux/actions/chatsActions';
+import { sendMessage } from './slice';
 
 import './chat.css';
 import profilepic from '../../icons/Alia.jpg';
 
 
-const Chat = ({ sendMessage, chats }) => {
-
-    const { chatId} = useParams(); 
+const Chat = () => {  
+    const { chatId } = useParams(); 
+    const data = useSelector(state => state.chat.data); 
+    const dispatch = useDispatch()
+   
     const [newMsg, setNewMsg] = useState('');
     
     // useEffect(()=>{
@@ -24,12 +26,12 @@ const Chat = ({ sendMessage, chats }) => {
         e.preventDefault();
         // TODO: fix so messages dont re-render the entire dataset
         // document.getElementsByClassName('messages')[0].append(`<div className='msg recieve'>${new_msg}</div>`);
-        sendMessage({
+        dispatch(sendMessage({
             'msg': newMsg,
-            'user1': chats[chatId].user1,
-            'user2': chats[chatId].user2,
+            'user1': data[chatId].user1,
+            'user2': data[chatId].user2,
             'chatId': chatId
-        });
+        }))
         setNewMsg('')
     };
 
@@ -43,7 +45,7 @@ const Chat = ({ sendMessage, chats }) => {
                 </NavLink>
             </div>
             <div className='messages'>  
-                {chats[chatId].messages.map((msg, index) =>
+                {data && data[chatId].messages.map((msg, index) =>
                    <div key={index} className='msg recieve'>{msg.msg}</div>
                 )}
             </div>
@@ -57,16 +59,6 @@ const Chat = ({ sendMessage, chats }) => {
         </>
     );
 }
+ 
 
-
-
-
-
-const mapStateToProps = state => ({
-    // isPending: state.chat.isPending,
-    // messages: state.chat.messages,
-    chats: state.chats.chats,
-
-});
-
-export default connect(mapStateToProps, { sendMessage })(memo(Chat));
+export default Chat;

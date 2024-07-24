@@ -25,7 +25,8 @@ const Chats = () => {
                         <NavLink key={index} className='chat' to={'/chat/' + index}>
                             <div className='propic'><img src={profilepic} alt='' /></div>
                             <div className='name'>Alia
-                                <div style={{ 'fontSize': '8px' }}>{chat._id}- {chat.user1} - {chat.user2} </div>
+                                {/* {chat._id}- {chat.user1} - {chat.user2} */}
+                                <div style={{ 'fontSize': '8px' }}></div>
 
                             </div>
                             <div className='msg_time'>{formatDate(chat.lastMessage)}</div>

@@ -34,9 +34,7 @@
 
 .name{
     font-weight: bold;
-    padding-left: 10px;
-    padding-top: 3px;
-    margin-bottom: auto;
+    padding-left: 10px; 
 }
 
 .propic img{
@@ -44,8 +42,7 @@
 }
 
 .msg_time{
-    margin-left: auto;
-    margin-top: auto;
+    margin-left: auto; 
     font-size: 12px;
     margin-right: 5px;
 }
