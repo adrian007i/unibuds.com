@@ -47,7 +47,7 @@ module.exports.login = async (req, res) => {
  * @access  Private 
  */
 module.exports.get_user = async (req, res) => {
-    const user = await User.findOne({ _id: req.user._id }).select('-password');
+    const user = await User.findOne({ _id: req.user._id }).select(['-password','-__v','-_id']);
     res.status(200).json(user);
 }
 
