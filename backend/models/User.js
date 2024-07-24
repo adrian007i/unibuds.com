@@ -69,11 +69,15 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
 };
 
 // Hash the password before saving it to the database
-userSchema.pre('save', async function (next) {
-  // Generate a salt
-  const salt = await bcrypt.genSalt();
-  this.password = await bcrypt.hash(this.password, salt);
-  next();
+userSchema.pre('save', async function (next) { 
+  if (this.isNew){
+    // Generate a salt
+    const salt = await bcrypt.genSalt();
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  }
+  
 });
 
 module.exports = mongoose.model('User', userSchema);
+ 

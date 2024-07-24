@@ -57,7 +57,8 @@ module.exports.get_user = async (req, res) => {
  */
 module.exports.set_user = async (req, res) => {
 
-    const user = await User.findOne({ _id: req.user._id });
+    const user = await User.findOne({ _id: req.user._id }); 
+    
     if (user) {
 
         const u = req.body;
@@ -75,7 +76,7 @@ module.exports.set_user = async (req, res) => {
             user.email = u.email;
 
 
-            await user.save();
+            await user.save(); 
             res.status(200).json({ success: true });
             
         } catch (error) { 
@@ -85,5 +86,4 @@ module.exports.set_user = async (req, res) => {
     } else {
         console.log('User not found');
     }
-}
-
+} 
