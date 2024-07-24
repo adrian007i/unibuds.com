@@ -12,16 +12,7 @@ const User = () => {
     const { data, errors, setUserPending, getUserPending } = useSelector(state => state.user);
 
     // local state for form values
-    const [formData, setFormData] = useState({
-        bio: '',
-        firstName: '',
-        lastName: '',
-        dob: '',
-        gender: '',
-        major: '',
-        campusLocation: '',
-        email: ''
-    });
+    const [formData, setFormData] = useState(null);
 
     useEffect(() => {
         !data ? dispatch(getUserData()) : setFormData(data);

@@ -1,16 +1,11 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 
-const PublicRoute = ({ component: Component, isAuthenticated, user }) => {
-    return isAuthenticated ? <Navigate to="/chats" /> : <Component user={user} />;
-};
+const PublicRoute = ({component: Component}) => {
+    const {isAuthenticated, tokenData} = useSelector(state => state.auth);
+    return isAuthenticated ? <Navigate to="/chats" /> : <Component user={tokenData} />;
+}; 
 
-// Map state to props
-const mapStateToProps = (state) => ({
-    isAuthenticated: state.auth.isAuthenticated,
-    user: state.auth.user,
-});
-
-export default connect(mapStateToProps)(PublicRoute);
+export default PublicRoute;

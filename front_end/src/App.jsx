@@ -70,8 +70,8 @@ function App() {
           <Route path='/login' element={<PublicRoute component={Login} />} />
 
           <Route path='/profile' element={<PrivateRoute component={User} />} /> 
-          {/* <Route path='/chats' element={<PrivateRoute component={Chats} />} />
-          <Route path='/chat/:chatId' element={<PrivateRoute component={Chat} />} />*/}
+          <Route path='/chats' element={<PrivateRoute component={Chats} />} />
+          <Route path='/chat/:chatId' element={<PrivateRoute component={Chat} />} />
           
         </Routes>
       </div>
