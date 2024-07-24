@@ -1,4 +1,4 @@
-exports.defaut.storeToken = (token) =>
+const storeToken = (token) =>
 {
     res.cookie('jwt', token, {
         httpOnly: true,
@@ -7,3 +7,5 @@ exports.defaut.storeToken = (token) =>
         maxAge: 90 * 24 * 60 * 60 * 1000, // 90 days
     })
 };
+
+export default storeToken;

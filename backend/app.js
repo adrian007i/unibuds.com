@@ -21,7 +21,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // ALLOW FRONT ENDS TO ACCESS THE APP 
-app.use(cors({ origin: ['http://127.0.0.1:5500', 'HTTPS://127.0.0.1:3000', 'http://localhost:3000'] }));
+app.use(cors({ origin: [ 'http://localhost:5173'] }));
 
 // WEB SOCKET CLIENTS 
 clients = app.locals.clients = {};

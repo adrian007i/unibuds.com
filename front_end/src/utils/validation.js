@@ -1,4 +1,4 @@
-module.exports.isEmpty = (value) => {
+export const isEmpty = (value) => {
   return (
     value === undefined ||
     value === null ||
@@ -7,12 +7,12 @@ module.exports.isEmpty = (value) => {
   );
 };
 
-module.exports.minLength = (value, len) => {
+export const minLength = (value, len) => {
   return typeof value === 'string' && value.trim().length <= len
 };
 
 
-module.exports.isValidEmail = (email) => { 
+export const isValidEmail = (email) => { 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 };

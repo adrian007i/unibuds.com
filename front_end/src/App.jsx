@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route, Link, NavLink } from 'react-router-dom';
-import loadAppData from './utils/loadJwtUser';
 import axios from 'axios';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 // UI COMPONENTS
 import Register from './containers/Auth/Register';
@@ -20,19 +19,16 @@ import signOut from './icons/signout.png';
 import chat from './icons/chat.png';
 import profile from './icons/profile.png';
 import logo from './logo.png';
-
-
-import { logoutUser } from './redux/actions/authActions'
+ 
+import { logoutUser } from './containers/Auth/slice'
 
 // BACKEND API ENDPOINT
 axios.defaults.baseURL = 'http://localhost:4000/';
 
-loadAppData();
 
-function App({ logoutUser, auth, chats }) {
-
-  if (!chats && auth.isAuthenticated)
-    return <h1>laoding</h1>
+function App() {
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth); 
 
   return (
     <div className='main'>
@@ -40,9 +36,9 @@ function App({ logoutUser, auth, chats }) {
       {(auth.isAuthenticated &&
         <div className='nav'>
           <div id='left'>
-            <NavLink to='/chats'  >
-              <img src={logo} height='30px' alt='' className='logo'/>
-            </NavLink>
+            <Link to='/chats'  >
+              <img src={logo} height='30px' alt='' className='logo' />
+            </Link>
           </div>
           <div id='right'>
             <NavLink to='/chats' className={({ isActive }) => (isActive ? 'active' : '')}>
@@ -51,7 +47,7 @@ function App({ logoutUser, auth, chats }) {
             <NavLink to='/profile' className={({ isActive }) => (isActive ? 'active' : '')}>
               <img src={profile} alt='profile' title='profile' />
             </NavLink>
-            <button onClick={logoutUser} style={{ background: 'transparent', border: 'none' }} >
+            <button onClick={()=> dispatch(logoutUser())} style={{ background: 'transparent', border: 'none' }} >
               <img src={signOut} alt='signout' title='signout' />
             </button>
           </div>
@@ -60,7 +56,7 @@ function App({ logoutUser, auth, chats }) {
         <Link to='/' style={{ color: 'inherit', textDecoration: 'none' }}>
           <div>
             <br />
-            <img src={logo} width='50px' className='logo'/>
+            <img src={logo} width='50px' className='logo' />
             <h1 className='d-inline'>UniBuds</h1>
           </div>
           <hr />
@@ -73,9 +69,9 @@ function App({ logoutUser, auth, chats }) {
           <Route path='/register' element={<PublicRoute component={Register} />} />
           <Route path='/login' element={<PublicRoute component={Login} />} />
 
-          <Route path='/chats' element={<PrivateRoute component={Chats} />} />
+          {/* <Route path='/chats' element={<PrivateRoute component={Chats} />} />
           <Route path='/chat/:chatId' element={<PrivateRoute component={Chat} />} />
-          <Route path='/profile' element={<PrivateRoute component={User} />} />
+          <Route path='/profile' element={<PrivateRoute component={User} />} /> */}
         </Routes>
       </div>
     </div>
@@ -83,9 +79,5 @@ function App({ logoutUser, auth, chats }) {
   );
 }
 
-const mapStateToProps = state => ({
-  auth: state.auth,
-  chats: state.chats.chats
-});
 
-export default connect(mapStateToProps, { logoutUser })(App);
+export default App;

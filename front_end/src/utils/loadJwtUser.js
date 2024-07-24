@@ -1,29 +1,29 @@
-import store from '../redux/store';
-
 // user actions 
-import { jwtDecode } from "jwt-decode";
-import setAuthToken from './setAuthToken';
-import { setCurrentUser } from '../redux/actions/authActions';
-import { getChats } from '../redux/actions/chatsActions';
+import { jwtDecode } from 'jwt-decode';
+import setAuthToken from './setAuthToken';  
 
-const loadAppData = () => {
+export const loadAppData = (jwt) => {  
 
-    const jwt = localStorage.getItem("jwtToken");
-    
     // check for login token, load user data, logout if expired
-    if (jwt) {  
-        try {
-            const decoded = jwtDecode(jwt);
-            store.dispatch(setCurrentUser(decoded));
-            setAuthToken(jwt);
+    if (jwt) {   
+        try { 
+            setAuthToken(jwt); 
+            localStorage.setItem('jwtToken', jwt);
+            return jwtDecode(jwt);
 
             // fetch chats from the database
-            store.dispatch(getChats()); 
+            // store.dispatch(getChats()); 
         }
-        catch {
+        catch(errors) { 
+            console.log(errors);
             // localStorage.removeItem("jwtToken");
         }
     }
+    return null
 };
 
-export default loadAppData;
+export const destoryAppData = () =>{
+    localStorage.removeItem('jwtToken');
+    setAuthToken(false);
+}
+ 

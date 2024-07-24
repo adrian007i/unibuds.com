@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Button, Form, FormControl as Input, FormLabel as Label } from 'react-bootstrap';
 import { Link } from 'react-router-dom';  
 
-// CUSTOM
-import { loginUser } from '../../redux/actions/authActions';
+import { loginUser } from './slice';
 
-const Login = ({ loginUser, errors, isPending }) => {
-
+const Login = () => {
+    
+    const dispatch = useDispatch(); 
+    const {errors, isPending} = useSelector((state) => state.auth);  
 
     // local state for form values
     const [formData, setFormData] = useState({
@@ -23,7 +24,7 @@ const Login = ({ loginUser, errors, isPending }) => {
     // trigger for when the user submits the form
     const onSubmit = (e) => {
         e.preventDefault();
-        loginUser(formData);
+        dispatch(loginUser(formData));
 
     };
     return (
@@ -57,10 +58,4 @@ const Login = ({ loginUser, errors, isPending }) => {
 
 }
 
-
-const mapStateToProps = state => ({
-    errors: state.auth.errors,  
-    isPending: state.auth.isPending
-});
-
-export default connect(mapStateToProps, { loginUser })(Login);
+export default Login;
