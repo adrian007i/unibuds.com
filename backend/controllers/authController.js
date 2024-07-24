@@ -56,19 +56,24 @@ module.exports.get_user = async (req, res) => {
  * @access  Private 
  */
 module.exports.set_user = async (req, res) => {
-    const user = await User.findOne({ _id: req.user._id });
 
+    const user = await User.findOne({ _id: req.user._id });
     if (user) {
 
-        // for security we remove any unwanted fields
-        delete req.body._id;
-        delete req.body.password;
-        delete req.body.__v;
- 
-        try { 
+        const u = req.body;
 
-            // Update user fields
-            Object.assign(user, req.body);
+        try {  
+            // Update user fields 
+            user.profilePicture = u.profilePicture;
+            user.bio = u.bio;
+            user.firstName = u.firstName;
+            user.lastName = u.lastName;
+            user.dob = u.dob;
+            user.gender = u.gender;
+            user.major = u.major;
+            user.campusLocation = u.campusLocation; 
+            user.email = u.email;
+
 
             await user.save();
             res.status(200).json({ success: true });
