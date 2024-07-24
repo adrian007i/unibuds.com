@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { Button, Form, FormControl as Input, FormLabel as Label, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 // CUSTOM
-import { registerUser } from '../../redux/actions/authActions';
+import { registerUser } from './slice';
 import camera from '../../icons/camera.png';
 
-const Register = ({ registerUser, errors, isPending }) => {
+const Register = () => {
 
+
+    const dispatch = useDispatch();
+    const {errors, isPending} = useSelector(state => state.auth);
 
     // local state for form values
     const [formData, setFormData] = useState({
@@ -34,8 +37,8 @@ const Register = ({ registerUser, errors, isPending }) => {
 
     // trigger for when the user submits the form
     const onSubmit = (e) => {
-        e.preventDefault();
-        registerUser(formData); 
+        e.preventDefault(); 
+        dispatch(registerUser(formData)); 
     };
 
     return (
@@ -98,13 +101,4 @@ const Register = ({ registerUser, errors, isPending }) => {
     );
 }
 
-
-
-
-
-const mapStateToProps = state => ({
-    errors: state.auth.errors,
-    isPending: state.auth.isPending
-});
-
-export default connect(mapStateToProps, { registerUser })(Register);
+export default Register;

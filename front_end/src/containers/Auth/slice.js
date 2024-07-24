@@ -2,9 +2,9 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 
-import { isEmpty, isValidEmail, minLength } from '../../utils/validation';
+import Validate from '../../utils/validation';
 import setAuthToken from '../../utils/setAuthToken';
-import {loadAppData, destoryAppData} from '../../utils/loadJwtUser';
+import { loadAppData, destoryAppData } from '../../utils/loadJwtUser';
 
 const initialState = {
   tokenData: null,
@@ -14,37 +14,51 @@ const initialState = {
 };
 
 // Register User
-export const registerUser = createAsyncThunk('auth/registerUser', async (userData, thunkAPI) => {
+export const registerUser = createAsyncThunk('auth/registerUser', async (user, thunkAPI) => {
   try {
-    const response = await axios.post('/api/register', userData);
-    return response.data;
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error.response.data);
-  }
-});
 
-// Login user
-export const loginUser = createAsyncThunk('auth/loginUser', async (regUser, thunkAPI) => {
-  try {
-    const localErrors = {}
+    // CLIENT SIDE VALIDATION FOR USER
+    const errors = new Validate({ 
+      'firstName': [user.firstName,['isEmpty', 'minLength'], 2],
+      'lastName': [user.lastName, ['isEmpty', 'minLength'], 2],
+      'email':    [user.email,    ['isEmpty', 'isValidEmail']],
+      'password': [user.password, ['isEmpty', 'minLength'], 6]
+    });
 
-    if (isEmpty(regUser.email)) localErrors.email = 'Required';
-    else if (!isValidEmail(regUser.email)) localErrors.email = 'Invalid Email';
+    if (!errors.isValid)
+      return thunkAPI.rejectWithValue(errors.errors);
 
-    if (isEmpty(regUser.password)) localErrors.password = 'Required';
-    else if (minLength(regUser.password, 6)) localErrors.password = 'Too Short';
-
-    if (Object.values(localErrors).length > 0)
-      return thunkAPI.rejectWithValue(localErrors);
-
-    const response = await axios.post('/login', regUser); 
+    const response = await axios.post('/register', user);
     thunkAPI.fulfillWithValue(response.data)
 
     return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data);
   }
-  
+
+});
+
+// Login user
+export const loginUser = createAsyncThunk('auth/loginUser', async (user, thunkAPI) => {
+  try {
+
+    // CLIENT SIDE VALIDATION FOR USER
+    const errors = new Validate({
+      'email':    [user.email,    ['isEmpty', 'isValidEmail']],
+      'password': [user.password, ['isEmpty', 'minLength'], 6]
+    });
+
+    if (!errors.isValid)
+      return thunkAPI.rejectWithValue(errors.errors);
+
+    const response = await axios.post('/login', user);
+    thunkAPI.fulfillWithValue(response.data)
+
+    return response.data;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response.data);
+  }
+
 });
 
 const authSlice = createSlice({
@@ -54,8 +68,8 @@ const authSlice = createSlice({
     alert2: (state) => {
       alert(123)
     },
-    setCurrentUser: (state , action )  => { 
-      state.tokenData = loadAppData(action.payload); 
+    setCurrentUser: (state, action) => {
+      state.tokenData = loadAppData(action.payload);
       state.isAuthenticated = state.tokenData ? true : false;
     },
     logoutUser: (state) => {
@@ -68,26 +82,27 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // .addCase(registerUser.pending, (state) => {
-      //   state.loading = true;
-      //   state.errorS = null;
-      // })
-      // .addCase(registerUser.fulfilled, (state, action) => {
-      //   state.loading = false;
-      //   state.user = action.payload;
-      // })
-      // .addCase(registerUser.rejected, (state, action) => {
-      //   state.loading = false;
-      //   state.errorS = action.payload;
-      // })
+      .addCase(registerUser.pending, (state) => {
+        state.loading = true;
+        state.errors = {};
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.tokenData = loadAppData(action.payload.token);
+        state.isAuthenticated = state.tokenData ? true : false;
+        state.isPending = false;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.loading = false;
+        state.errors = action.payload;
+      })
       .addCase(loginUser.pending, (state) => {
         state.isPending = true;
         state.errors = {};
       })
-      .addCase(loginUser.fulfilled, (state, action) => { 
-        state.tokenData = loadAppData(action.payload.token); 
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.tokenData = loadAppData(action.payload.token);
         state.isAuthenticated = state.tokenData ? true : false;
-        state.isPending = false; 
+        state.isPending = false;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isPending = false;

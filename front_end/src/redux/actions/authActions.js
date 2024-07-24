@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { LOGIN_FAIL, LOGIN_PENDING, REGISTER_FAIL, REGISTER_PENDING, SET_USER, LOGOUT_USER } from '../constants/authConstants';
-import { isEmpty, minLength, isValidEmail } from '../../utils/validation';
+// import { isEmpty, minLength, isValidEmail } from '../../utils/validation';
 import {loadAppData} from '../../utils/loadJwtUser';
 import setAuthToken from '../../utils/setAuthToken';
 
