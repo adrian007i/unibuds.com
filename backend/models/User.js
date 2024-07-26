@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema({
     default: ''
   },
   profilePicture: {
-    type: String,
+    type: Buffer,
     default: ''
   },
   university: {

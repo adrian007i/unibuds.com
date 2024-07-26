@@ -2,16 +2,18 @@ import React, { useState } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { Button, Form, FormControl as Input, FormLabel as Label, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import imageCompression from 'browser-image-compression';
 
 // CUSTOM
 import { registerUser } from './slice';
 import camera from '../../icons/camera.png';
+import { defaultPic, imgUploadConfig } from '../../utils/globals';
+
 
 const Register = () => {
 
-
     const dispatch = useDispatch();
-    const {errors, isPending} = useSelector(state => state.auth);
+    const { errors, isPending } = useSelector(state => state.auth);
 
     // local state for form values
     const [formData, setFormData] = useState({
@@ -19,7 +21,8 @@ const Register = () => {
         lastName: '',
         email: '',
         password: '',
-        profilePicture: '/proPicDefault.jpg'
+        profilePicture: defaultPic,
+        profilePictureName: ''
     });
 
     // tracks change of input on form
@@ -28,17 +31,34 @@ const Register = () => {
     };
 
     const handleChangeImage = e => {
+
+        // image removed
         if (e.target.files.length === 0)
-            setFormData({ ...formData, profilePicture: '/proPicDefault.jpg' });
-        else
-            setFormData({ ...formData, profilePicture: URL.createObjectURL(e.target.files[0]) });
+            setFormData({ ...formData, profilePicture: defaultPic });
+
+        // once the uesr uploads a image, we compress it
+        else {
+            async function handleImageUpload(event) {
+
+                try {
+                    const compressedFile = await imageCompression(event.target.files[0], imgUploadConfig);
+                    setFormData({ ...formData, profilePicture: compressedFile ,  profilePictureName : e.target.files[0].name });
+                } catch (error) {
+                    console.log(error);
+                }
+
+            }
+
+            handleImageUpload(e)
+
+        } 
     }
 
 
     // trigger for when the user submits the form
     const onSubmit = (e) => {
-        e.preventDefault(); 
-        dispatch(registerUser(formData)); 
+        e.preventDefault();
+        dispatch(registerUser(formData));
     };
 
     return (
@@ -46,9 +66,9 @@ const Register = () => {
             <Form onSubmit={onSubmit}>
 
                 <div className={errors.profilePicture ? 'text-center error' : 'text-center'} >
-                    <div className='text-center'>
-                        <label className='profilePicPreview' htmlFor='proPicture' style={{ backgroundImage: `url(${formData.profilePicture})` }} >
-                            <Input type='file' name='profilePicture' id='proPicture' onChange={handleChangeImage} />
+                    <div className='text-center'> 
+                        <label className='profilePicPreview' htmlFor='proPicture' style={{ backgroundImage: `url(${formData.profilePicture === defaultPic ? defaultPic :  URL.createObjectURL(formData.profilePicture)})` }} >
+                            <Input type='file' name='profilePicture' id='proPicture' accept="image/*" onChange={handleChangeImage} />
                             <img src={camera} />
                         </label>
                     </div>

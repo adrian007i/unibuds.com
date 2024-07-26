@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const enableWs = require('express-ws');
+const multer = require('multer');
 
 // CUSTOM IMPORTS
 const { protectRaw } = require('./middleware/authMiddleware');
@@ -19,6 +20,7 @@ enableWs(app);
 
 app.use(express.json());
 app.use(cookieParser());
+
 
 // ALLOW FRONT ENDS TO ACCESS THE APP 
 app.use(cors({ origin: [ 'http://localhost:5173'] }));
@@ -64,6 +66,6 @@ mongoose.connect(process.env.mongoURI)
 
 
 // ROUTES
-app.get('/', (req, res) => res.send('Hello, World!'));
+app.get('/',(req, res) => res.send('Hello, World!'));
 app.use(authRoutes);
 app.use(chatRoutes); 

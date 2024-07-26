@@ -1,3 +1,4 @@
+import { defaultPic } from "./globals";
 class Validate {
 
   constructor(data) {
@@ -56,6 +57,15 @@ class Validate {
         msg: "Invalid Email"
       }
     );
+  };
+
+  validPicture = (picture) => {
+     return(
+      {
+        err : picture === '',
+        msg: 'Picture required'
+      }
+     ) 
   };
 
 }

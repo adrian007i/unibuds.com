@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
- 
-import Validate from '../../utils/validation'; 
+
+import Validate from '../../utils/validation';
 import { loadAppData, destoryAppData } from '../../utils/loadJwtUser';
 
 const initialState = {
@@ -16,20 +16,34 @@ export const registerUser = createAsyncThunk('auth/registerUser', async (user, t
   try {
 
     // CLIENT SIDE VALIDATION FOR USER
-    const errors = new Validate({ 
-      'firstName': [user.firstName,['isEmpty', 'minLength'], 2],
+    const errors = new Validate({
+      'firstName': [user.firstName, ['isEmpty', 'minLength'], 2],
       'lastName': [user.lastName, ['isEmpty', 'minLength'], 2],
-      'email':    [user.email,    ['isEmpty', 'isValidEmail']],
-      'password': [user.password, ['isEmpty', 'minLength'], 6]
-    });
+      'email': [user.email, ['isEmpty', 'isValidEmail']],
+      'password': [user.password, ['isEmpty', 'minLength'], 6],
+      'profilePicture': [user.profilePictureName, ['validPicture']]
+    }); 
 
     if (!errors.isValid)
       return thunkAPI.rejectWithValue(errors.errors);
 
-    const response = await axios.post('/register', user);
-    thunkAPI.fulfillWithValue(response.data)
 
+    // let formData = new FormData();
+    // let fileName = `${user.profilePicture.name}`;
+    // let file = new File([user.profilePicture.blob], fileName);
+    // formData.append('file', file, fileName); 
+    // formData.append('text', use)
+
+    // user.profilePicture = new File([user.profilePicture.blob], 'hello.jpg')
+
+    const response = await axios.post('/register', user, {
+      headers: {
+        'Content-Type': `multipart/form-data`,
+      },
+    });
+    thunkAPI.fulfillWithValue(response.data)
     return response.data;
+
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data);
   }
@@ -42,7 +56,7 @@ export const loginUser = createAsyncThunk('auth/loginUser', async (user, thunkAP
 
     // CLIENT SIDE VALIDATION FOR USER
     const errors = new Validate({
-      'email':    [user.email,    ['isEmpty', 'isValidEmail']],
+      'email': [user.email, ['isEmpty', 'isValidEmail']],
       'password': [user.password, ['isEmpty', 'minLength'], 6]
     });
 

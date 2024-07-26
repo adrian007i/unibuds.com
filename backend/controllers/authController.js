@@ -6,12 +6,12 @@ const generateToken = require('../utils/generateToken');
  * @desc    User registration with email verification
  * @access  Public 
  */
-module.exports.register = async (req, res) => {
-
+module.exports.register = async (req, res) => {  
+    const profilePicture = req.file.buffer;
     const { email, password, firstName, lastName } = req.body;
 
     try {
-        const newUser = await User.create({ email, password, firstName, lastName });
+        const newUser = await User.create({ email, password, firstName, lastName, profilePicture });
 
         // create the jwt 
         res.status(201).json({ token: generateToken(newUser) });
