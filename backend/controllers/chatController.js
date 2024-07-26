@@ -13,12 +13,12 @@ module.exports.get_chats = async (req, res) => {
     const _id = new mongoose.Types.ObjectId(req.user._id);
     // await sleep(1000)
     const chats = await Chat
-    .find({
-        $or: [{ user1: _id }, { user2: _id }]
-    })
-    .skip(0)
-    .limit(10)
-    .sort({'lastMessage': 'desc'}) 
+        .find({
+            $or: [{ user1: _id }, { user2: _id }]
+        })
+        .skip(0)
+        .limit(10)
+        .sort({ 'lastMessage': 'desc' })
     res.status(200).json({ 'success': true, 'chats': chats });
 
 }
@@ -29,16 +29,16 @@ module.exports.get_chats = async (req, res) => {
 //  */
 // module.exports.get_messages = async (req, res) => {
 
-     
+
 //     const chat_id = new mongoose.Types.ObjectId(req.params.chat_id);
 //     const messages = await Chat.findById(chat_id);
-     
+
 //     // ensure user is able to access the chat
 //     if(messages.user1._id.toString() === req.user._id || messages.user2._id.toString() === req.user._id)
 //         res.status(200).json({ 'success': true, 'messages': messages });
 //     else
 //         res.status(400).json({'success': false, error: 'Not authorized'});
-        
+
 // }
 
 /**
@@ -60,7 +60,7 @@ module.exports.send_message = async (req, res) => {
 
     try {
         let msgIndex = 0;
-        let chat;  
+        let chat;
 
         if (req.body.chatId) {
 
@@ -71,30 +71,30 @@ module.exports.send_message = async (req, res) => {
             msgIndex = chat.msgIndex;
             if (!chat) throw ('Invalid Chat ID')
 
-        } else { 
+        } else {
             const user1 = new mongoose.Types.ObjectId(req.body.user1);
             const user2 = new mongoose.Types.ObjectId(req.body.user2);
             chat = new Chat({ user1, user2 });
-        } 
-        
+        }
+
         // DETERMINE THE SENDER OF THE MESSAGE
         const sender = (req.user._id === req.body.user1 ? 1 : 2);
 
         // STORE THE MESSAGE IN THE NEXT CIRCULAR ARRAY POSITION
-        chat.messages[msgIndex] = {sender: sender , msg : req.body.message }
-        
+        chat.messages[msgIndex] = { sender: sender, msg: req.body.message }
+
         // WE ARE LIMITING MESSAGES TO A FIXED AMOUNT DUE TO SERVER COST
         // HERE WE DETERMINE THE NEXT INDEX POSITION WHEN THE CIRCULAR ARRAY BECOMES FULL
-        if(msgIndex === MAX_MESSAGES)
-            chat.msgIndex = 0 
+        if (msgIndex === MAX_MESSAGES)
+            chat.msgIndex = 0
         else
             chat.msgIndex++;
-        
+
         await chat.save();
 
-        res.status(201).json({ 'success': true});
+        res.status(201).json({ 'success': true });
 
-    } catch (error) {  
+    } catch (error) {
         console.log(error)
         res.status(400).json({ 'error': 'Fail to Send' });
     }

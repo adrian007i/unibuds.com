@@ -6,21 +6,31 @@ const generateToken = require('../utils/generateToken');
  * @desc    User registration with email verification
  * @access  Public 
  */
-module.exports.register = async (req, res) => {  
-    const profilePicture = req.file.buffer;
+module.exports.register = async (req, res) => { 
+   
     const { email, password, firstName, lastName } = req.body;
 
-    try {
+    try { 
+        let profilePicture = undefined;
+
+        // ENSURE THE PROFILE PICTURE WAS UPLOADED
+        if(req.file && req.file.buffer)
+            profilePicture = {
+                data : req.file.buffer,
+                type : req.file.mimetype
+            }; 
+        
         const newUser = await User.create({ email, password, firstName, lastName, profilePicture });
 
         // create the jwt 
         res.status(201).json({ token: generateToken(newUser) });
 
-    } catch (error) {
-        let errors = handleErrors(error, 'create');
+    } catch (error) {  
+        let errors = handleErrors(error, 'create'); 
         res.status(400).json(errors);
     }
 }
+ 
 
 /**
  * @desc    Login a user
@@ -47,7 +57,7 @@ module.exports.login = async (req, res) => {
  * @access  Private 
  */
 module.exports.get_user = async (req, res) => {
-    const user = await User.findOne({ _id: req.user._id }).select(['-password','-__v','-_id']);
+    const user = await User.findOne({ _id: req.user._id }).select(['-password','-__v','-_id']); 
     res.status(200).json(user);
 }
 
