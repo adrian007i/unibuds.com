@@ -11,14 +11,19 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import { setCurrentUser } from './containers/Auth/slice';
 import { getChats } from './containers/Chat/slice';
+import { getUserData } from './containers/User/slice';
 
 const Main = () => {
   const dispatch = useDispatch();
   dispatch(setCurrentUser(localStorage.getItem("jwtToken")));
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
   
-  if(isAuthenticated)
+  if(isAuthenticated){
     dispatch(getChats())
+    dispatch(getUserData())
+    
+  }
+    
 
   return <App />
 }

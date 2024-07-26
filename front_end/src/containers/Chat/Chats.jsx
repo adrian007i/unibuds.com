@@ -13,11 +13,13 @@ import './chats.css';
 const Chats = () => {
 
     const {data} = useSelector(state => state.chat); 
+    const user = useSelector(state => state.user); 
     
     return (
         <>
             {
                 <div>
+                    {/* {JSON.stringify} */}
                     <Button className='find_bud_btn'>
                         <img src={search} alt='' /> Find Buddies
                     </Button> 

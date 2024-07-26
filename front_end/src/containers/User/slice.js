@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios'; 
+import { object } from 'prop-types';
 
 const initialState = {
   data: null,
@@ -11,11 +12,17 @@ const initialState = {
 // Get user Profile Data
 export const getUserData = createAsyncThunk('auth/getUserData', async (user, thunkAPI) => {
   try {
-    const response = await axios.get('/get_user');
+    const response = await axios.get('/get_user'); 
+    
+    // CREATE A PROFILE PICTURE URL FROM THE MONGO DB BUFFER DATA
+    const buffer = new Uint8Array(response.data.profilePicture.data.data); 
+    const blob = new Blob([buffer], { type: 'image/jpeg' }); 
+    response.data.profilePicture = URL.createObjectURL(blob); 
+
     thunkAPI.fulfillWithValue(response.data);
 
     return response.data;
-  } catch (error) {
+  } catch (error) { 
     return thunkAPI.rejectWithValue(error.response.data);
   } 
 });

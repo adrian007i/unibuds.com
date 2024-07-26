@@ -26,16 +26,7 @@ export const registerUser = createAsyncThunk('auth/registerUser', async (user, t
 
     if (!errors.isValid)
       return thunkAPI.rejectWithValue(errors.errors);
-
-
-    // let formData = new FormData();
-    // let fileName = `${user.profilePicture.name}`;
-    // let file = new File([user.profilePicture.blob], fileName);
-    // formData.append('file', file, fileName); 
-    // formData.append('text', use)
-
-    // user.profilePicture = new File([user.profilePicture.blob], 'hello.jpg')
-
+    
     const response = await axios.post('/register', user, {
       headers: {
         'Content-Type': `multipart/form-data`,

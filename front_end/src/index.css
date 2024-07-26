@@ -134,3 +134,8 @@ label {
 .error .profilePicPreview{ 
   border: 3px solid red; 
 }
+
+.navProPic{
+  padding: unset !important;
+  border-radius: 50% !important;
+}

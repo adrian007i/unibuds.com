@@ -16,10 +16,10 @@ import PublicRoute from './utils/PublicRoute';
 
 // ICONS
 import signOut from './icons/signout.png';
-import chat from './icons/chat.png';
-import profile from './icons/profile.png';
+import chat from './icons/chat.png'; 
 import logo from './logo.png';
- 
+import { defaultPic } from './utils/globals';
+
 import { logoutUser } from './containers/Auth/slice'
 
 // BACKEND API ENDPOINT
@@ -28,8 +28,9 @@ axios.defaults.baseURL = 'http://localhost:4000/';
 
 function App() {
   const dispatch = useDispatch();
-  const auth = useSelector((state) => state.auth); 
- 
+  const auth = useSelector((state) => state.auth);
+  const { data } = useSelector((state) => state.user);
+
   return (
     <div className='main'>
 
@@ -45,9 +46,18 @@ function App() {
               <img src={chat} alt='chat' title='chat' />
             </NavLink >
             <NavLink to='/profile' className={({ isActive }) => (isActive ? 'active' : '')}>
-              <img src={profile} alt='profile' title='profile' />
+
+              {/* SET USER PROFILE PICTURE */}
+              {(data &&
+                <img className='navProPic' src={data.profilePicture} title='profile' />
+              ) ||
+                <img className='navProPic' src={defaultPic} title='profile' />
+              }
+
+
+
             </NavLink>
-            <button onClick={()=> dispatch(logoutUser())} style={{ background: 'transparent', border: 'none' }} >
+            <button onClick={() => dispatch(logoutUser())} style={{ background: 'transparent', border: 'none' }} >
               <img src={signOut} alt='signout' title='signout' />
             </button>
           </div>
@@ -69,10 +79,10 @@ function App() {
           <Route path='/register' element={<PublicRoute component={Register} />} />
           <Route path='/login' element={<PublicRoute component={Login} />} />
 
-          <Route path='/profile' element={<PrivateRoute component={User} />} /> 
+          <Route path='/profile' element={<PrivateRoute component={User} />} />
           <Route path='/chats' element={<PrivateRoute component={Chats} />} />
           <Route path='/chat/:chatId' element={<PrivateRoute component={Chat} />} />
-          
+
         </Routes>
       </div>
     </div>
