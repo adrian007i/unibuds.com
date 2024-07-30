@@ -25,7 +25,7 @@ export const getUserData = createAsyncThunk('auth/getUserData', async (user, thu
 // Set User profile data
 export const setUserData = createAsyncThunk('auth/setUserData', async ({ formData, proPicExt, proPicBlob }, thunkAPI) => {
   try {
-    await axios.post('/set_user',
+    const response = await axios.post('/set_user',
       {
         profilePicture: proPicBlob,
         proPicExt,
@@ -36,8 +36,8 @@ export const setUserData = createAsyncThunk('auth/setUserData', async ({ formDat
           'Content-Type': `multipart/form-data`,
         },
       });
-    thunkAPI.fulfillWithValue(formData);
-    return formData;
+    thunkAPI.fulfillWithValue({formData, profilePicture : response.profilePicture}); 
+    return {formData, profilePicture : response.data.profilePicture};
 
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data);
@@ -67,7 +67,8 @@ const userSlice = createSlice({
         state.errors = {};
       })
       .addCase(setUserData.fulfilled, (state, action) => {
-        state.data = action.payload;
+        state.data = action.payload.formData;
+        state.data.profilePicture = action.payload.profilePicture;
         state.setUserPending = false;
       })
       .addCase(setUserData.rejected, (state, action) => {

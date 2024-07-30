@@ -94,13 +94,13 @@ module.exports.set_user = async (req, res) => {
                 catch {}; 
 
                 // FILE NAME REMAINS THE SAME, PROFILE PICTURE EXTENSION MAY CHANGE
-                user.profilePicture = user.profilePicture.split('.')[0]+'.'+ req.body.proPicExt
+                user.profilePicture = getRandomFileName()+'.'+ req.body.proPicExt
                 fs.writeFileSync('./uploads/'+user.profilePicture , req.file.buffer); 
             }  
 
 
             await user.save();
-            res.status(200).json({ success: true });
+            res.status(200).json({ success: true , 'profilePicture' : user.profilePicture });
 
         } catch (error) {
             console.log(error);
