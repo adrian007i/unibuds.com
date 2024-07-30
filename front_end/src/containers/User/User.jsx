@@ -15,8 +15,8 @@ const User = () => {
     const [formData, setFormData] = useState(null);
 
     useEffect(() => {
-        !data ? dispatch(getUserData()) : setFormData(data);
-    }, [data]);
+        setFormData(data)
+    },[data]);
 
     // tracks change of input on form
     const onChange = (e) => {
@@ -39,7 +39,7 @@ const User = () => {
                         <br />
 
                         <div>
-                            <img src={profilepic} alt="" style={{ display: "block", width: "100px", height: "100px", border: "1px dashed white", borderRadius: "50%", margin: "auto" }} />
+                            <img src={!formData || formData.profilePicture} alt="" style={{ display: "block", width: "100px", height: "100px", borderRadius: "50%", margin: "auto" }} />
                         </div>
                         <br />
                         <Row>

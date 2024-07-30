@@ -22,7 +22,8 @@ const Register = () => {
         email: '',
         password: '',
         profilePicture: defaultPic,
-        profilePictureName: ''
+        profilePictureName: '',
+        pictureExt: ''
     });
 
     // tracks change of input on form
@@ -42,7 +43,13 @@ const Register = () => {
 
                 try {
                     const compressedFile = await imageCompression(event.target.files[0], imgUploadConfig);
-                    setFormData({ ...formData, profilePicture: compressedFile ,  profilePictureName : e.target.files[0].name });
+                    
+                    setFormData(
+                        { ...formData, 
+                            profilePicture: compressedFile ,  
+                            profilePictureName : e.target.files[0].name ,
+                            pictureExt : e.target.files[0].name.split('.')[1]
+                        });
                 } catch (error) {
                     console.log(error);
                 }
