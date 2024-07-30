@@ -1,17 +1,6 @@
 const mongoose = require('mongoose');
 const { isEmail } = require('validator');
-const bcrypt = require('bcrypt');
-
-// PROFILE PICTURE DETAILS
-const imageSchema = new mongoose.Schema({
-  data: {
-    type: Buffer,  
-  }, 
-  type: {
-    type: String,
-    default: '' 
-  }
-});
+const bcrypt = require('bcrypt'); 
 
 // USER PROFILE
 const userSchema = new mongoose.Schema({
@@ -42,7 +31,7 @@ const userSchema = new mongoose.Schema({
     default: ''
   },
   profilePicture: {
-    type: imageSchema,
+    type: String,
     required: [true, 'Required'], 
   }, 
   university: {
