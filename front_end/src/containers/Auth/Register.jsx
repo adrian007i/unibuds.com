@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { connect, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button, Form, FormControl as Input, FormLabel as Label, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import imageCompression from 'browser-image-compression';
@@ -21,10 +21,11 @@ const Register = () => {
         lastName: '',
         email: '',
         password: '',
-        profilePicture: defaultPic,
-        profilePictureName: '',
-        pictureExt: ''
+        profilePicture: defaultPic,   // blob or default image
+        pictureExt: '',               // jpg png
+        profilePictureUrl:''          // url for the blob
     });
+    
 
     // tracks change of input on form
     const onChange = (e) => {
@@ -38,7 +39,7 @@ const Register = () => {
             setFormData({ ...formData, profilePicture: defaultPic });
 
         // once the uesr uploads a image, we compress it
-        else {
+        else { 
             async function handleImageUpload(event) {
 
                 try {
@@ -46,9 +47,9 @@ const Register = () => {
                     
                     setFormData(
                         { ...formData, 
-                            profilePicture: compressedFile ,  
-                            profilePictureName : e.target.files[0].name ,
-                            pictureExt : e.target.files[0].name.split('.')[1]
+                            profilePicture: compressedFile ,   
+                            pictureExt : e.target.files[0].name.split('.')[1],
+                            profilePictureUrl:  URL.createObjectURL(compressedFile)
                         });
                 } catch (error) {
                     console.log(error);
@@ -74,7 +75,7 @@ const Register = () => {
 
                 <div className={errors.profilePicture ? 'text-center error' : 'text-center'} >
                     <div className='text-center'> 
-                        <label className='profilePicPreview' htmlFor='proPicture' style={{ backgroundImage: `url(${formData.profilePicture === defaultPic ? defaultPic :  URL.createObjectURL(formData.profilePicture)})` }} >
+                        <label className='profilePicPreview' htmlFor='proPicture' style={{ backgroundImage: `url(${formData.profilePicture === defaultPic ? defaultPic :  formData.profilePictureUrl})` }} >
                             <Input type='file' name='profilePicture' id='proPicture' accept="image/*" onChange={handleChangeImage} />
                             <img src={camera} />
                         </label>

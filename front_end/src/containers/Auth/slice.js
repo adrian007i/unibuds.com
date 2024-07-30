@@ -21,9 +21,9 @@ export const registerUser = createAsyncThunk('auth/registerUser', async (user, t
       'lastName': [user.lastName, ['isEmpty', 'minLength'], 2],
       'email': [user.email, ['isEmpty', 'isValidEmail']],
       'password': [user.password, ['isEmpty', 'minLength'], 6],
-      'profilePicture': [user.profilePictureName, ['validPicture']]
+      'profilePicture': [user.profilePictureUrl, ['validPicture']]
     }); 
-
+ 
     if (!errors.isValid)
       return thunkAPI.rejectWithValue(errors.errors);
     
