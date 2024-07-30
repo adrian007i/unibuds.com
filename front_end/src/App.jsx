@@ -37,7 +37,7 @@ function App() {
       {(auth.isAuthenticated &&
         <div className='nav'>
           <div id='left'>
-            <Link to='/chats'  >
+            <Link to='/chats'>
               <img src={logo} height='30px' alt='' className='logo' />
             </Link>
           </div>
@@ -46,10 +46,11 @@ function App() {
               <img src={chat} alt='chat' title='chat' />
             </NavLink >
             <NavLink to='/profile' className={({ isActive }) => (isActive ? 'active' : '')}>
-
+            
               {/* SET USER PROFILE PICTURE */}
+              
               {(data &&
-                <img className='navProPic' src={data.profilePicture} title='profile' />
+                <img className='navProPic' src={axios.defaults.baseURL +'uploads/'+data.profilePicture} title='profile' />
               ) ||
                 <img className='navProPic' src={defaultPic} title='profile' />
               }

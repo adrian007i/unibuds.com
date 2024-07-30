@@ -66,17 +66,14 @@ module.exports.get_user = async (req, res) => {
  * @desc    Update user data
  * @access  Private 
  */
-module.exports.set_user = async (req, res) => {
-
-    const user = await User.findOne({ _id: req.user._id });
+module.exports.set_user = async (req, res) => { 
+    const user = await User.findOne({ _id: req.user._id }); 
 
     if (user) {
 
-        const u = req.body;
+        const u = req.body.data;
 
-        try {
-            // Update user fields 
-            user.profilePicture = u.profilePicture;
+        try {  
             user.bio = u.bio;
             user.firstName = u.firstName;
             user.lastName = u.lastName;
@@ -84,13 +81,29 @@ module.exports.set_user = async (req, res) => {
             user.gender = u.gender;
             user.major = u.major;
             user.campusLocation = u.campusLocation;
-            user.email = u.email;
+            user.email = u.email; 
+ 
+
+            // ENSURE THE PROFILE PICTURE WAS UPLOADED AND REBUILD THE PICTURE USING THE BUFFER
+            if (req.file && req.file.buffer) {  
+                
+                // REMOVE THE OLD IMAGE
+                try{  
+                    fs.unlinkSync('./uploads/'+user.profilePicture);  
+                }
+                catch {}; 
+
+                // FILE NAME REMAINS THE SAME, PROFILE PICTURE EXTENSION MAY CHANGE
+                user.profilePicture = user.profilePicture.split('.')[0]+'.'+ req.body.proPicExt
+                fs.writeFileSync('./uploads/'+user.profilePicture , req.file.buffer); 
+            }  
 
 
             await user.save();
             res.status(200).json({ success: true });
 
         } catch (error) {
+            console.log(error);
             let errors = handleErrors(error, 'update');
             res.status(403).json(errors);
         }

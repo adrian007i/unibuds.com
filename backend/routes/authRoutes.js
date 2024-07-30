@@ -12,6 +12,6 @@ const router = Router();
 router.post('/register', upload.single('profilePicture'), authControler.register); 
 router.post('/login' , authControler.login);
 
-router.get('/get_user' , protect ,  authControler.get_user);
-router.post('/set_user' , protect ,  authControler.set_user);
+router.get('/get_user' , protect , authControler.get_user);
+router.post('/set_user' , protect , upload.single('profilePicture'), authControler.set_user);
 module.exports = router;

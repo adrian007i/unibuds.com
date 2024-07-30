@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios'; 
+import axios from 'axios';
 import { object } from 'prop-types';
 
 const initialState = {
@@ -12,32 +12,36 @@ const initialState = {
 // Get user Profile Data
 export const getUserData = createAsyncThunk('auth/getUserData', async (user, thunkAPI) => {
   try {
-    const response = await axios.get('/get_user'); 
-    
-    // CREATE A PROFILE PICTURE URL FROM THE MONGO DB BUFFER DATA
-    const buffer = new Uint8Array(response.data.profilePicture.data.data); 
-    const blob = new Blob([buffer], { type: 'image/jpeg' }); 
-    response.data.profilePicture = URL.createObjectURL(blob); 
+    const response = await axios.get('/get_user');
 
     thunkAPI.fulfillWithValue(response.data);
 
     return response.data;
-  } catch (error) { 
+  } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data);
-  } 
+  }
 });
 
 // Set User profile data
-export const setUserData = createAsyncThunk('auth/setUserData', async (user, thunkAPI) => {
+export const setUserData = createAsyncThunk('auth/setUserData', async ({ formData, proPicExt, proPicBlob }, thunkAPI) => {
   try {
-    
-    await axios.post('/set_user', user);
-    thunkAPI.fulfillWithValue(user);
-    return user;
+    await axios.post('/set_user',
+      {
+        profilePicture: proPicBlob,
+        proPicExt,
+        data: formData
+      },
+      {
+        headers: {
+          'Content-Type': `multipart/form-data`,
+        },
+      });
+    thunkAPI.fulfillWithValue(formData);
+    return formData;
 
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data);
-  } 
+  }
 });
 
 const userSlice = createSlice({
@@ -52,23 +56,23 @@ const userSlice = createSlice({
       })
       .addCase(getUserData.fulfilled, (state, action) => {
         state.data = action.payload;
-        state.getUserPending = false; 
+        state.getUserPending = false;
       })
       .addCase(getUserData.rejected, (state, action) => {
-        state.errors = action.payload; 
-        state.getUserPending = false; 
+        state.errors = action.payload;
+        state.getUserPending = false;
       })
       .addCase(setUserData.pending, (state) => {
         state.setUserPending = true;
         state.errors = {};
       })
-      .addCase(setUserData.fulfilled, (state, action) => { 
+      .addCase(setUserData.fulfilled, (state, action) => {
         state.data = action.payload;
-        state.setUserPending = false; 
+        state.setUserPending = false;
       })
       .addCase(setUserData.rejected, (state, action) => {
-        state.errors = action.payload; 
-        state.setUserPending = false; 
+        state.errors = action.payload;
+        state.setUserPending = false;
       })
   },
 });

@@ -68,4 +68,12 @@ mongoose.connect(process.env.mongoURI)
 // ROUTES
 app.get('/',(req, res) => res.send('Hello, World!'));
 app.use(authRoutes);
-app.use(chatRoutes); 
+app.use(chatRoutes);  
+
+
+// 90 days
+const CACHE_AGE = 1000 * 60 * 60 * 24 * 90;
+
+app.use('/uploads',express.static('uploads', {
+  maxAge: CACHE_AGE  
+}));
