@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const enableWs = require('express-ws');
 const multer = require('multer');
+const storeMessage = require('./controllers/webSockets');
 
 // CUSTOM IMPORTS
 const { protectRaw } = require('./middleware/authMiddleware');
@@ -26,7 +27,7 @@ app.use(cookieParser());
 app.use(cors({ origin: [ 'http://localhost:5173'] }));
 
 // WEB SOCKET CLIENTS 
-clients = app.locals.clients = {};
+clients = new Map();
 
 // CONNECT TO MONGOOSE DATABASE
 mongoose.connect(process.env.mongoURI)
@@ -38,25 +39,40 @@ mongoose.connect(process.env.mongoURI)
       // ensure user JWT and user ID is valid when authenticating 
       const userKey = req.params.userKey;
       let protect = await protectRaw(req.header('Authorization'));
-
-      if (!protect.authenticated || userKey !== protect.user._id.toString()) {
+      
+      if (!protect.authenticated || userKey !== protect.user._id.toString()) {  
         ws.close();
         return;
       }
 
-      clients[userKey] = clients[userKey] || [];
+      // IF CLIENT IS NOT ALREADY CONNECTED
+      if(!clients[userKey]) 
+        clients[userKey]= ws; 
+      
+      // CLIENT ALREADY CONNECTED
+      ws.on('message', function (msg) {  
+        const data = JSON.parse(msg)
+        if(clients[data.reciever]){  
 
-      // Add the new client to the clients list
-      clients[userKey].push(ws); 
+          clients[data.reciever].send(data.message); 
+          storeMessage(msg, 'connected');
+        
+        }else{
+          storeMessage(msg, 'send_email');
+        }
+
+      }); 
+
+      
 
       // Remove the client from the clients list when it disconnects
       ws.on('close', function () {
-        clients[userKey] = clients[userKey].filter((client) => client !== ws); 
-        console.log('client disconnected');
+        clients[userKey] = undefined;
       });
 
-      // }); 
     });
+
+    app
   })
   .then((result) => app.listen(4000))
   .catch((err) => console.log(err));
@@ -75,6 +91,5 @@ app.use(chatRoutes);
 const CACHE_AGE = 1000 * 60 * 60 * 24 * 90;
 
 app.use('/uploads',express.static('uploads', {
-  // maxAge: CACHE_AGE  
-  // TODO - RESOLVE CACHING
+  maxAge: CACHE_AGE   
 }));

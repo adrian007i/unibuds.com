@@ -52,7 +52,7 @@ module.exports.send_message = async (req, res) => {
 
     try {
         // use web socket to broadcast the message
-        req.app.locals.clients[userKey].forEach((client) => client.send(req.body.message));
+        // req.app.locals.clients[userKey].forEach((client) => client.send(req.body.message));
     } catch {
         // send and email here
         console.log('User Not Currently Online')
