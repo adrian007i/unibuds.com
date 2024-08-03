@@ -24,7 +24,7 @@ app.use(cookieParser());
 
 
 // ALLOW FRONT ENDS TO ACCESS THE APP 
-app.use(cors({ origin: ['http://localhost:5173'] }));
+app.use(cors({ origin: ['http://localhost:5173', 'http://127.0.0.1:5500'] }));
 
 // WEB SOCKET CLIENTS 
 clients = new Map();
@@ -34,16 +34,19 @@ mongoose.connect(process.env.mongoURI)
 
   //SETUP WEB SOCKET CONNECTION AT /wss
   .then(result => {
-    app.ws('/:userKey', async function (ws, req) {
-
+    app.ws('/web_socket_endpoint', async function (ws, req) { 
+      console.log(123);
+      
       // ensure user JWT and user ID is valid when authenticating 
-      const userKey = req.params.userKey;
-      let protect = await protectRaw(req.header('Authorization'));
-
-      if (!protect.authenticated || userKey !== protect.user._id.toString()) {
+      let protect = await protectRaw(req.query.auth);
+       console.log(protect); 
+       
+      if (!protect.authenticated) {
         ws.close();
         return;
       }
+
+      const userKey = protect.user._id.toString();
 
       // IF CLIENT IS NOT ALREADY CONNECTED
       if (!clients[userKey])
@@ -51,7 +54,10 @@ mongoose.connect(process.env.mongoURI)
 
       // CLIENT ALREADY CONNECTED
       ws.on('message', function (msg) {
+        console.log(msg);
+        
         const data = JSON.parse(msg);
+        
         
         if (clients[data.reciever]) {
 

@@ -1,37 +1,62 @@
 import React, { useState, memo } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
-import { Button,  FormControl as Input} from 'react-bootstrap';
+import { Button, FormControl as Input } from 'react-bootstrap';
 import { NavLink, useParams } from 'react-router-dom';
 
 // CUSTOM
 // import formatDate from '../../utils/formatDate';
-import { sendMessage } from './slice';
+import { wsSendMessage } from './slice';
 
 import './chat.css';
 import profilepic from '../../icons/Alia.jpg';
 
 
-const Chat = () => {  
-    const { chatId } = useParams(); 
-    const data = useSelector(state => state.chat.data); 
+const Chat = ({ ws }) => {
+
+    const { chatId } = useParams();
+    const data = useSelector(state => state.chat.data);
+    const authUserId = useSelector(state => state.auth.tokenData._id);
+
     const dispatch = useDispatch()
-   
+
     const [newMsg, setNewMsg] = useState('');
-    
     // useEffect(()=>{
     //     console.log('rendering took place for '+ chat_id)
     // },[chats]) 
-    
+
     const onSubmit = (e) => {
         e.preventDefault();
         // TODO: fix so messages dont re-render the entire dataset
         // document.getElementsByClassName('messages')[0].append(`<div className='msg recieve'>${new_msg}</div>`);
-        dispatch(sendMessage({
+
+        // const message = { 
+        //     'body': newMsg,
+        //     'reciever': authUserId == data[chatId].user1 ? data[chatId].user2 : data[chatId].user1,
+        //     'chatId': data[chatId]._id
+        // }
+        // if (ws) {
+        ws.send(JSON.stringify(
+            {
+                'body': newMsg,
+                'reciever': authUserId == data[chatId].user1 ? data[chatId].user2 : data[chatId].user1,
+                'chatId': data[chatId]._id
+            }
+        ));
+
+        //     ws.onmessage = function (event) {
+        //         console.log(event);
+
+        //     }
+        // }
+
+        dispatch(wsSendMessage({
+            'index': chatId,
             'msg': newMsg,
-            'user1': data[chatId].user1,
-            'user2': data[chatId].user2,
-            'chatId': chatId
-        }))
+            'sender': authUserId == data[chatId].user1 ? 1 : 2,
+            'chatId': data[chatId]._id
+        }));
+
+
         setNewMsg('')
     };
 
@@ -44,9 +69,9 @@ const Chat = () => {
 
                 </NavLink>
             </div>
-            <div className='messages'>  
+            <div className='messages'>
                 {data && data[chatId].messages.map((msg, index) =>
-                   <div key={index} className='msg recieve'>{msg.msg}</div>
+                    <div key={index} className={'msg s'+msg.sender}>{msg.msg}</div>
                 )}
             </div>
 
@@ -59,6 +84,6 @@ const Chat = () => {
         </>
     );
 }
- 
+
 
 export default Chat;

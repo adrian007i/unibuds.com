@@ -16,20 +16,38 @@ import PublicRoute from './utils/PublicRoute';
 
 // ICONS
 import signOut from './icons/signout.png';
-import chat from './icons/chat.png'; 
+import chat from './icons/chat.png';
 import logo from './logo.png';
 import { defaultPic } from './utils/globals';
 
 import { logoutUser } from './containers/Auth/slice'
 
-// BACKEND API ENDPOINT
-axios.defaults.baseURL = 'http://localhost:4000/';
+import { wsRecieveMessage } from './containers/Chat/slice'
 
 
-function App() {
+function App({ ws }) {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
   const { data } = useSelector((state) => state.user);
+  const chats = useSelector((state) => state.chat.data);
+
+  if (ws) {
+    ws.onopen = function (event) {
+      console.log('Connection opened');
+    };
+
+    ws.onmessage = function (event) {  
+      dispatch(wsRecieveMessage({
+        'index': 0,
+        'msg': event.data,
+        'sender': auth.tokenData._id == chats[0].user1 ? 2 : 1,
+        'chatId': chats[0]._id
+      })); 
+   }
+
+   
+
+  }
 
   return (
     <div className='main'>
@@ -46,11 +64,11 @@ function App() {
               <img src={chat} alt='chat' title='chat' />
             </NavLink >
             <NavLink to='/profile' className={({ isActive }) => (isActive ? 'active' : '')}>
-            
+
               {/* SET USER PROFILE PICTURE */}
-              
+
               {(data &&
-                <img className='navProPic' src={axios.defaults.baseURL +'uploads/'+data.profilePicture} title='profile' />
+                <img className='navProPic' src={axios.defaults.baseURL + 'uploads/' + data.profilePicture} title='profile' />
               ) ||
                 <img className='navProPic' src={defaultPic} title='profile' />
               }
@@ -82,7 +100,7 @@ function App() {
 
           <Route path='/profile' element={<PrivateRoute component={User} />} />
           <Route path='/chats' element={<PrivateRoute component={Chats} />} />
-          <Route path='/chat/:chatId' element={<PrivateRoute component={Chat} />} />
+          <Route path='/chat/:chatId' element={<PrivateRoute component={Chat} ws={ws} />} />
 
         </Routes>
       </div>

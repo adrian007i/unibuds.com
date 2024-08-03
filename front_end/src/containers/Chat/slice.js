@@ -33,7 +33,14 @@ export const sendMessage = createAsyncThunk('auth/sendMessage', async (msg, thun
 const chatSlice = createSlice({
   name: 'chat',
   initialState,
-  reducers: {},
+  reducers: {
+    wsRecieveMessage: (state, action) => {
+      state.data[action.payload.index].messages.push(action.payload);
+    },
+    wsSendMessage: (state, action) => {
+      state.data[action.payload.index].messages.push(action.payload);
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getChats.pending, (state) => {
@@ -47,21 +54,10 @@ const chatSlice = createSlice({
       .addCase(getChats.rejected, (state, action) => {
         state.errors = action.payload; 
         state.loadingChats = false; 
-      })
-      .addCase(sendMessage.pending, (state) => {
-        state.errors = {}
-        state.sendingMsg = true; 
-      })
-      .addCase(sendMessage.fulfilled, (state, action) => { 
-        state.data[action.payload.chatId].messages.push(action.payload) 
-      })
-      .addCase(sendMessage.rejected, (state, action) => {
-        state.errors = action.payload; 
-        state.sendingMsg = false; 
-      })
+      }) 
   },
 });
 
-// export const {} = authSlice.actions;
+export const {wsSendMessage, wsRecieveMessage} = chatSlice.actions;
 
 export default chatSlice.reducer;

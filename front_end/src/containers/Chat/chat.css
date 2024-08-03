@@ -45,7 +45,7 @@
     max-width: 80%;
 }
 
-.recieve {
+.s1 {
     background-color: white;
     color: #444;
     margin-left: 10px;
@@ -53,7 +53,7 @@
 
 }
 
-.send {
+.s2 {
     background-color: rgb(46, 46, 255);
     color: #ddd;
     margin-right: 10px; 
