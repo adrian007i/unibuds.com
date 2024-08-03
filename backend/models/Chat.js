@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema; 
-
-const MAX_MESSAGES = 3;
-
+ 
 // SCHEMA DEFINATION FOR A MESSAGE
 const messageSchema = new mongoose.Schema({
   sender: {
