@@ -61,7 +61,7 @@ mongoose.connect(process.env.mongoURI)
         
         if (clients[data.reciever]) {
 
-          clients[data.reciever].send(data.body);
+          clients[data.reciever].send(msg);
           storeMessage(data, protect.user._id , true);
 
         } else {

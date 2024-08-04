@@ -36,17 +36,17 @@ function App({ ws }) {
       console.log('Connection opened');
     };
 
-    ws.onmessage = function (event) {  
+    ws.onmessage = function (event) {   
+      const message = JSON.parse(event.data)
+      const chatIndex = chats.findIndex( chat => chat._id === message.chatId)
+      
       dispatch(wsRecieveMessage({
-        'index': 0,
-        'msg': event.data,
-        'sender': auth.tokenData._id == chats[0].user1 ? 2 : 1,
-        'chatId': chats[0]._id
+        'index': chatIndex,
+        'msg': message.body,
+        'sender': auth.tokenData._id == chats[chatIndex].user1 ? 2 : 1,
+        'chatId': message.chatId
       })); 
    }
-
-   
-
   }
 
   return (
