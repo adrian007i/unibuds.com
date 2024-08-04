@@ -22,11 +22,21 @@ body,
   justify-content: center;
   padding: 5% 0px;
 }
-
-
-::-webkit-scrollbar {
-  width: 0px;
+::-webkit-scrollbar{
+    width: 0px;
 }
+
+#pages ::-webkit-scrollbar {
+  width: 5px;
+  background-color: #888;
+}
+
+/* Handle */
+#pages ::-webkit-scrollbar-thumb {
+  background: #eee; 
+}
+
+
 
 
 label {
@@ -63,6 +73,10 @@ label {
   #root{
     padding: 0px;
   }
+
+  ::-webkit-scrollbar{
+    width: 0px !important
+} 
 }
 
 #home .welcome {

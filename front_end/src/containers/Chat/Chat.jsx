@@ -56,7 +56,9 @@ const Chat = ({ ws }) => {
             </div>
             <div className='messages'>
                 {data && data[chatIndex].messages.map((msg, index) =>
-                    <div key={index} className={'msg s' + msg.sender}>{msg.msg}</div>
+                    <div key={index} className={'msg s' + msg.sender}>
+                        {data[chatIndex].messages[data[chatIndex].messages.length - 1 - index].msg}
+                        </div>
                 )}
             </div>
 

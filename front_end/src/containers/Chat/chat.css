@@ -30,7 +30,7 @@
 .messages {
     margin-bottom: auto; 
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     row-gap: 5px;
     column-gap: 20px;
     flex: 14;
