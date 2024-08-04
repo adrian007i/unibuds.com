@@ -35,7 +35,9 @@
 }
 
 .messages {
-    background-color: #eee;
+    background-color: #eee; 
+    padding-bottom: 40px;
+    min-height: -webkit-fill-available;   
 }
 
 .msg {

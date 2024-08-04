@@ -70,7 +70,7 @@ const Chat = ({ ws }) => {
                 </NavLink>
             </div>
             <div className='messages'>
-                {data && data[chatId].messages.map((msg, index) =>
+                {data && data.filter(item => item._id === chatId)[0].messages.map((msg, index) =>
                     <div key={index} className={'msg s'+msg.sender}>{msg.msg}</div>
                 )}
             </div>

@@ -24,7 +24,7 @@ const Chats = () => {
                         <img src={search} alt='' /> Find Buddies
                     </Button> 
                     {data && data.map((chat, index) => (  
-                        <NavLink key={index} className='chat' to={'/chat/' + index}>
+                        <NavLink key={index} className='chat' to={'/chat/' + chat._id}>
                             <div className='propic'><img src={profilepic} alt='' /></div>
                             <div className='name'>Alia
                                 {/* {chat._id}- {chat.user1} - {chat.user2} */}
