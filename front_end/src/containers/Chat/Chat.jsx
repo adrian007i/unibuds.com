@@ -23,7 +23,6 @@ const Chat = ({ ws }) => {
     const chatIndex = data ? data.findIndex( chat => chat._id === chatId) : null;
     
     const onSubmit = (e) => {
-        e.preventDefault(); 
 
         ws.send(JSON.stringify(
             {
@@ -44,6 +43,8 @@ const Chat = ({ ws }) => {
         setNewMsg('')
     };
 
+ 
+
     return (
         <>
             <div className='user'>
@@ -61,7 +62,7 @@ const Chat = ({ ws }) => {
 
             <div className='msg_box'>
                 <div className='msg_box_flex'>
-                    <Input className='input_msg' onChange={e => { setNewMsg(e.target.value) }} value={newMsg} placeholder='Enter Message Here'></Input>
+                    <Input className='input_msg' onChange={e => { setNewMsg(e.target.value) }} onKeyDown={e => {if (e.key == 'Enter') onSubmit() } } value={newMsg} placeholder='Enter Message Here'></Input>
                     
                     <Button className='send' type='button' onClick={onSubmit}><img className='sendIcon' src="/send.png" alt="" /></Button>
                 </div>
