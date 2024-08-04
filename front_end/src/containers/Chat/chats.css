@@ -46,3 +46,8 @@
     font-size: 12px;
     margin-right: 5px;
 }
+
+.sendIcon{
+    height: 25px;
+    filter: invert()
+}

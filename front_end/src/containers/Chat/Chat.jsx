@@ -1,4 +1,4 @@
-import React, { useState, memo } from 'react';
+import React, { useState, memo, useEffect } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { Button, FormControl as Input } from 'react-bootstrap';
 import { NavLink, useParams } from 'react-router-dom';
@@ -20,40 +20,24 @@ const Chat = ({ ws }) => {
     const dispatch = useDispatch()
 
     const [newMsg, setNewMsg] = useState('');
-    // useEffect(()=>{
-    //     console.log('rendering took place for '+ chat_id)
-    // },[chats]) 
-
+    const chatIndex = data ? data.findIndex( chat => chat._id === chatId) : null;
+    
     const onSubmit = (e) => {
-        e.preventDefault();
-        // TODO: fix so messages dont re-render the entire dataset
-        // document.getElementsByClassName('messages')[0].append(`<div className='msg recieve'>${new_msg}</div>`);
+        e.preventDefault(); 
 
-        // const message = { 
-        //     'body': newMsg,
-        //     'reciever': authUserId == data[chatId].user1 ? data[chatId].user2 : data[chatId].user1,
-        //     'chatId': data[chatId]._id
-        // }
-        // if (ws) {
         ws.send(JSON.stringify(
             {
                 'body': newMsg,
-                'reciever': authUserId == data[chatId].user1 ? data[chatId].user2 : data[chatId].user1,
-                'chatId': data[chatId]._id
+                'reciever': authUserId == data[chatIndex].user1 ? data[chatIndex].user2 : data[chatIndex].user1,
+                'chatId': data[chatIndex]._id
             }
         ));
 
-        //     ws.onmessage = function (event) {
-        //         console.log(event);
-
-        //     }
-        // }
-
         dispatch(wsSendMessage({
-            'index': chatId,
+            'index': chatIndex,
             'msg': newMsg,
-            'sender': authUserId == data[chatId].user1 ? 1 : 2,
-            'chatId': data[chatId]._id
+            'sender': authUserId == data[chatIndex].user1 ? 1 : 2,
+            'chatId': data[chatIndex]._id
         }));
 
 
@@ -70,15 +54,16 @@ const Chat = ({ ws }) => {
                 </NavLink>
             </div>
             <div className='messages'>
-                {data && data.filter(item => item._id === chatId)[0].messages.map((msg, index) =>
-                    <div key={index} className={'msg s'+msg.sender}>{msg.msg}</div>
+                {data && data[chatIndex].messages.map((msg, index) =>
+                    <div key={index} className={'msg s' + msg.sender}>{msg.msg}</div>
                 )}
             </div>
 
             <div className='msg_box'>
                 <div className='msg_box_flex'>
                     <Input className='input_msg' onChange={e => { setNewMsg(e.target.value) }} value={newMsg} placeholder='Enter Message Here'></Input>
-                    <Button className='send' type='button' onClick={onSubmit}>Send</Button>
+                    
+                    <Button className='send' type='button' onClick={onSubmit}><img className='sendIcon' src="/send.png" alt="" /></Button>
                 </div>
             </div>
         </>
