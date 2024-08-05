@@ -22,8 +22,9 @@ body,
   justify-content: center;
   padding: 5% 0px;
 }
-::-webkit-scrollbar{
-    width: 0px;
+
+::-webkit-scrollbar {
+  width: 0px;
 }
 
 #pages ::-webkit-scrollbar {
@@ -33,7 +34,7 @@ body,
 
 /* Handle */
 #pages ::-webkit-scrollbar-thumb {
-  background: #eee; 
+  background: #eee;
 }
 
 
@@ -70,13 +71,21 @@ label {
     width: 100%;
     border-radius: unset;
   }
-  #root{
+
+  #root {
     padding: 0px;
   }
 
-  ::-webkit-scrollbar{
+  ::-webkit-scrollbar {
     width: 0px !important
-} 
+  }
+}
+
+#home {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
 }
 
 #home .welcome {
