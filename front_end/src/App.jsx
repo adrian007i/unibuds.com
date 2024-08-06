@@ -36,6 +36,11 @@ function App({ ws }) {
       console.log('Connection opened');
     };
 
+    ws.onclose = function (event) {  
+      console.log('Connection closed');
+      
+    };
+
     ws.onmessage = function (event) {   
       const message = JSON.parse(event.data)
       const chatIndex = chats.findIndex( chat => chat._id === message.chatId)
@@ -47,6 +52,11 @@ function App({ ws }) {
         'chatId': message.chatId
       })); 
    }
+  }
+
+  const logoutAndDisconnect = () => {
+    dispatch(logoutUser())
+    ws.close()
   }
 
   return (
@@ -76,7 +86,7 @@ function App({ ws }) {
 
 
             </NavLink>
-            <button onClick={() => dispatch(logoutUser())} style={{ background: 'transparent', border: 'none' }} >
+            <button onClick={logoutAndDisconnect} style={{ background: 'transparent', border: 'none' }} >
               <img src={signOut} alt='signout' title='signout' />
             </button>
           </div>
