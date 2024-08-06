@@ -43,7 +43,7 @@ function App({ ws }) {
       dispatch(wsRecieveMessage({
         'index': chatIndex,
         'msg': message.body,
-        'sender': auth.tokenData._id == chats[chatIndex].user1 ? 2 : 1,
+        'sender': auth.tokenData._id === chats[chatIndex].user1 ? 2 : 1,
         'chatId': message.chatId
       })); 
    }

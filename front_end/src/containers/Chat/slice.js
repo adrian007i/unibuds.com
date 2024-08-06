@@ -35,10 +35,10 @@ const chatSlice = createSlice({
   initialState,
   reducers: {
     wsRecieveMessage: (state, action) => {
-      state.data[action.payload.index].messages = state.data[action.payload.index].messages.push(action.payload);
+      state.data[action.payload.index].messages.push(action.payload);
     },
     wsSendMessage: (state, action) => {
-      state.data[action.payload.index].messages = state.data[action.payload.index].messages.push(action.payload);
+      state.data[action.payload.index].messages.push(action.payload);
     },
   },
   extraReducers: (builder) => {

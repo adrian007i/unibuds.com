@@ -20,8 +20,8 @@ const Chat = ({ ws }) => {
     const dispatch = useDispatch()
 
     const [newMsg, setNewMsg] = useState('');
-    const chatIndex = data ? data.findIndex( chat => chat._id === chatId) : null;
-    
+    const chatIndex = data ? data.findIndex(chat => chat._id === chatId) : null;
+
     const onSubmit = (e) => {
 
         ws.send(JSON.stringify(
@@ -31,11 +31,10 @@ const Chat = ({ ws }) => {
                 'chatId': data[chatIndex]._id
             }
         ));
-
         dispatch(wsSendMessage({
             'index': chatIndex,
             'msg': newMsg,
-            'sender': authUserId == data[chatIndex].user1 ? 1 : 2,
+            'sender': authUserId === data[chatIndex].user1 ? 1 : 2,
             'chatId': data[chatIndex]._id
         }));
 
@@ -43,7 +42,7 @@ const Chat = ({ ws }) => {
         setNewMsg('')
     };
 
- 
+
 
     return (
         <>
@@ -55,17 +54,22 @@ const Chat = ({ ws }) => {
                 </NavLink>
             </div>
             <div className='messages'>
-                {data && data[chatIndex].messages.map((msg, index) =>
-                    <div key={index} className={'msg s' + msg.sender}>
-                        {data[chatIndex].messages[data[chatIndex].messages.length - 1 - index].msg}
-                        </div>
+                {data && data[chatIndex].messages.map((msg, index) => {
+
+                    // we are using flex box reverse direction, so contents must iterated in reverse
+                    let id = data[chatIndex].messages.length - 1 - index;
+                    return (
+                        <div key={id} className={'msg s' + data[chatIndex].messages[id].sender}>
+                            {data[chatIndex].messages[id].msg}
+                        </div>)
+                }
                 )}
             </div>
 
             <div className='msg_box'>
                 <div className='msg_box_flex'>
-                    <Input className='input_msg' onChange={e => { setNewMsg(e.target.value) }} onKeyDown={e => {if (e.key == 'Enter') onSubmit() } } value={newMsg} placeholder='Enter Message Here'></Input>
-                    
+                    <Input className='input_msg' onChange={e => { setNewMsg(e.target.value) }} onKeyDown={e => { if (e.key == 'Enter') onSubmit() }} value={newMsg} placeholder='Enter Message Here'></Input>
+
                     <Button className='send' type='button' onClick={onSubmit}><img className='sendIcon' src="/send.png" alt="" /></Button>
                 </div>
             </div>
