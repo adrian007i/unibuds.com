@@ -21,28 +21,29 @@ const Chat = ({ ws }) => {
 
     const [newMsg, setNewMsg] = useState('');
     const chatIndex = data ? data.findIndex(chat => chat._id === chatId) : null;
+    
+    // user 1 or user 2 is assigned to each message, here we figure of which of the two the user is
+    let amIuser1;
+    if(chatIndex !== null) amIuser1 = authUserId == data[chatIndex].user1 
 
     const onSubmit = (e) => {
 
         ws.send(JSON.stringify(
             {
                 'body': newMsg,
-                'reciever': authUserId == data[chatIndex].user1 ? data[chatIndex].user2 : data[chatIndex].user1,
+                'reciever': amIuser1 ? data[chatIndex].user2 : data[chatIndex].user1,
                 'chatId': data[chatIndex]._id
             }
         ));
         dispatch(wsSendMessage({
             'index': chatIndex,
             'msg': newMsg,
-            'sender': authUserId === data[chatIndex].user1 ? 1 : 2,
+            'sender': amIuser1 ? 1 : 2,
             'chatId': data[chatIndex]._id
-        }));
-
+        })); 
 
         setNewMsg('')
-    };
-
-
+    }; 
 
     return (
         <>
@@ -59,7 +60,7 @@ const Chat = ({ ws }) => {
                     // we are using flex box reverse direction, so contents must iterated in reverse
                     let id = data[chatIndex].messages.length - 1 - index;
                     return (
-                        <div key={id} className={'msg s' + data[chatIndex].messages[id].sender}>
+                        <div key={id} className={`msg ${amIuser1}${data[chatIndex].messages[id].sender}` }>
                             {data[chatIndex].messages[id].msg}
                         </div>)
                 }

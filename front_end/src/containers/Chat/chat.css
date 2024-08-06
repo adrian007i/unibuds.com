@@ -45,14 +45,22 @@
 
 }
 
-.s1 {
+/* true refers to 
+amIuser1
+
+*/
+
+
+/* your messags */
+.messages .false1, .messages .true2 {
     background-color: white;
     color: #444;
     margin-left: 10px; 
 
 }
 
-.s2 {
+/* my messags */
+.messages .false2, .messages .true1 {
     background-color: rgb(46, 46, 255);
     color: #ddd;
     margin-right: 10px;  
