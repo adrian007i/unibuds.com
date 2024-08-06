@@ -5,3 +5,5 @@ export const imgUploadConfig = {
     maxWidthOrHeight: 300,
     useWebWorker: true,
 } 
+
+export const BACKEND_URL = 'localhost:4000/'
