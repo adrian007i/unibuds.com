@@ -1,0 +1,70 @@
+.match{
+    height: 100%; 
+    align-content: center;
+    align-self: center;
+}
+
+
+.findBuddy{
+    text-align: center;
+}
+
+.findBuddyBtn{ 
+    padding: 5px;
+    font-size: 2em; 
+    font-family: cursive; 
+    border-radius: 10px;
+    border: none;
+}
+
+
+.findBuddyBtn:hover{
+    opacity: .5;
+}
+ 
+
+.findABuddyIcon{ 
+    width: 80%; 
+}
+
+.profileDetails{
+    text-align: center;
+}
+
+.bullet{
+    color: #eee;
+    padding: 10px;
+    font-weight: 900;
+}
+
+.profileDetails h1{
+    color: #eee;
+}
+
+.startChatBtn, .skipChatBtn{ 
+    padding: 2px;
+    font-size: 1.5em; 
+    font-family: cursive; 
+    border-radius: 10px;
+    border: none;
+    margin:10px;
+    color: #eee; 
+}
+.startChatBtn{
+    background-color: rgb(27, 100, 27);
+}
+
+.skipChatBtn{
+    background-color: rgb(151, 4, 4);
+}
+
+.bio{
+    background-color: #ddd;
+    height: 250px;
+    color: #333;
+    border-radius: 10px;
+    text-align: left;
+    padding: 10px;
+    overflow-y: scroll;
+    width: 300px
+}

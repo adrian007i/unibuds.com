@@ -1,38 +1,75 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 
-// CUSTOM
-import formatDate from '../../utils/formatDate';
+// CUSTOM 
 import './userMatch.css';
+import '../../loader.css'
+import buddy from '../../icons/buddy.png';
 
-const UserMatch = ( ) => {
- 
+import { fetchMatch } from './slice';
+
+const UserMatch = () => {
+
+    const { isPending, matchedUser } = useSelector(state => state.match)
+    const dispatch = useDispatch();
+
     return (
         <>
-            {/* {
-                <div> 
-                    {data && data.map((chat, index) => {  
+            <div className='match'>
+                {matchedUser === null &&
+                    <div className='findBuddy'>
+                        <img src={buddy} alt="" className='findABuddyIcon' />
 
-                        const otherUser = user._id === chat.user1._id ? chat.user2 : chat.user1; 
-
-                        return (<NavLink key={index} className='chat' to={'/chat/' + chat._id}> 
-                            <div className='propic'>
-                                <img src={axios.defaults.baseURL + 'uploads/' + otherUser.profilePicture} alt='' />
+                        {isPending &&
+                            <div className="loader">
+                                <div className="lds-facebook"><div></div><div></div><div></div></div>
+                                <div>Finding You A Buddy</div>
                             </div>
-                            <div className='name'>{otherUser.firstName}
-                                
-                                <div style={{ 'fontSize': '8px' }}></div>
+                            ||
+                            <button className='findBuddyBtn' onClick={() => dispatch(fetchMatch())}>
+                                Find a Uni Buddy
+                            </button>
+                        }
+                    </div>
+                    ||
+                    <div>
+                        <div className='text-center'>
+                            <label
+                                className='profilePicPreview'
+                                style={{ backgroundImage: `url(${
+                                    matchedUser.profilePicture ? 
+                                    axios.defaults.baseURL + 'uploads/' + matchedUser.profilePicture :
+                                    '/proPicDefault.jpg'})` }} >
+                            </label>
+                        </div>
+                        <div className='profileDetails'>
+                            <h1>{matchedUser.firstName}</h1>
+                            <p>
+                                {matchedUser.campusLocation}
+                                <span className='bullet'>&#8226;</span>
+                                {matchedUser.major}
+                                <span className='bullet'>&#8226;</span>
+                                {matchedUser.gender}
+                            </p>
+                            <p className='bio'>
+                                {matchedUser.bio} 
+                            </p>
 
-                            </div>
-                            <div className='msg_time'>{formatDate(chat.lastMessage)}</div>
-                        </NavLink>)
-                    }
-                    )}
-                </div>
-            } */}
-            helloo
+                            <button className='startChatBtn'>
+                                Start Chat
+                            </button>
+                            
+                            <button className='skipChatBtn' onClick={() => dispatch(fetchMatch())}>
+                                Skip
+                            </button>
+                        </div>
+
+
+                    </div>
+                }
+            </div>
         </>
     );
 }
