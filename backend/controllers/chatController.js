@@ -1,4 +1,5 @@
 const Chat = require('../models/Chat');
+const User = require('../models/User')
 const mongoose = require('mongoose');
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -23,9 +24,44 @@ module.exports.get_chats = async (req, res) => {
 
 }
 
+module.exports.generateNewChat = async (req, res) => {
+
+    const my_user_id = new mongoose.Types.ObjectId(req.user._id);
+    // await sleep(1000)
+    try {
+        const usersCount = await User.countDocuments({});
+
+        var random = Math.floor(Math.random() * usersCount)
+        const randomUser = await User
+            .findOne({ _id: { $ne: my_user_id } })
+            .skip(random)
+            .select(['_id', 'firstName', 'lastName', 'gender', 'campusLocation', 'major', 'bio', 'profilePicture'])
+        console.log(randomUser);
+
+        res.status(200).json({ 'success': true, 'user': randomUser });
+    } catch {
+        res.status(400).json({ 'success': false });
+    }
+
+}
+
+module.exports.acceptNewChat = async (req, res) => {
+
+}
+
+
+
+
+
+
+
+
+
+
+
 // /**
 //  * @desc    Get all messages for a particular user
-//  * @access  Private 
+//  * @access  Private
 //  */
 // module.exports.get_messages = async (req, res) => {
 
@@ -41,4 +77,3 @@ module.exports.get_chats = async (req, res) => {
 
 // }
 
- 
