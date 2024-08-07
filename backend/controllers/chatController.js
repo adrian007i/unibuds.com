@@ -12,7 +12,8 @@ const MAX_MESSAGES = 3;
 module.exports.get_chats = async (req, res) => {
 
     const _id = new mongoose.Types.ObjectId(req.user._id);
-    // await sleep(1000)
+    // await sleep(1000) 
+    
     const chats = await Chat
         .find({
             $or: [{ user1: _id }, { user2: _id }]
@@ -20,6 +21,19 @@ module.exports.get_chats = async (req, res) => {
         .skip(0)
         .limit(10)
         .sort({ 'lastMessage': 'desc' })
+        .populate([ 
+            {
+                path: 'user1',
+                select: 'firstName profilePicture',
+            },
+            {
+                path: 'user2',
+                select: 'firstName profilePicture',
+            }
+        ])
+
+    console.log(chats);
+
     res.status(200).json({ 'success': true, 'chats': chats });
 
 }
