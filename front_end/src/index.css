@@ -51,6 +51,7 @@ label {
   width: 350px;
   display: flex;
   flex-direction: column;
+  padding: 10px;
 }
 
 .main .nav {
@@ -78,6 +79,10 @@ label {
 
   ::-webkit-scrollbar {
     width: 0px !important
+  }
+
+  .main{
+    padding: 0px;
   }
 }
 
@@ -126,7 +131,7 @@ label {
 }
 
 .logo {
-  filter: invert()
+  filter: invert();
 }
 
 
@@ -162,4 +167,8 @@ label {
 .navProPic {
   padding: unset !important;
   border-radius: 50% !important;
+}
+
+#left{
+  padding: 5px;
 }
