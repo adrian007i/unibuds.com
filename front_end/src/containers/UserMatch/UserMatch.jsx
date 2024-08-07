@@ -5,21 +5,19 @@ import axios from 'axios';
 
 // CUSTOM
 import formatDate from '../../utils/formatDate';
-import './chats.css';
+import './userMatch.css';
 
-const Chats = ({user}) => {
-
-    const { data } = useSelector(state => state.chat); 
+const UserMatch = ( ) => {
+ 
     return (
         <>
-            {
+            {/* {
                 <div> 
                     {data && data.map((chat, index) => {  
 
                         const otherUser = user._id === chat.user1._id ? chat.user2 : chat.user1; 
 
-                        return (<NavLink key={index} className='chat' to={'/chat/' + chat._id}>
-                            {/*  */}
+                        return (<NavLink key={index} className='chat' to={'/chat/' + chat._id}> 
                             <div className='propic'>
                                 <img src={axios.defaults.baseURL + 'uploads/' + otherUser.profilePicture} alt='' />
                             </div>
@@ -33,9 +31,10 @@ const Chats = ({user}) => {
                     }
                     )}
                 </div>
-            }
+            } */}
+            helloo
         </>
     );
 }
 
-export default Chats
+export default UserMatch

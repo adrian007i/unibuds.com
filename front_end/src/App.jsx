@@ -10,6 +10,7 @@ import Home from './containers/PublicHome';
 import User from './containers/User/User';
 import Chats from './containers/Chat/Chats';
 import Chat from './containers/Chat/Chat';
+import UserMatch from './containers/UserMatch/UserMatch';
 
 import PrivateRoute from './utils/PrivateRoute';
 import PublicRoute from './utils/PublicRoute';
@@ -18,12 +19,11 @@ import PublicRoute from './utils/PublicRoute';
 import signOut from './icons/signout.png';
 import chat from './icons/chat.png';
 import logo from './logo.png';
+import search from './icons/search.png';
+
 import { defaultPic } from './utils/globals';
-
-import { logoutUser } from './containers/Auth/slice'
-
-import { wsRecieveMessage } from './containers/Chat/slice'
-
+import { logoutUser } from './containers/Auth/slice';
+import { wsRecieveMessage } from './containers/Chat/slice';
 
 function App({ ws }) {
   const dispatch = useDispatch();
@@ -36,22 +36,22 @@ function App({ ws }) {
       console.log('Connection opened');
     };
 
-    ws.onclose = function (event) {  
+    ws.onclose = function (event) {
       console.log('Connection closed');
-      
+
     };
 
-    ws.onmessage = function (event) {   
+    ws.onmessage = function (event) {
       const message = JSON.parse(event.data)
-      const chatIndex = chats.findIndex( chat => chat._id === message.chatId)
-      
+      const chatIndex = chats.findIndex(chat => chat._id === message.chatId)
+
       dispatch(wsRecieveMessage({
         'index': chatIndex,
         'msg': message.body,
         'sender': auth.tokenData._id === chats[chatIndex].user1 ? 2 : 1,
         'chatId': message.chatId
-      })); 
-   }
+      }));
+    }
   }
 
   const logoutAndDisconnect = () => {
@@ -73,17 +73,17 @@ function App({ ws }) {
             <NavLink to='/chats' className={({ isActive }) => (isActive ? 'active' : '')}>
               <img src={chat} alt='chat' title='chat' />
             </NavLink >
+            <NavLink to='/find_a_buddy' className={({ isActive }) => (isActive ? 'active' : '')}>
+              <img src={search} alt='search' title='find a buddy' />
+            </NavLink >
             <NavLink to='/profile' className={({ isActive }) => (isActive ? 'active' : '')}>
 
               {/* SET USER PROFILE PICTURE */}
-
               {(data &&
                 <img className='navProPic' src={axios.defaults.baseURL + 'uploads/' + data.profilePicture} title='profile' />
               ) ||
                 <img className='navProPic' src={defaultPic} title='profile' />
               }
-
-
 
             </NavLink>
             <button onClick={logoutAndDisconnect} style={{ background: 'transparent', border: 'none' }} >
@@ -110,6 +110,7 @@ function App({ ws }) {
 
           <Route path='/profile' element={<PrivateRoute component={User} />} />
           <Route path='/chats' element={<PrivateRoute component={Chats} />} />
+          <Route path='/find_a_buddy' element={<PrivateRoute component={UserMatch} />} />
           <Route path='/chat/:chatId' element={<PrivateRoute component={Chat} ws={ws} />} />
 
         </Routes>

@@ -11,8 +11,7 @@ const MAX_MESSAGES = 3;
  */
 module.exports.get_chats = async (req, res) => {
 
-    const _id = new mongoose.Types.ObjectId(req.user._id);
-    // await sleep(1000) 
+    const _id = new mongoose.Types.ObjectId(req.user._id); 
     
     const chats = await Chat
         .find({
@@ -30,10 +29,7 @@ module.exports.get_chats = async (req, res) => {
                 path: 'user2',
                 select: 'firstName profilePicture',
             }
-        ])
-
-    console.log(chats);
-
+        ]) 
     res.status(200).json({ 'success': true, 'chats': chats });
 
 }
