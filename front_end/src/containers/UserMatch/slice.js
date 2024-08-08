@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 const initialState = {
   matchedUser: null,
   errors: {},
@@ -10,8 +12,17 @@ const initialState = {
 
 export const fetchMatch = createAsyncThunk('auth/fetchMatch', async (data, thunkAPI) => {
   try {
+    var start = Date.now();
     const response = await axios.get('/generate_new_chat');
-    thunkAPI.fulfillWithValue(response.data); 
+    var diff =   Date.now() - start;
+
+    if (diff < 3000){
+      await sleep(3000 - diff) 
+    }
+      
+
+    thunkAPI.fulfillWithValue(response.data);  
+    
     return response.data;
   } catch (error) { 
     return thunkAPI.rejectWithValue(error.response.data);
@@ -28,7 +39,8 @@ const matchSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchMatch.pending, (state) => {
-        state.loading = true;
+        state.matchedUser = null
+        state.isPending = true;
         state.errors = {};
       })
       .addCase(fetchMatch.fulfilled, (state, action) => { 
@@ -36,7 +48,7 @@ const matchSlice = createSlice({
         state.isPending = false;
       })
       .addCase(fetchMatch.rejected, (state, action) => {
-        state.loading = false;
+        state.isPending = false;
         state.errors = action.payload;
       })
   },

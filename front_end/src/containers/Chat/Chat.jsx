@@ -24,14 +24,17 @@ const Chat = ({ ws }) => {
     
     // user 1 or user 2 is assigned to each message, here we figure of which of the two the user is
     let amIuser1;
-    if(chatIndex !== null) amIuser1 = authUserId == data[chatIndex].user1 
+    if(chatIndex !== null) amIuser1 = authUserId == data[chatIndex].user1._id;
 
     const onSubmit = (e) => {
+
+        if(newMsg.length === 0)
+            return
 
         ws.send(JSON.stringify(
             {
                 'body': newMsg,
-                'reciever': amIuser1 ? data[chatIndex].user2 : data[chatIndex].user1,
+                'reciever': amIuser1 ? data[chatIndex].user2._id : data[chatIndex].user1._id,
                 'chatId': data[chatIndex]._id
             }
         ));
@@ -71,7 +74,7 @@ const Chat = ({ ws }) => {
                 <div className='msg_box_flex'>
                     <Input className='input_msg' onChange={e => { setNewMsg(e.target.value) }} onKeyDown={e => { if (e.key == 'Enter') onSubmit() }} value={newMsg} placeholder='Enter Message Here'></Input>
 
-                    <Button className='send' type='button' onClick={onSubmit}><img className='sendIcon' src="/send.png" alt="" /></Button>
+                    <Button disabled={newMsg.length === 0 } className='send' type='button' onClick={onSubmit}><img className='sendIcon' src="/send.png" alt="" /></Button>
                 </div>
             </div>
         </>
