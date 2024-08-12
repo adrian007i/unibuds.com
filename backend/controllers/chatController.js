@@ -61,9 +61,8 @@ module.exports.generateNewChat = async (req, res) => {
  * @desc    User accepts the random chat
  * @access  Private 
  */
-module.exports.acceptNewChat = async (req, res) => {
-    console.log('acepting');
-
+module.exports.acceptNewChat = async (req, res) => { 
+    
     try {
         const user1 = new mongoose.Types.ObjectId(req.user._id);
         const user2 = new mongoose.Types.ObjectId(req.params.chat_id);
