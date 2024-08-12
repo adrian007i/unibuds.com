@@ -34,6 +34,9 @@ const chatSlice = createSlice({
   name: 'chat',
   initialState,
   reducers: {
+    addNewChat:(state , action ) =>{
+        state.data.push(action.payload);
+    },
     wsRecieveMessage: (state, action) => {
       state.data[action.payload.index].messages.push(action.payload);
     },
@@ -58,6 +61,6 @@ const chatSlice = createSlice({
   },
 });
 
-export const {wsSendMessage, wsRecieveMessage} = chatSlice.actions;
+export const {wsSendMessage, wsRecieveMessage, addNewChat} = chatSlice.actions;
 
 export default chatSlice.reducer;

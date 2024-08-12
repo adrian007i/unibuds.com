@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { NavLink } from 'react-router-dom';
+import { Navigate, NavLink , useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 // CUSTOM 
@@ -8,12 +8,29 @@ import './userMatch.css';
 import '../../loader.css'
 import buddy from '../../icons/buddy.png';
 
-import { fetchMatch } from './slice';
+import { fetchMatch, acceptMatch } from './slice';
+import { addNewChat } from '../Chat/slice';
 
 const UserMatch = () => {
 
-    const { isPending, matchedUser } = useSelector(state => state.match)
-    const dispatch = useDispatch();
+    const { isPending, matchedUser, startingMatch, newChat } = useSelector(state => state.match)
+    const dispatch = useDispatch(); 
+    const navigate = useNavigate();
+
+    useEffect(() =>{
+        if(newChat){
+            dispatch(addNewChat(newChat)) ;
+            navigate('/chat/'+newChat._id)
+        }
+            
+        
+    },[newChat])
+
+    const acceptMatchSubmit = async (user) =>{   
+        dispatch(acceptMatch(user)); 
+        
+        
+    }
 
     return (
         <>
@@ -57,7 +74,7 @@ const UserMatch = () => {
                                 {matchedUser.bio} 
                             </p>
 
-                            <button className='startChatBtn'>
+                            <button className='startChatBtn' onClick={() => acceptMatchSubmit(matchedUser)}>
                                 Start Chat
                             </button>
                             

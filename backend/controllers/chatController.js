@@ -11,8 +11,8 @@ const MAX_MESSAGES = 3;
  */
 module.exports.get_chats = async (req, res) => {
 
-    const _id = new mongoose.Types.ObjectId(req.user._id); 
-    
+    const _id = new mongoose.Types.ObjectId(req.user._id);
+
     const chats = await Chat
         .find({
             $or: [{ user1: _id }, { user2: _id }]
@@ -20,7 +20,7 @@ module.exports.get_chats = async (req, res) => {
         .skip(0)
         .limit(10)
         .sort({ 'lastMessage': 'desc' })
-        .populate([ 
+        .populate([
             {
                 path: 'user1',
                 select: 'firstName profilePicture',
@@ -29,15 +29,18 @@ module.exports.get_chats = async (req, res) => {
                 path: 'user2',
                 select: 'firstName profilePicture',
             }
-        ]) 
+        ])
     res.status(200).json({ 'success': true, 'chats': chats });
 
 }
 
+/**
+ * @desc    Generates a random chat for the user
+ * @access  Private 
+ */
 module.exports.generateNewChat = async (req, res) => {
 
     const my_user_id = new mongoose.Types.ObjectId(req.user._id);
-    // await sleep(1000)
     try {
         const usersCount = await User.countDocuments({});
 
@@ -46,7 +49,6 @@ module.exports.generateNewChat = async (req, res) => {
             .findOne({ _id: { $ne: my_user_id } })
             .skip(random)
             .select(['_id', 'firstName', 'lastName', 'gender', 'campusLocation', 'major', 'bio', 'profilePicture'])
-        console.log(randomUser);
 
         res.status(200).json({ 'success': true, 'user': randomUser });
     } catch {
@@ -55,16 +57,42 @@ module.exports.generateNewChat = async (req, res) => {
 
 }
 
+/**
+ * @desc    User accepts the random chat
+ * @access  Private 
+ */
 module.exports.acceptNewChat = async (req, res) => {
+    console.log('acepting');
 
+    try {
+        const user1 = new mongoose.Types.ObjectId(req.user._id);
+        const user2 = new mongoose.Types.ObjectId(req.params.chat_id);
+        const last_messsage = Date.now()
+        const chat = await Chat.create({ user1, user2, last_messsage }); 
+        
+        res.status(200).json(
+            {
+                'success': true,
+                'newChat': await chat.populate([
+                    {
+                        path: 'user1',
+                        select: 'firstName profilePicture',
+                    },
+                    {
+                        path: 'user2',
+                        select: 'firstName profilePicture',
+                    }
+                ])
+            });
+
+    } catch {
+        res.status(400).json({ 'success': false });
+    }
 }
 
 
 
-
-
-
-
+ 
 
 
 
