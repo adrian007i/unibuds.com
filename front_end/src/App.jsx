@@ -43,12 +43,12 @@ function App({ ws }) {
 
     ws.onmessage = function (event) {
       const message = JSON.parse(event.data)
-      const chatIndex = chats.findIndex(chat => chat._id === message.chatId)
+      const chatIndex = chats.findIndex(chat => chat._id === message.chatId) 
 
       dispatch(wsRecieveMessage({
         'index': chatIndex,
         'msg': message.body,
-        'sender': auth.tokenData._id === chats[chatIndex].user1 ? 2 : 1,
+        'sender': auth.tokenData._id === chats[chatIndex].user1._id ? 2 : 1,
         'chatId': message.chatId
       }));
     }

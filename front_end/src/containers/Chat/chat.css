@@ -35,6 +35,7 @@
     column-gap: 20px;
     flex: 14;
     overflow-y: scroll;
+    padding-bottom: 15px;
 }
 
 .msg {
@@ -42,6 +43,7 @@
     border-radius: 20px !important;
     width: max-content;
     max-width: 80%;
+    min-width: 40px;
 
 }
 

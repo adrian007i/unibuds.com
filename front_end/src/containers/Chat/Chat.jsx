@@ -77,6 +77,7 @@ const Chat = ({ ws, user }) => {
                 }
                 )}
             </div>
+           
 
             <div className='msg_box'>
                 <div className='msg_box_flex'>
