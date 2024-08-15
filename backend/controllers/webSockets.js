@@ -1,39 +1,27 @@
 const mongoose = require('mongoose');
-const Chat = require('../models/Chat');
-const MAX_MESSAGES = 10;
+const Chat = require('../models/Chat'); 
 
 const storeMessage = async (message, user, status) => {
 
-    try {
-        // let msgIndex = 0;
+    try { 
         let chat;
 
         if (message.chatId) {
 
             const chatId = new mongoose.Types.ObjectId(message.chatId);
 
-            chat = await Chat.findById(chatId);
-            // msgIndex = chat.msgIndex;
+            chat = await Chat.findById(chatId); 
             if (!chat) throw ('Invalid Chat ID') 
 
             // DETERMINE THE SENDER OF THE MESSAGE  
             const sender = (user === chat.user1.toString() ? 1 : 2);
 
             // STORE THE MESSAGE IN THE NEXT CIRCULAR ARRAY POSITION
-            chat.messages.push({ sender: sender, msg: message.body });
-
-            // WE ARE LIMITING MESSAGES TO A FIXED AMOUNT DUE TO SERVER COST
-            // HERE WE DETERMINE THE NEXT INDEX POSITION WHEN THE CIRCULAR ARRAY BECOMES FULL
-            // if (msgIndex === MAX_MESSAGES)
-            //     chat.msgIndex = 0
-            // else
-            //     chat.msgIndex++;
+            chat.messages.push({ sender: sender, msg: message.body }); 
 
             chat.save();
         }
-    } catch (error) {
-        console.log(error)
-    }
+    } catch (error) {}
 
 };
 
