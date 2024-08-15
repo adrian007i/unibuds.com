@@ -66,10 +66,16 @@ const Chat = ({ ws, user }) => {
                 </NavLink>
             </div>
             <div className='messages'>
+
+                
+
                 {data && data[chatIndex].messages.map((msg, index) => {
 
                     // we are using flex box reverse direction, so contents must iterated in reverse
                     let id = data[chatIndex].messages.length - 1 - index;
+
+                    // console.log(data[chatIndex].msgIndex, data[chatIndex].messages[id].msg , id);
+                    // if (id > )
                     return (
                         <div key={id} className={`msg ${amIuser1}${data[chatIndex].messages[id].sender}`}>
                             {data[chatIndex].messages[id].msg}
