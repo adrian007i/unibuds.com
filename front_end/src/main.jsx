@@ -16,12 +16,22 @@ import { getUserData } from './containers/User/slice';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 
 let BASE_BACKEND_URL;
-if (import.meta.env.MODE === 'development')
-  BASE_BACKEND_URL = 'localhost:4000/';
-else 
-  BASE_BACKEND_URL = 'unibuds-com.onrender.com/';
+let HTTPS;
+let WSS;
 
-axios.defaults.baseURL = 'http://' + BASE_BACKEND_URL;
+if (import.meta.env.MODE === 'development'){
+  BASE_BACKEND_URL = 'localhost:4000/';
+  HTTPS = 'http://';
+  WSS = 'ws://';
+}
+else{
+  BASE_BACKEND_URL = 'unibuds-com.onrender.com/';
+  HTTPS = 'https://';
+  WSS = 'wss://';
+}
+  
+
+axios.defaults.baseURL = HTTPS + BASE_BACKEND_URL;
 
 let ws = null;
 
@@ -34,7 +44,7 @@ const Main = () => {
     dispatch(getChats())
     dispatch(getUserData())
     
-    ws = new ReconnectingWebSocket('ws://' + BASE_BACKEND_URL + 'web_socket_endpoint/' + '?auth=' + localStorage.getItem('jwtToken'));
+    ws = new ReconnectingWebSocket(WSS + BASE_BACKEND_URL + 'web_socket_endpoint/' + '?auth=' + localStorage.getItem('jwtToken'));
   }
 
 
