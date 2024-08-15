@@ -7,12 +7,12 @@
 
 .findBuddy{
     text-align: center;
+    height: 350px;
 }
 
 .findBuddyBtn{ 
     padding: 5px;
-    font-size: 2em; 
-    font-family: cursive; 
+    font-size: 1.5em;
     border-radius: 10px;
     border: none;
 }
@@ -42,9 +42,8 @@
 }
 
 .startChatBtn, .skipChatBtn{ 
-    padding: 2px;
-    font-size: 1.5em; 
-    font-family: cursive; 
+    padding: 5px;
+    font-size: 1.2em;  
     border-radius: 10px;
     border: none;
     margin:10px;

@@ -59,7 +59,7 @@ const Chat = ({ ws, user }) => {
     return (
         <>
             <div className='user'>
-                <NavLink className='chat chat_small' to='/chat/1234567890'> 
+                <NavLink className='chat chat_small' to='/chats'> 
                     <div className='propic'><img src={otherUser && axios.defaults.baseURL + 'uploads/' +otherUser.profilePicture} alt='' /></div>
                     <div className='name'>{otherUser && otherUser.firstName}</div>
 

@@ -70,11 +70,11 @@ function App({ ws }) {
             </Link>
           </div>
           <div id='right'>
-            <NavLink to='/chats' className={({ isActive }) => (isActive ? 'active' : '')}>
-              <img src={chat} alt='chat' title='chat' />
-            </NavLink >
             <NavLink to='/find_a_buddy' className={({ isActive }) => (isActive ? 'active' : '')}>
               <img src={search} alt='search' title='find a buddy' />
+            </NavLink >
+            <NavLink to='/chats' className={({ isActive }) => (isActive ? 'active' : '')}>
+              <img src={chat} alt='chat' title='chat' />
             </NavLink >
             <NavLink to='/profile' className={({ isActive }) => (isActive ? 'active' : '')}>
 
