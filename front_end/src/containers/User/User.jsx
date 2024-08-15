@@ -53,9 +53,7 @@ const User = () => {
                     setProPicBlob(compressedFile)
                     setProPicUrl(URL.createObjectURL(compressedFile));
                     setProPicExt(e.target.files[0].name.split('.')[1])
-                } catch (error) {
-                    console.log(error);
-                }
+                } catch {}
             }
 
             handleImageUpload(e)

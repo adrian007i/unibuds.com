@@ -51,9 +51,7 @@ const Register = () => {
                             pictureExt : e.target.files[0].name.split('.')[1],
                             profilePictureUrl:  URL.createObjectURL(compressedFile)
                         });
-                } catch (error) {
-                    console.log(error);
-                }
+                } catch {}
 
             }
 

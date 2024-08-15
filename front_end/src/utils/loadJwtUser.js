@@ -10,14 +10,8 @@ export const loadAppData = (jwt) => {
             setAuthToken(jwt); 
             localStorage.setItem('jwtToken', jwt);
             return jwtDecode(jwt);
-
-            // fetch chats from the database
-            // store.dispatch(getChats()); 
         }
-        catch(errors) { 
-            console.log(errors);
-            // localStorage.removeItem("jwtToken");
-        }
+        catch {}
     }
     return null
 };
