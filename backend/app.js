@@ -24,7 +24,7 @@ app.use(cookieParser());
 
 
 // ALLOW FRONT ENDS TO ACCESS THE APP 
-app.use(cors({ origin: ['http://localhost:5173', 'http://127.0.0.1:5500'] }));
+app.use(cors({ origin: [process.env.ALLOWED_ORGINS] }));
 
 // WEB SOCKET CLIENTS 
 clients = new Map();
@@ -67,7 +67,8 @@ mongoose.connect(process.env.mongoURI)
       });
 
       // Remove the client from the clients list when it disconnects
-      ws.on('close', function () {
+      ws.on('close', function () { 
+        
         clients[userKey] = undefined;
       });
 
