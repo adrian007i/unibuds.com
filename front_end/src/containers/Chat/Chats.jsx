@@ -9,12 +9,19 @@ import './chats.css';
 
 const Chats = ({user}) => {
 
-    const { data } = useSelector(state => state.chat); 
+    const { data , loadingChats } = useSelector(state => state.chat); 
     return (
         <>
             {
                 <div> 
-                    {data && data.map((chat, index) => {  
+                    {(loadingChats || data === null) &&
+                    <div className="loader" style={{'textAlign':'center'}}>
+                        <br /><br /><br />
+                        <div className="lds-facebook"><div></div><div></div><div></div></div>
+                        <div>Loading Messages</div>
+                    </div>
+
+                    || data.map((chat, index) => {  
 
                         const otherUser = user._id === chat.user1._id ? chat.user2 : chat.user1; 
 

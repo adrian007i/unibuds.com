@@ -24,14 +24,14 @@ export const registerUser = createAsyncThunk('auth/registerUser', async (user, t
       'profilePicture': [user.profilePictureUrl, ['validPicture']]
     }); 
  
-    if (!errors.isValid)
-      return thunkAPI.rejectWithValue(errors.errors);
-    
     const response = await axios.post('/register', user, {
       headers: {
         'Content-Type': `multipart/form-data`,
       },
     });
+    if (!errors.isValid)
+      return thunkAPI.rejectWithValue(errors.errors);
+
     thunkAPI.fulfillWithValue(response.data)
     return response.data;
 
@@ -86,7 +86,7 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(registerUser.pending, (state) => {
-        state.loading = true;
+        state.isPending = true;
         state.errors = {};
       })
       .addCase(registerUser.fulfilled, (state, action) => {
@@ -95,7 +95,7 @@ const authSlice = createSlice({
         state.isPending = false;
       })
       .addCase(registerUser.rejected, (state, action) => {
-        state.loading = false;
+        state.isPending = false;
         state.errors = action.payload;
       })
       .addCase(loginUser.pending, (state) => {

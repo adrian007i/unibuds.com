@@ -43,7 +43,7 @@ const Login = () => {
                 </div>
 
                 <Button variant='primary' type='submit' disabled={isPending}>
-                    {isPending && 'Saving ...'}
+                    {isPending && 'Verifying ...'}
                     {!isPending && 'Login'}
                 </Button>
                 <div className={errors.message ? 'error' : ''} >
