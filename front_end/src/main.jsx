@@ -13,6 +13,7 @@ import './index.css';
 import { setCurrentUser } from './containers/Auth/slice';
 import { getChats } from './containers/Chat/slice';
 import { getUserData } from './containers/User/slice';
+import ReconnectingWebSocket from 'reconnecting-websocket';
 
 // BACKEND API ENDPOINT
 const BASE_BACKEND_URL = 'localhost:4000/';
@@ -27,7 +28,8 @@ const Main = () => {
   if (isAuthenticated) {
     dispatch(getChats())
     dispatch(getUserData())
-    ws = new WebSocket('ws://' + BASE_BACKEND_URL + 'web_socket_endpoint/' + '?auth=' + localStorage.getItem('jwtToken'));
+    
+    ws = new ReconnectingWebSocket('ws://' + BASE_BACKEND_URL + 'web_socket_endpoint/' + '?auth=' + localStorage.getItem('jwtToken'));
   }
 
 
