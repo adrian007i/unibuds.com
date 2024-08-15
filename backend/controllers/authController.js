@@ -10,16 +10,16 @@ const getRandomFileName = require('../utils/getRandomFileName');
  */
 module.exports.register = async (req, res) => {
 
-    const { email, password, firstName, lastName, pictureExt } = req.body; 
+    const { email, password, firstName, lastName, pictureExt } = req.body;
 
     try {
         let profilePicture = undefined;
 
         // ENSURE THE PROFILE PICTURE WAS UPLOADED AND REBUILD THE PICTURE USING THE BUFFER
-        if (req.file && req.file.buffer) { 
-            profilePicture = getRandomFileName()+'.'+pictureExt
-            fs.writeFileSync('./uploads/'+profilePicture , req.file.buffer); 
-        } 
+        if (req.file && req.file.buffer) {
+            profilePicture = getRandomFileName() + '.' + pictureExt
+            fs.writeFileSync('./uploads/' + profilePicture, req.file.buffer);
+        }
 
         const newUser = await User.create({ email, password, firstName, lastName, profilePicture });
 
@@ -66,14 +66,14 @@ module.exports.get_user = async (req, res) => {
  * @desc    Update user data
  * @access  Private 
  */
-module.exports.set_user = async (req, res) => { 
-    const user = await User.findOne({ _id: req.user._id }); 
+module.exports.set_user = async (req, res) => {
+    const user = await User.findOne({ _id: req.user._id });
 
     if (user) {
 
         const u = req.body.data;
 
-        try {  
+        try {
             user.bio = u.bio;
             user.firstName = u.firstName;
             user.lastName = u.lastName;
@@ -81,33 +81,30 @@ module.exports.set_user = async (req, res) => {
             user.gender = u.gender;
             user.major = u.major;
             user.campusLocation = u.campusLocation;
-            user.email = u.email; 
- 
+            user.email = u.email;
+
 
             // ENSURE THE PROFILE PICTURE WAS UPLOADED AND REBUILD THE PICTURE USING THE BUFFER
-            if (req.file && req.file.buffer) {  
-                
+            if (req.file && req.file.buffer) {
+
                 // REMOVE THE OLD IMAGE
-                try{  
-                    fs.unlinkSync('./uploads/'+user.profilePicture);  
+                try {
+                    fs.unlinkSync('./uploads/' + user.profilePicture);
                 }
-                catch {}; 
+                catch { };
 
                 // FILE NAME REMAINS THE SAME, PROFILE PICTURE EXTENSION MAY CHANGE
-                user.profilePicture = getRandomFileName()+'.'+ req.body.proPicExt
-                fs.writeFileSync('./uploads/'+user.profilePicture , req.file.buffer); 
-            }  
+                user.profilePicture = getRandomFileName() + '.' + req.body.proPicExt
+                fs.writeFileSync('./uploads/' + user.profilePicture, req.file.buffer);
+            }
 
 
             await user.save();
-            res.status(200).json({ success: true , 'profilePicture' : user.profilePicture });
+            res.status(200).json({ success: true, 'profilePicture': user.profilePicture });
 
         } catch (error) {
-            console.log(error);
             let errors = handleErrors(error, 'update');
             res.status(403).json(errors);
         }
-    } else {
-        console.log('User not found');
     }
 } 

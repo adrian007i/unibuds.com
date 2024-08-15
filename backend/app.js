@@ -35,11 +35,9 @@ mongoose.connect(process.env.mongoURI)
   //SETUP WEB SOCKET CONNECTION AT /wss
   .then(result => {
     app.ws('/web_socket_endpoint', async function (ws, req) { 
-      console.log(123);
       
       // ensure user JWT and user ID is valid when authenticating 
       let protect = await protectRaw(req.query.auth);
-       console.log(protect); 
        
       if (!protect.authenticated) {
         ws.close();
@@ -54,8 +52,7 @@ mongoose.connect(process.env.mongoURI)
 
       // CLIENT ALREADY CONNECTED
       ws.on('message', function (msg) {
-        console.log(msg);
-        
+
         const data = JSON.parse(msg);
         
         
@@ -79,7 +76,7 @@ mongoose.connect(process.env.mongoURI)
     app
   })
   .then((result) => app.listen(4000))
-  .catch((err) => console.log(err));
+  // .catch((err) => console.log(err));
 
 
 
