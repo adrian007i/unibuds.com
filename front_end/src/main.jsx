@@ -15,9 +15,14 @@ import { getChats } from './containers/Chat/slice';
 import { getUserData } from './containers/User/slice';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 
-// BACKEND API ENDPOINT
-const BASE_BACKEND_URL = 'localhost:4000/';
+let BASE_BACKEND_URL;
+if (import.meta.env.MODE === 'development')
+  BASE_BACKEND_URL = 'localhost:4000/';
+else 
+  BASE_BACKEND_URL = 'unibuds-com.onrender.com/';
+
 axios.defaults.baseURL = 'http://' + BASE_BACKEND_URL;
+
 let ws = null;
 
 const Main = () => {
