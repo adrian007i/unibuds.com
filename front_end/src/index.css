@@ -141,8 +141,10 @@ label {
   border-radius: 50%;
   overflow: hidden;
   cursor: pointer;
-  background-size: contain;
+  background-size: cover;
   position: relative;
+  background-repeat: no-repeat;
+
 }
 
 .profilePicPreview input {
