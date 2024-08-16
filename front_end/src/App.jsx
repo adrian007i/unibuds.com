@@ -92,14 +92,12 @@ function App({ ws }) {
         </div>
       ) ||
         <Link to='/' style={{ color: 'inherit', textDecoration: 'none' }}>
-          <div>
-            <br />
+          <div> 
            <div className='text-center'>
            <img src='./logo.svg' width='50px' className='logo' />
            <h1 >UniBuds</h1>
            </div>
-          </div> 
-          <br />
+          </div>  
         </Link>
       }
 
