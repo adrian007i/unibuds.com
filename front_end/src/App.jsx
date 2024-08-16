@@ -64,9 +64,9 @@ function App({ ws }) {
       {(auth.isAuthenticated &&
         <div className='nav'>
           <div id='left'>
-            <Link to='/chats'>
+            <a href='/'>
               <img src='/logo.svg' height='35px' alt='' className='logo' />
-            </Link>
+            </a>
           </div>
           <div id='right'>
             <NavLink to='/find_a_buddy' className={({ isActive }) => (isActive ? 'active' : '')}>

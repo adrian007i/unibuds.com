@@ -170,7 +170,11 @@ const User = () => {
                 </div >
 
                 ||
-                <div>loading</div>
+                 <div className="loader" style={{'textAlign':'center'}}>
+                        <br /><br /><br />
+                        <div className="lds-facebook"><div></div><div></div><div></div></div>
+                        <div>Loading Profile Data</div>
+                </div>
             )}
 
         </>
