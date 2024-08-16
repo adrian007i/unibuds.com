@@ -8,7 +8,7 @@ const initialState = {
     errors:{}
   };
 
-// Get user Profile Data
+// Get chat data when first message arrives
 export const getChats = createAsyncThunk('auth/getChats', async (user, thunkAPI) => {
   try {
     const response = await axios.get('/get_chats/');  
@@ -19,9 +19,23 @@ export const getChats = createAsyncThunk('auth/getChats', async (user, thunkAPI)
   } 
 });
 
+export const getChat = createAsyncThunk('auth/getChat', async (chat, thunkAPI) => {
+  try {
+    let response = await axios.get('/get_chat/'+chat.chatId); 
+    
+    response.data.messages[0] = chat
+    response.data.lastMessage =  Date.now()
+
+    thunkAPI.fulfillWithValue(response.data);
+    return response.data
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response.data);
+  } 
+});
+
 export const sendMessage = createAsyncThunk('auth/sendMessage', async (msg, thunkAPI) => {
   try {
-    // await axios.post('/send_message/', msg);
+    await axios.post('/send_message/', msg);
     thunkAPI.fulfillWithValue(msg);
     return msg;
 
@@ -57,7 +71,10 @@ const chatSlice = createSlice({
       .addCase(getChats.rejected, (state, action) => {
         state.errors = action.payload; 
         state.loadingChats = false; 
-      }) 
+      })  
+      .addCase(getChat.fulfilled, (state, action) => { 
+        state.data.push(action.payload)
+      })
   },
 });
 

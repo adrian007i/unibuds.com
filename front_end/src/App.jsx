@@ -22,7 +22,7 @@ import search from './icons/search.png';
 
 import { defaultPic } from './utils/globals';
 import { logoutUser } from './containers/Auth/slice';
-import { wsRecieveMessage } from './containers/Chat/slice';
+import { wsRecieveMessage , getChat} from './containers/Chat/slice';
 
 function App({ ws }) {
   const dispatch = useDispatch();
@@ -44,12 +44,21 @@ function App({ ws }) {
       const message = JSON.parse(event.data)
       const chatIndex = chats.findIndex(chat => chat._id === message.chatId) 
 
-      dispatch(wsRecieveMessage({
-        'index': chatIndex,
-        'msg': message.body,
-        'sender': auth.tokenData._id === chats[chatIndex].user1._id ? 2 : 1,
-        'chatId': message.chatId
-      }));
+      if(chatIndex === -1){
+        dispatch(getChat({ 
+          'msg': message.body,
+          'sender': 2,
+          'chatId': message.chatId
+        }));
+
+      }else{
+        dispatch(wsRecieveMessage({
+          'index': chatIndex,
+          'msg': message.body,
+          'sender': auth.tokenData._id === chats[chatIndex].user1._id ? 2 : 1,
+          'chatId': message.chatId
+        }));
+      } 
     }
   }
 
