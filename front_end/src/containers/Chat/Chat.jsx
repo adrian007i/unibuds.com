@@ -35,7 +35,9 @@ const Chat = ({ ws, user }) => {
     }
 
     const onSubmit = (e) => {
-        e.preventDefault();
+        if (e)
+            e.preventDefault();
+        
         if (newMsg.length === 0)
             return
 
