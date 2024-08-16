@@ -35,7 +35,7 @@ const Chat = ({ ws, user }) => {
     }
 
     const onSubmit = (e) => {
-
+        e.preventDefault();
         if (newMsg.length === 0)
             return
 
@@ -87,7 +87,7 @@ const Chat = ({ ws, user }) => {
                 <div className='msg_box_flex'>
                     <Input className='input_msg' onChange={e => { setNewMsg(e.target.value) }} onKeyDown={e => { if (e.key == 'Enter') onSubmit() }} value={newMsg} placeholder='Enter Message Here'></Input>
 
-                    <Button disabled={newMsg.length === 0} className='send' type='button' onClick={onSubmit}><img className='sendIcon' src="/send.png" alt="" /></Button>
+                    <Button disabled={newMsg.length === 0} className='send' type='button' onMouseDown={onSubmit}><img className='sendIcon' src="/send.png" alt="" /></Button>
                 </div>
             </div>
         </>
