@@ -1,6 +1,7 @@
 import {
     Button,
-    Row, Col
+    Row, Col,
+    Container
 } from 'react-bootstrap';
 
 import buddy from '../icons/buddy.png';
@@ -23,22 +24,24 @@ function Home() {
             </div>
 
             <div className='bottom'>
-                <Row>
-                    <Col>
-                        <Link to='/register'>
-                            <div className='d-grid gap-2'>
-                                <Button variant='primary' type='button' > Register </Button>
-                            </div>
-                        </Link>
-                    </Col>
-                    <Col>
-                        <Link to='/login'>
-                            <div className='d-grid gap-2'>
-                                <Button variant='success' type='button' > Login </Button>
-                            </div>
-                        </Link>
-                    </Col>
-                </Row>
+                <Container>
+                    <Row>
+                        <Col>
+                            <Link to='/register'>
+                                <div className='d-grid gap-2'>
+                                    <Button variant='primary' type='button' > Register </Button>
+                                </div>
+                            </Link>
+                        </Col>
+                        <Col>
+                            <Link to='/login'>
+                                <div className='d-grid gap-2'>
+                                    <Button variant='success' type='button' > Login </Button>
+                                </div>
+                            </Link>
+                        </Col>
+                    </Row>
+                </Container>
             </div>
         </div>
     );
