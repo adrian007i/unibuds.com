@@ -58,6 +58,10 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  nextChatNumber: {
+    type: Number,
+    default: 0,
+  }, 
   dateCreated: {
     type: Date,
     default: Date.now,

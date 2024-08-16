@@ -40,18 +40,26 @@ module.exports.get_chats = async (req, res) => {
  */
 module.exports.generateNewChat = async (req, res) => {
 
-    const my_user_id = new mongoose.Types.ObjectId(req.user._id);
     try {
+        const user = await User.findById(req.user._id);
+
         const usersCount = await User.countDocuments({});
 
-        var random = Math.floor(Math.random() * usersCount)
-        const randomUser = await User
-            .findOne({ _id: { $ne: my_user_id } })
-            .skip(random)
+        const nextUser = await User
+            .findOne()
+            .skip(user.nextChatNumber)
             .select(['_id', 'firstName', 'lastName', 'gender', 'campusLocation', 'major', 'bio', 'profilePicture'])
 
-        res.status(200).json({ 'success': true, 'user': randomUser });
-    } catch {
+        
+        // will eventually implement a better queuing system
+        user.nextChatNumber = user.nextChatNumber + 1;
+        if (user.nextChatNumber >= usersCount)
+            user.nextChatNumber = 0;
+
+        await user.save();
+
+        res.status(200).json({ 'success': true, 'user': nextUser });
+    } catch (e) {
         res.status(400).json({ 'success': false });
     }
 
@@ -61,14 +69,14 @@ module.exports.generateNewChat = async (req, res) => {
  * @desc    User accepts the random chat
  * @access  Private 
  */
-module.exports.acceptNewChat = async (req, res) => { 
-    
+module.exports.acceptNewChat = async (req, res) => {
+
     try {
         const user1 = new mongoose.Types.ObjectId(req.user._id);
         const user2 = new mongoose.Types.ObjectId(req.params.chat_id);
-        const last_messsage = Date.now()
-        const chat = await Chat.create({ user1, user2, last_messsage }); 
-        
+        const last_messsage = Date.now();
+        const chat = await Chat.create({ user1, user2, last_messsage });
+
         res.status(200).json(
             {
                 'success': true,
@@ -90,27 +98,34 @@ module.exports.acceptNewChat = async (req, res) => {
 }
 
 
+/**
+ * @desc    Get a single chag
+ * @access  Private 
+ */
+module.exports.get_chat = async (req, res) => {
 
- 
+    try {
+        const chat = await Chat
+            .findById(req.params.id)
+            .populate([
+                {
+                    path: 'user1',
+                    select: 'firstName profilePicture',
+                },
+                {
+                    path: 'user2',
+                    select: 'firstName profilePicture',
+                }
+            ])
 
+        // verify the user id is associated with the chat
+        if (chat.user1._id != req.user._id && chat.user2._id != req.user._id)
+            throw new Error("You are not authorized to access this chat");
 
+        res.status(200).json(chat);
 
+    } catch {
+        res.status(400).json({ 'success': false });
+    }
 
-// /**
-//  * @desc    Get all messages for a particular user
-//  * @access  Private
-//  */
-// module.exports.get_messages = async (req, res) => {
-
-
-//     const chat_id = new mongoose.Types.ObjectId(req.params.chat_id);
-//     const messages = await Chat.findById(chat_id);
-
-//     // ensure user is able to access the chat
-//     if(messages.user1._id.toString() === req.user._id || messages.user2._id.toString() === req.user._id)
-//         res.status(200).json({ 'success': true, 'messages': messages });
-//     else
-//         res.status(400).json({'success': false, error: 'Not authorized'});
-
-// }
-
+}
