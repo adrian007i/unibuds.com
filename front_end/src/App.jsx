@@ -17,8 +17,7 @@ import PublicRoute from './utils/PublicRoute';
 
 // ICONS
 import signOut from './icons/signout.png';
-import chat from './icons/chat.png';
-import logo from './logo.png';
+import chat from './icons/chat.png'; 
 import search from './icons/search.png';
 
 import { defaultPic } from './utils/globals';
@@ -66,7 +65,7 @@ function App({ ws }) {
         <div className='nav'>
           <div id='left'>
             <Link to='/chats'>
-              <img src={logo} height='30px' alt='' className='logo' />
+              <img src='/logo.svg' height='35px' alt='' className='logo' />
             </Link>
           </div>
           <div id='right'>
@@ -95,10 +94,12 @@ function App({ ws }) {
         <Link to='/' style={{ color: 'inherit', textDecoration: 'none' }}>
           <div>
             <br />
-            <img src={logo} width='50px' className='logo' />
-            <h1 className='d-inline'>UniBuds</h1>
-          </div>
-          <hr />
+           <div className='text-center'>
+           <img src='./logo.svg' width='50px' className='logo' />
+           <h1 >UniBuds</h1>
+           </div>
+          </div> 
+          <br />
         </Link>
       }
 

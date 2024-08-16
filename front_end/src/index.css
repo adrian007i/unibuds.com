@@ -129,11 +129,7 @@ label {
   justify-content: space-between;
 
 }
-
-.logo {
-  filter: invert();
-}
-
+ 
 
 .profilePicPreview {
   height: 150px;
