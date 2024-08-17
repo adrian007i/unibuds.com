@@ -6,8 +6,7 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const initialState = {
   matchedUser: null,
   errors: {},
-  isPending: false,
-  startingMatch: false,
+  isPending: false, 
   newChat: null
 };
 
@@ -51,7 +50,8 @@ const matchSlice = createSlice({
   initialState,
   reducers: {
     clearNewChat:(state , action) =>{
-      state = initialState
+      state.matchedUser =  null;
+      state.newChat = null
     }
   },
   extraReducers: (builder) => {
@@ -70,20 +70,17 @@ const matchSlice = createSlice({
         state.errors = action.payload;
       })
       .addCase(acceptMatch.pending, (state) => {
-        state.startingMatch = true;
         state.errors = {};
       })
       .addCase(acceptMatch.fulfilled, (state, action) => { 
-        state.startingMatch = false; 
-        state.newChat = action.payload;
+        state.newChat = action.payload; 
       })
       .addCase(acceptMatch.rejected, (state, action) => {
-        state.startingMatch = false;
         state.errors = action.payload;
       })
   },
 });
 
-export const { } = matchSlice.actions;
+export const { clearNewChat } = matchSlice.actions;
 
 export default matchSlice.reducer;

@@ -8,22 +8,21 @@ import './userMatch.css';
 import '../../loader.css'
 import buddy from '../../icons/buddy.png';
 
-import { fetchMatch, acceptMatch } from './slice';
+import { fetchMatch, acceptMatch , clearNewChat} from './slice';
 import { addNewChat } from '../Chat/slice';
 
 const UserMatch = () => {
 
-    const { isPending, matchedUser, startingMatch, newChat } = useSelector(state => state.match)
+    const { isPending, matchedUser,  newChat } = useSelector(state => state.match)
     const dispatch = useDispatch(); 
     const navigate = useNavigate();
 
     useEffect(() =>{
         if(newChat){
-            dispatch(addNewChat(newChat)) ;
-            navigate('/chat/'+newChat._id)
-        }
-            
-        
+            dispatch(addNewChat(newChat));
+            navigate('/chat/'+newChat._id);
+            dispatch(clearNewChat());
+        }  
     },[newChat])
 
     const acceptMatchSubmit = async (user) =>{   
