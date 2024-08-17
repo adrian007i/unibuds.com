@@ -27,8 +27,9 @@
   </ol>
 </details>
 
-<img src="./readme/demo.png"/>
-
+<div background="#eee">
+  <img src="./readme/demo.gif" width="100%"/> 
+</div>
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
