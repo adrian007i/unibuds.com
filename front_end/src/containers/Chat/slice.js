@@ -21,10 +21,11 @@ export const getChats = createAsyncThunk('auth/getChats', async (user, thunkAPI)
 
 export const getChat = createAsyncThunk('auth/getChat', async (chat, thunkAPI) => {
   try {
-    let response = await axios.get('/get_chat/'+chat.chatId); 
-    
+    let response = await axios.get('/get_chat/'+chat.chatId);
+    var date = new Date(); 
+    chat.timestamp =date.toString();
     response.data.messages[0] = chat;
-    response.data.lastMessage =  Date.now()
+    response.data.lastMessage =  chat.timestamp; 
 
     thunkAPI.fulfillWithValue(response.data);
     return response.data
@@ -49,7 +50,7 @@ const chatSlice = createSlice({
   initialState,
   reducers: {
     addNewChat:(state , action ) =>{
-        state.data.push(action.payload);
+        state.data.unshift(action.payload);
     },
     wsRecieveMessage: (state, action) => {
       state.data[action.payload.index].messages.push(action.payload);
@@ -73,7 +74,7 @@ const chatSlice = createSlice({
         state.loadingChats = false; 
       })  
       .addCase(getChat.fulfilled, (state, action) => { 
-        state.data.push(action.payload)
+        state.data.unshift(action.payload)
       })
   },
 });
