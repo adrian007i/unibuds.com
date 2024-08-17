@@ -47,7 +47,7 @@ function App({ ws }) {
       if(chatIndex === -1){
         dispatch(getChat({ 
           'msg': message.body,
-          'sender': 2,
+          'sender': 1,
           'chatId': message.chatId
         }));
 
@@ -77,12 +77,12 @@ function App({ ws }) {
               <img src='/logo.svg' height='35px' alt='' className='logo' />
             </a>
           </div>
-          <div id='right'>
-            <NavLink to='/find_a_buddy' className={({ isActive }) => (isActive ? 'active' : '')}>
-              <img src={search} alt='search' title='find a buddy' />
-            </NavLink >
+          <div id='right'> 
             <NavLink to='/chats' className={({ isActive }) => (isActive ? 'active' : '')}>
               <img src={chat} alt='chat' title='chat' />
+            </NavLink >
+            <NavLink to='/find_a_buddy' className={({ isActive }) => (isActive ? 'active' : '')}>
+              <img src={search} alt='search' title='find a buddy' />
             </NavLink >
             <NavLink to='/profile' className={({ isActive }) => (isActive ? 'active' : '')}>
 

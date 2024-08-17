@@ -52,3 +52,8 @@
     height: 25px;
     filter: invert()
 }
+
+.noChats{ 
+    text-align: center;
+    margin-top: 100px;
+}

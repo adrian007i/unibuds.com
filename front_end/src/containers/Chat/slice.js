@@ -23,7 +23,7 @@ export const getChat = createAsyncThunk('auth/getChat', async (chat, thunkAPI) =
   try {
     let response = await axios.get('/get_chat/'+chat.chatId); 
     
-    response.data.messages[0] = chat
+    response.data.messages[0] = chat;
     response.data.lastMessage =  Date.now()
 
     thunkAPI.fulfillWithValue(response.data);

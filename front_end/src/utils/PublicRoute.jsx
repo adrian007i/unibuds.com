@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 
 const PublicRoute = ({component: Component}) => {
     const {isAuthenticated, tokenData} = useSelector(state => state.auth);
-    return isAuthenticated ? <Navigate to="/find_a_buddy" /> : <Component user={tokenData} />;
+    return isAuthenticated ? <Navigate to="/chats" /> : <Component user={tokenData} />;
 }; 
 
 export default PublicRoute;
