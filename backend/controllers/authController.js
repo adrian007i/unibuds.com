@@ -4,21 +4,37 @@ const generateToken = require('../utils/generateToken');
 const fs = require('fs');
 const getRandomFileName = require('../utils/getRandomFileName');
 
+const { PutObjectCommand } = require('@aws-sdk/client-s3');
+const { s3Client } = require('../utils/awsConfig');
+
 /** 
  * @desc    User registration with email verification
  * @access  Public 
  */
-module.exports.register = async (req, res) => {
-
-    const { email, password, firstName, lastName, pictureExt } = req.body;
+module.exports.register = async (req, res) => { 
 
     try {
+        const { email, password, firstName, lastName, pictureExt } = req.body;
+        
         let profilePicture = undefined;
 
         // ENSURE THE PROFILE PICTURE WAS UPLOADED AND REBUILD THE PICTURE USING THE BUFFER
         if (req.file && req.file.buffer) {
             profilePicture = getRandomFileName() + '.' + pictureExt
-            fs.writeFileSync('./uploads/' + profilePicture, req.file.buffer);
+
+            const params = {
+                Bucket: 'unibuds',
+                Key: profilePicture,
+                Body: req.file.buffer
+            };    
+
+            // STORE USER PROFILE PICTURE IN S3
+            try {
+                await s3Client.send(new PutObjectCommand(params));
+            } catch (err) {
+                console.error(err);
+                res.status(500).json({"profilePicture": "Failed to upload!"});
+            }
         }
 
         const newUser = await User.create({ email, password, firstName, lastName, profilePicture });

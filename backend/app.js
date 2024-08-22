@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const enableWs = require('express-ws');
-const multer = require('multer');
 const storeMessage = require('./controllers/webSockets');
 
 // CUSTOM IMPORTS
