@@ -62,7 +62,7 @@ const Chat = ({ ws, user }) => {
         <>
             <div className='user'>
                 <NavLink className='chat chat_small' to='/chats'> 
-                    <div className='propic'><img src={otherUser && axios.defaults.baseURL + 'uploads/' +otherUser.profilePicture} alt='' /></div>
+                    <div className='propic'><img src={otherUser && import.meta.env.VITE_S3_ENDPOINT + otherUser.profilePicture} alt='' /></div>
                     <div className='name'>{otherUser && otherUser.firstName}</div>
 
                 </NavLink>

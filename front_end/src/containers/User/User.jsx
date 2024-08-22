@@ -22,7 +22,7 @@ const User = () => {
     useEffect(() => {
         setFormData(data);
         if (data) {
-            setProPicUrl(axios.defaults.baseURL + 'uploads/' + data.profilePicture);
+            setProPicUrl(import.meta.env.VITE_S3_ENDPOINT + data.profilePicture);
         }
     }, [data]);
 
@@ -41,7 +41,7 @@ const User = () => {
 
         // SET TO ORIGINAL PROFILE PICTURE
         if (e.target.files.length === 0) {
-            setProPicUrl(axios.defaults.baseURL + 'uploads/' + data.profilePicture);
+            setProPicUrl(import.meta.env.VITE_S3_ENDPOINT + data.profilePicture);
             setProPicBlob(null)
         }
         // COMPRESS THE IMAGE

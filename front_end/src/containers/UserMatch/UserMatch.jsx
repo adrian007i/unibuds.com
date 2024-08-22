@@ -56,7 +56,7 @@ const UserMatch = () => {
                                 className='profilePicPreview'
                                 style={{ backgroundImage: `url(${
                                     matchedUser.profilePicture ? 
-                                    axios.defaults.baseURL + 'uploads/' + matchedUser.profilePicture :
+                                    import.meta.env.VITE_S3_ENDPOINT + matchedUser.profilePicture :
                                     '/proPicDefault.jpg'})` }} >
                             </label>
                         </div>

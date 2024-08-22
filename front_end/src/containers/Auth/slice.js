@@ -22,8 +22,10 @@ export const registerUser = createAsyncThunk('auth/registerUser', async (user, t
       'email': [user.email, ['isEmpty', 'isValidEmail']],
       'password': [user.password, ['isEmpty', 'minLength'], 6],
       'profilePicture': [user.profilePictureUrl, ['validPicture']]
-    }); 
- 
+    });
+    if (!errors.isValid)
+      return thunkAPI.rejectWithValue(errors.errors);
+
     const response = await axios.post('/register', user, {
       headers: {
         'Content-Type': `multipart/form-data`,

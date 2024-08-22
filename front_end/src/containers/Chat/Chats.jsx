@@ -36,7 +36,7 @@ const Chats = ({ user }) => {
                             return (<NavLink key={index} className='chat' to={'/chat/' + chat._id}>
                                 {/*  */}
                                 <div className='propic'>
-                                    <img src={axios.defaults.baseURL + 'uploads/' + otherUser.profilePicture} alt='' />
+                                    <img src={import.meta.env.VITE_S3_ENDPOINT + otherUser.profilePicture} alt='' />
                                 </div>
                                 <div className='name'>{otherUser.firstName}
 

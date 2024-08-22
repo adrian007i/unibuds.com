@@ -88,7 +88,7 @@ function App({ ws }) {
 
               {/* SET USER PROFILE PICTURE */}
               {(data &&
-                <img className='navProPic' src={axios.defaults.baseURL + 'uploads/' + data.profilePicture} title='profile' />
+                <img className='navProPic' src={import.meta.env.VITE_S3_ENDPOINT +  data.profilePicture} title='profile' />
               ) ||
                 <img className='navProPic' src={defaultPic} title='profile' />
               }

@@ -17,7 +17,7 @@ import ReconnectingWebSocket from 'reconnecting-websocket';
 
 let BASE_BACKEND_URL;
 let HTTPS;
-let WSS;
+let WSS; 
 
 if (import.meta.env.MODE === 'development'){
   BASE_BACKEND_URL = 'localhost:4000/';
