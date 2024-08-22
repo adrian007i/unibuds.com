@@ -4,18 +4,18 @@ const generateToken = require('../utils/generateToken');
 const fs = require('fs');
 const getRandomFileName = require('../utils/getRandomFileName');
 
-const { PutObjectCommand } = require('@aws-sdk/client-s3');
+const { PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 const { s3Client } = require('../utils/awsConfig');
 
 /** 
  * @desc    User registration with email verification
  * @access  Public 
  */
-module.exports.register = async (req, res) => { 
+module.exports.register = async (req, res) => {
 
     try {
         const { email, password, firstName, lastName, pictureExt } = req.body;
-        
+
         let profilePicture = undefined;
 
         // ENSURE THE PROFILE PICTURE WAS UPLOADED AND REBUILD THE PICTURE USING THE BUFFER
@@ -27,14 +27,14 @@ module.exports.register = async (req, res) => {
                 Key: profilePicture,
                 Body: req.file.buffer,
                 CacheControl: 'max-age:31536000'
-            };    
+            };
 
             // STORE USER PROFILE PICTURE IN S3
             try {
                 await s3Client.send(new PutObjectCommand(params));
             } catch (err) {
                 console.error(err);
-                res.status(500).json({"profilePicture": "Failed to upload!"});
+                res.status(500).json({ "profilePicture": "Failed to upload!" });
             }
         }
 
@@ -106,13 +106,32 @@ module.exports.set_user = async (req, res) => {
 
                 // REMOVE THE OLD IMAGE
                 try {
-                    fs.unlinkSync('./uploads/' + user.profilePicture);
+                    s3Client.send(new DeleteObjectCommand({
+                        Bucket: 'unibuds',
+                        Key: user.profilePicture,
+                    }));
                 }
-                catch { };
+                catch (err) {
+                    console.log(err);
 
-                // FILE NAME REMAINS THE SAME, PROFILE PICTURE EXTENSION MAY CHANGE
+                };
+
+                // generate new name for image                
                 user.profilePicture = getRandomFileName() + '.' + req.body.proPicExt
-                fs.writeFileSync('./uploads/' + user.profilePicture, req.file.buffer);
+
+                // STORE USER PROFILE PICTURE IN S3
+                try {
+                    await s3Client.send(new PutObjectCommand({
+                        Bucket: 'unibuds',
+                        Key: user.profilePicture,
+                        Body: req.file.buffer,
+                        CacheControl: 'max-age:31536000'
+                    }));
+
+                } catch (err) {
+                    console.error(err);
+                    res.status(500).json({ "profilePicture": "Failed to upload!" });
+                }
             }
 
 
