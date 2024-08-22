@@ -25,7 +25,8 @@ module.exports.register = async (req, res) => {
             const params = {
                 Bucket: 'unibuds',
                 Key: profilePicture,
-                Body: req.file.buffer
+                Body: req.file.buffer,
+                CacheControl: 'max-age:31536000'
             };    
 
             // STORE USER PROFILE PICTURE IN S3
