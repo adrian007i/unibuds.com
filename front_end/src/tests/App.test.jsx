@@ -1,7 +1,13 @@
-import { describe, it, expect } from 'vitest'
+// App.test.js
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';  
 
-describe('A truthy statement', () => {
-  it('should be equal to 2', () => {
-    expect(1+1).toEqual(2)
-  })
-})
+  
+describe('App Component', () => { 
+ 
+  test('initial', () => {  
+    expect(true).toBe(true)
+  });
+});
