@@ -70,8 +70,8 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    alert2: (state) => {
-      alert(123)
+    resetErrors: (state) => {
+      state.errors = {}
     },
     setCurrentUser: (state, action) => {
       state.tokenData = loadAppData(action.payload);
@@ -94,7 +94,7 @@ const authSlice = createSlice({
       .addCase(registerUser.fulfilled, (state, action) => {
         state.tokenData = loadAppData(action.payload.token);
         state.isAuthenticated = state.tokenData ? true : false;
-        state.isPending = false;
+        state.isPending = false; 
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.isPending = false;
@@ -116,6 +116,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { setCurrentUser, logoutUser } = authSlice.actions;
+export const { setCurrentUser, logoutUser , resetErrors} = authSlice.actions;
 
 export default authSlice.reducer;

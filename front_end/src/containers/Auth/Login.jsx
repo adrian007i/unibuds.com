@@ -1,14 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Form, FormControl as Input, FormLabel as Label } from 'react-bootstrap';
 import { Link } from 'react-router-dom';  
 
-import { loginUser } from './slice';
+import { loginUser, resetErrors } from './slice';
 
 const Login = () => {
     
     const dispatch = useDispatch(); 
     const {errors, isPending} = useSelector((state) => state.auth);  
+
+
+    useEffect(() =>{
+        dispatch(resetErrors());  
+    },[])
 
     // local state for form values
     const [formData, setFormData] = useState({

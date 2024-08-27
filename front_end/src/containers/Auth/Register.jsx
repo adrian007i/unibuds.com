@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Form, FormControl as Input, FormLabel as Label, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import imageCompression from 'browser-image-compression';
 
 // CUSTOM
-import { registerUser } from './slice';
+import { registerUser, resetErrors } from './slice';
 import camera from '../../icons/camera.png';
 import { defaultPic, imgUploadConfig } from '../../utils/globals';
 
@@ -14,6 +14,10 @@ const Register = () => {
 
     const dispatch = useDispatch();
     const { errors, isPending } = useSelector(state => state.auth);
+
+    useEffect(() =>{
+        dispatch(resetErrors());  
+    },[])
 
     // local state for form values
     const [formData, setFormData] = useState({
