@@ -49,11 +49,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['male', 'female', 'other', ''],
     default: '',
-  },
-  campusLocation: {
-    type: String,
-    default: ''
-  },
+  }, 
   emailVerified: {
     type: Boolean,
     default: false

@@ -1,7 +1,7 @@
 const User = require('../models/User');
+const Universities = require('../models/Universities');
 const handleErrors = require('../validation/User');
 const generateToken = require('../utils/generateToken');
-const fs = require('fs');
 const getRandomFileName = require('../utils/getRandomFileName');
 
 const { PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
@@ -143,4 +143,27 @@ module.exports.set_user = async (req, res) => {
             res.status(403).json(errors);
         }
     }
+}
+
+
+/**
+ * @desc    Load universities on key press
+ * @access  Private 
+ */
+module.exports.get_universities = async (req, res) => { 
+
+    try {
+        console.log(req.query.name);
+
+        const data = await Universities.find({
+            name: new RegExp(req.query.name, 'i')
+        }).limit(10)
+
+        res.status(200).json({ "data": data });
+    }
+
+    catch (e) {
+        res.status(403).json({ "errors": "something went wrong" });
+    }
+
 } 
