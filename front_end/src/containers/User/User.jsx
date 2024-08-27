@@ -120,9 +120,9 @@ const User = () => {
                                         <Label>Gender</Label>
                                         <Form.Select value={formData.gender} name="gender" onChange={onChange} >
                                             <option value="">Select</option>
-                                            <option value="male">male</option>
-                                            <option value="female">female</option>
-                                            <option value="other">other</option>
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                            <option value="other">Other</option>
                                         </Form.Select>
                                         <span className='error'>{errors.gender} &nbsp;</span>
                                     </div>
