@@ -170,3 +170,37 @@ label {
 #left{
   padding: 5px;
 }
+ 
+.universities {
+  background-color: #ccc;
+  color: #111; 
+  transition: height 0.2s ease;
+  height: 150px;
+
+}
+
+.universitySearch{
+  background-image: url(https://www.w3schools.com/howto/searchicon.png);
+  background-repeat: no-repeat;
+  background-position: 99%; 
+  border-radius: 0px !important;
+  padding-left: 10px;
+}
+
+.uni{ 
+  padding-left: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.uni:hover{
+  background-color: #bbb !important;
+}
+
+.hide{
+  height: 0px;
+  overflow: hidden;
+}
+

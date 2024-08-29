@@ -8,28 +8,39 @@ import imageCompression from 'browser-image-compression';
 import { registerUser, resetErrors } from './slice';
 import camera from '../../icons/camera.png';
 import { defaultPic, imgUploadConfig } from '../../utils/globals';
-
+import debounce from '../../utils/debounce'
 
 const Register = () => {
 
     const dispatch = useDispatch();
     const { errors, isPending } = useSelector(state => state.auth);
 
-    useEffect(() =>{
-        dispatch(resetErrors());  
-    },[])
+    useEffect(() => {
+        dispatch(resetErrors());
+    }, []);
+
+    const [uniDrop, setUniDrop] = useState('hide');
+    const [uniSelected, setUniSelected] = useState(null);
 
     // local state for form values
     const [formData, setFormData] = useState({
         firstName: '',
-        lastName: '',
+        lastName: '', 
         email: '',
         password: '',
+        university:'',
         profilePicture: defaultPic,   // blob or default image
         pictureExt: '',               // jpg png
-        profilePictureUrl:''          // url for the blob
+        profilePictureUrl: ''          // url for the blob
     });
-    
+ 
+    const universitySearch = (e) => {
+        console.log(e.target.value)
+    }
+
+    // server side filtering prevents request to be sent every time a key is pressed
+    const debouncedSearch = debounce(universitySearch, 400);
+
 
     // tracks change of input on form
     const onChange = (e) => {
@@ -43,32 +54,32 @@ const Register = () => {
             setFormData({ ...formData, profilePicture: defaultPic });
 
         // once the uesr uploads a image, we compress it
-        else { 
+        else {
             async function handleImageUpload(event) {
 
                 try {
                     const compressedFile = await imageCompression(event.target.files[0], imgUploadConfig);
-                    
+
                     setFormData(
-                        { ...formData, 
-                            profilePicture: compressedFile ,   
-                            pictureExt : e.target.files[0].name.split('.')[1],
-                            profilePictureUrl:  URL.createObjectURL(compressedFile)
+                        {
+                            ...formData,
+                            profilePicture: compressedFile,
+                            pictureExt: e.target.files[0].name.split('.')[1],
+                            profilePictureUrl: URL.createObjectURL(compressedFile)
                         });
-                } catch {}
+                } catch { }
 
             }
 
             handleImageUpload(e)
 
-        } 
-    }
-
+        }
+    } 
 
     // trigger for when the user submits the form
     const onSubmit = (e) => {
-        e.preventDefault();
-        dispatch(registerUser(formData));
+        e.preventDefault(); 
+        dispatch(registerUser({ ...formData, university: uniSelected ? uniSelected[0] : ''}));
     };
 
     return (
@@ -76,9 +87,9 @@ const Register = () => {
             <Form onSubmit={onSubmit}>
 
                 <div className={errors.profilePicture ? 'text-center error' : 'text-center'} >
-                    <div className='text-center'> 
-                        <label className='profilePicPreview' htmlFor='proPicture' style={{ backgroundImage: `url(${formData.profilePicture === defaultPic ? defaultPic :  formData.profilePictureUrl})` }} >
-                            <Input type='file' name='profilePicture' id='proPicture' accept="image/*" onChange={handleChangeImage} />
+                    <div className='text-center'>
+                        <label className='profilePicPreview' htmlFor='proPicture' style={{ backgroundImage: `url(${formData.profilePicture === defaultPic ? defaultPic : formData.profilePictureUrl})` }} >
+                            <Input type='file' name='profilePicture' id='proPicture' accept='image/*' onChange={handleChangeImage} />
                             <img src={camera} />
                         </label>
                     </div>
@@ -103,6 +114,30 @@ const Register = () => {
                         </div>
                     </Col>
                 </Row>
+
+                <div className={errors.university ? 'error' : ''} >
+                    
+                    <input type='hidden' value={uniSelected ? uniSelected[0] : ''} />
+                    <Label>{uniSelected ? uniSelected[1] :  'University' }</Label>
+                    <Input type='text'
+                        className='universitySearch'
+                        placeholder='Search'
+                        name='university'
+                        onKeyUp={(e) => {
+                            debouncedSearch(e);
+                        }}
+                        onFocus={() => setUniDrop('')}
+                        onBlur ={() => setUniDrop('hide')}  
+                    /> 
+                    <div className={'universities ' + uniDrop}>
+                        <div onClick={() => setUniSelected(['66cd38414a1fcd63d117bc01' ,'University of South Daktoa'])} className='uni'>University of South Dakota</div>
+                        <div onClick={() => setUniSelected(['TAM_ID' ,'Texas A&M University'])} className='uni'>Texas A&M University</div> 
+                    </div>
+                    <span className='error'>{errors.university} &nbsp;</span>
+
+                </div>
+
+
 
                 <div className={errors.email ? 'error' : ''} >
                     <Label>Email</Label>

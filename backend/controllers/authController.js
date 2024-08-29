@@ -3,6 +3,7 @@ const Universities = require('../models/Universities');
 const handleErrors = require('../validation/User');
 const generateToken = require('../utils/generateToken');
 const getRandomFileName = require('../utils/getRandomFileName');
+const mongoose = require('mongoose');
 
 const { PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 const { s3Client } = require('../utils/awsConfig');
@@ -14,13 +15,16 @@ const { s3Client } = require('../utils/awsConfig');
 module.exports.register = async (req, res) => {
 
     try {
-        const { email, password, firstName, lastName, pictureExt } = req.body;
+        // let university = new mongoose.Types.ObjectId(u.university);
+        let { email, password, firstName, lastName, pictureExt, university } = req.body;
+        university = new mongoose.Types.ObjectId(university);
+
 
         let profilePicture = undefined;
 
         // ENSURE THE PROFILE PICTURE WAS UPLOADED AND REBUILD THE PICTURE USING THE BUFFER
         if (req.file && req.file.buffer) {
-            profilePicture = getRandomFileName() + '.' + pictureExt
+            profilePicture = getRandomFileName() + '.' + pictureExt;
 
             const params = {
                 Bucket: 'unibuds',
@@ -38,12 +42,14 @@ module.exports.register = async (req, res) => {
             }
         }
 
-        const newUser = await User.create({ email, password, firstName, lastName, profilePicture });
+        const newUser = await User.create({ email, password, firstName, lastName, profilePicture, university });
 
         // create the jwt 
         res.status(201).json({ token: generateToken(newUser) });
 
-    } catch (error) {
+    } catch (error) { 
+        console.log(error);
+        
         let errors = handleErrors(error, 'create');
         res.status(400).json(errors);
     }
@@ -88,8 +94,8 @@ module.exports.set_user = async (req, res) => {
 
     if (user) {
 
-        const u = req.body.data;
-
+        const u = req.body.data; 
+        
         try {
             user.bio = u.bio;
             user.firstName = u.firstName;
@@ -99,6 +105,7 @@ module.exports.set_user = async (req, res) => {
             user.major = u.major;
             user.campusLocation = u.campusLocation;
             user.email = u.email;
+            user.university = new mongoose.Types.ObjectId(u.university);
 
 
             // ENSURE THE PROFILE PICTURE WAS UPLOADED AND REBUILD THE PICTURE USING THE BUFFER
@@ -152,9 +159,8 @@ module.exports.set_user = async (req, res) => {
  */
 module.exports.get_universities = async (req, res) => { 
 
-    try {
-        console.log(req.query.name);
-
+    try {  
+        
         const data = await Universities.find({
             name: new RegExp(req.query.name, 'i')
         }).limit(10)

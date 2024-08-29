@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const { isEmail } = require('validator');
 const bcrypt = require('bcrypt'); 
+const Schema = mongoose.Schema; 
 
 // USER PROFILE
 const userSchema = new mongoose.Schema({
@@ -35,9 +36,10 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Required'], 
   }, 
   university: {
-    type: String,
-    default: ''
-  },
+    type: Schema.Types.ObjectId,
+    ref: 'Universities',
+    required: [true, 'Required']
+  }, 
   major: {
     type: String,
     default: ''
