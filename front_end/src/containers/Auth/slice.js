@@ -3,12 +3,15 @@ import axios from 'axios';
 
 import Validate from '../../utils/validation';
 import { loadAppData, destoryAppData } from '../../utils/loadJwtUser';
+import { thunk } from 'redux-thunk';
 
 const initialState = {
   tokenData: null,
   isAuthenticated: false,
   errors: {},
-  isPending: false
+  isPending: false,
+  universities: null,
+  universitiesPending: false
 };
 
 // Register User
@@ -25,9 +28,6 @@ export const registerUser = createAsyncThunk('auth/registerUser', async (user, t
       'university': [user.university, ['isEmpty']]
     }); 
 
-    console.log(user);
-    
-    
     if (!errors.isValid)
       return thunkAPI.rejectWithValue(errors.errors);
 
@@ -71,6 +71,25 @@ export const loginUser = createAsyncThunk('auth/loginUser', async (user, thunkAP
 
 });
 
+export const searchUniversity = createAsyncThunk('auth/searchUniversities', async (name, thunkAPI) => {
+
+  if (name.length < 3){
+    thunkAPI.fulfillWithValue(null);
+    return null;
+  }
+
+  try { 
+
+    const response = await axios.get('/get_universities?name=' + name);
+
+    thunkAPI.fulfillWithValue(response.data.data);
+    return response.data.data;
+
+  } catch (e) {
+    thunkAPI.rejectWithValue(e.response.data);
+  }
+});
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -99,7 +118,7 @@ const authSlice = createSlice({
       .addCase(registerUser.fulfilled, (state, action) => {
         state.tokenData = loadAppData(action.payload.token);
         state.isAuthenticated = state.tokenData ? true : false;
-        state.isPending = false; 
+        state.isPending = false;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.isPending = false;
@@ -117,10 +136,22 @@ const authSlice = createSlice({
       .addCase(loginUser.rejected, (state, action) => {
         state.isPending = false;
         state.errors = action.payload;
+      })
+      .addCase(searchUniversity.pending, (state) => {
+        state.universitiesPending = true;
+        state.errors = {};
+      })
+      .addCase(searchUniversity.fulfilled, (state, action) => {
+        state.universities = action.payload;
+        state.universitiesPending = false;
+      })
+      .addCase(searchUniversity.rejected, (state, action) => {
+        state.isPending = false;
+        state.errors = action.payload;
       });
   },
 });
 
-export const { setCurrentUser, logoutUser , resetErrors} = authSlice.actions;
+export const { setCurrentUser, logoutUser, resetErrors } = authSlice.actions;
 
 export default authSlice.reducer;

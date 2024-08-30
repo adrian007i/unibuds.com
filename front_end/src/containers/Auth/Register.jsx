@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Form, FormControl as Input, FormLabel as Label, Row, Col } from 'react-bootstrap';
+import { Container, Button, Form, FormControl as Input, FormLabel as Label, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import imageCompression from 'browser-image-compression';
+import axios from 'axios';
 
 // CUSTOM
-import { registerUser, resetErrors } from './slice';
+import { registerUser, resetErrors, searchUniversity } from './slice';
 import camera from '../../icons/camera.png';
 import { defaultPic, imgUploadConfig } from '../../utils/globals';
 import debounce from '../../utils/debounce'
@@ -13,7 +14,7 @@ import debounce from '../../utils/debounce'
 const Register = () => {
 
     const dispatch = useDispatch();
-    const { errors, isPending } = useSelector(state => state.auth);
+    const { errors, isPending, universities, universitiesPending } = useSelector(state => state.auth);
 
     useEffect(() => {
         dispatch(resetErrors());
@@ -25,17 +26,17 @@ const Register = () => {
     // local state for form values
     const [formData, setFormData] = useState({
         firstName: '',
-        lastName: '', 
+        lastName: '',
         email: '',
         password: '',
-        university:'',
+        university: '',
         profilePicture: defaultPic,   // blob or default image
         pictureExt: '',               // jpg png
         profilePictureUrl: ''          // url for the blob
     });
- 
+
     const universitySearch = (e) => {
-        console.log(e.target.value)
+        dispatch(searchUniversity(e.target.value));
     }
 
     // server side filtering prevents request to be sent every time a key is pressed
@@ -74,12 +75,12 @@ const Register = () => {
             handleImageUpload(e)
 
         }
-    } 
+    }
 
     // trigger for when the user submits the form
     const onSubmit = (e) => {
-        e.preventDefault(); 
-        dispatch(registerUser({ ...formData, university: uniSelected ? uniSelected[0] : ''}));
+        e.preventDefault();
+        dispatch(registerUser({ ...formData, university: uniSelected ? uniSelected[0] : '' }));
     };
 
     return (
@@ -97,28 +98,30 @@ const Register = () => {
                 </div>
                 <br />
 
+                <Container>
 
-                <Row>
-                    <Col>
-                        <div className={errors.firstName ? 'error' : ''} >
-                            <Label>First Name</Label>
-                            <Input type='text' name='firstName' value={formData.firstName} onChange={onChange} />
-                            <span>{errors.firstName} &nbsp; </span>
-                        </div>
-                    </Col>
-                    <Col>
-                        <div className={errors.lastName ? 'error' : ''} >
-                            <Label>Last Name</Label>
-                            <Input type='text' name='lastName' value={formData.lastName} onChange={onChange} />
-                            <span className='error'>{errors.lastName} &nbsp;</span>
-                        </div>
-                    </Col>
-                </Row>
+                    <Row>
+                        <Col style={{ paddingLeft: "0px" }}>
+                            <div className={errors.firstName ? 'error' : ''} >
+                                <Label>First Name</Label>
+                                <Input type='text' name='firstName' value={formData.firstName} onChange={onChange} />
+                                <span>{errors.firstName} &nbsp; </span>
+                            </div>
+                        </Col>
+                        <Col style={{ paddingRight: "0px" }}>
+                            <div className={errors.lastName ? 'error' : ''} >
+                                <Label>Last Name</Label>
+                                <Input type='text' name='lastName' value={formData.lastName} onChange={onChange} />
+                                <span className='error'>{errors.lastName} &nbsp;</span>
+                            </div>
+                        </Col>
+                    </Row>
+                </Container>
 
                 <div className={errors.university ? 'error' : ''} >
-                    
+
                     <input type='hidden' value={uniSelected ? uniSelected[0] : ''} />
-                    <Label>{uniSelected ? uniSelected[1] :  'University' }</Label>
+                    <Label>University</Label>
                     <Input type='text'
                         className='universitySearch'
                         placeholder='Search'
@@ -127,17 +130,22 @@ const Register = () => {
                             debouncedSearch(e);
                         }}
                         onFocus={() => setUniDrop('')}
-                        onBlur ={() => setUniDrop('hide')}  
-                    /> 
+                    />
                     <div className={'universities ' + uniDrop}>
-                        <div onClick={() => setUniSelected(['66cd38414a1fcd63d117bc01' ,'University of South Daktoa'])} className='uni'>University of South Dakota</div>
-                        <div onClick={() => setUniSelected(['TAM_ID' ,'Texas A&M University'])} className='uni'>Texas A&M University</div> 
+                        {(universitiesPending && <div className='searchMessage'>Loading...</div>) ||
+                            (!universities && <div className='searchMessage'></div>) ||
+                            (universities.length === 0 && <div className='searchMessage'>No Matches Found</div>) ||
+                            (<div>
+                                {
+                                    universities.map((uni, i) => {
+                                        return <div key={i} onClick={() => { setUniSelected([uni._id, uni.name]); setUniDrop('hide') }} className='uni'>{uni.name}</div>
+                                    })
+                                }
+                            </div>)
+                        }
                     </div>
                     <span className='error'>{errors.university} &nbsp;</span>
-
                 </div>
-
-
 
                 <div className={errors.email ? 'error' : ''} >
                     <Label>Email</Label>

@@ -175,7 +175,8 @@ label {
   background-color: #ccc;
   color: #111; 
   transition: height 0.2s ease;
-  height: 150px;
+  max-height: 150px;
+  overflow-y: scroll;
 
 }
 
@@ -204,3 +205,6 @@ label {
   overflow: hidden;
 }
 
+.searchMessage{
+  text-align: center;
+}
