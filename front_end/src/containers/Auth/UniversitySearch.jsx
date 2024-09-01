@@ -14,6 +14,8 @@ const UniversitySearch = ({ error, getUniversity }) => {
     const [uniSelected, setUniSelected] = useState(null);
 
     const universitySearch = (e) => {
+        setUniSelected(null);
+        getUniversity('');
         dispatch(searchUniversity(e.target.value));
     }
 
