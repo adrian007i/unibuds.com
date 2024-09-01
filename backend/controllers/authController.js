@@ -159,9 +159,7 @@ module.exports.set_user = async (req, res) => {
  */
 module.exports.get_universities = async (req, res) => { 
 
-    try {  
-        console.log(req.body);
-        
+    try {   
         const data = await Universities.find({
             name: new RegExp(req.body.name, 'i')
         }).limit(10)

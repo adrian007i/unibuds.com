@@ -4,40 +4,30 @@ import { FormControl as Input, FormLabel as Label } from 'react-bootstrap';
 
 // CUSTOM
 import { searchUniversity } from './slice';
-import camera from '../../icons/camera.png';
-import { defaultPic, imgUploadConfig } from '../../utils/globals';
 import debounce from '../../utils/debounce'
 
-const UniversitySearch = () => {
+const UniversitySearch = ({ error, getUniversity }) => {
 
     const dispatch = useDispatch();
     const { universities, universitiesPending } = useSelector(state => state.auth);
-    const [uniDrop, setUniDrop] = useState('hide');
+    const [showResults, setShowResults] = useState('hide');
     const [uniSelected, setUniSelected] = useState(null);
-
-    // local state for form values
-    const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        email: '',
-        password: '',
-        university: '',
-        profilePicture: defaultPic,   // blob or default image
-        pictureExt: '',               // jpg png
-        profilePictureUrl: ''          // url for the blob
-    });
 
     const universitySearch = (e) => {
         dispatch(searchUniversity(e.target.value));
     }
 
+    const universitySelect = (id, name) =>{
+        setUniSelected([id, name]); 
+        setShowResults('hide');
+        getUniversity(id);
+    }
+
     // server side filtering prevents request to be sent every time a key is pressed
     const debouncedSearch = debounce(universitySearch, 400);
 
-
-
     return (
-        <div className={errors.university ? 'error' : ''} >
+        <div className={error ? 'error' : ''} >
 
             <input type='hidden' value={uniSelected ? uniSelected[0] : ''} />
             <Label>University</Label>
@@ -48,23 +38,25 @@ const UniversitySearch = () => {
                 onKeyUp={(e) => {
                     debouncedSearch(e);
                 }}
-                onFocus={() => setUniDrop('')}
-            // onBlur={() => setUniDrop('hide')}
+                onFocus={() => setShowResults('')}
+                // onBlur={() => setShowResults('hide')}
             />
-            <div className={'universities ' + uniDrop}>
+
+            {/* renders the list of universites based on the search paramaters */}
+            <div className={'universities ' + showResults}>
                 {(universitiesPending && <div className='searchMessage'>Loading...</div>) ||
                     (!universities && <div className='searchMessage'></div>) ||
                     (universities.length === 0 && <div className='searchMessage'>No Matches Found</div>) ||
                     (<div>
                         {
                             universities.map((uni, i) => {
-                                return <div key={i} onClick={() => { setUniSelected([uni._id, uni.name]); setUniDrop('hide') }} className='uni'>{uni.name}</div>
+                                return <div key={i} onClick={()=> universitySelect(uni._id, uni.name)} className='uni'>{uni.name}</div>
                             })
                         }
                     </div>)
                 }
             </div>
-            <span className='error'>{errors.university} &nbsp;</span>
+            <span className='error'>{error} &nbsp;</span>
 
         </div>
     );

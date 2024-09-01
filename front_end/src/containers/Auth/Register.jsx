@@ -2,46 +2,35 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Container, Button, Form, FormControl as Input, FormLabel as Label, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import imageCompression from 'browser-image-compression';
-import axios from 'axios';
+import imageCompression from 'browser-image-compression'; 
 
 // CUSTOM
-import { registerUser, resetErrors, searchUniversity } from './slice';
+import { registerUser, resetErrors } from './slice';
 import camera from '../../icons/camera.png';
 import { defaultPic, imgUploadConfig } from '../../utils/globals';
-import debounce from '../../utils/debounce'
+import UniversitySearch from './UniversitySearch';
 
 const Register = () => {
 
     const dispatch = useDispatch();
-    const { errors, isPending, universities, universitiesPending } = useSelector(state => state.auth);
+    const { errors, isPending } = useSelector(state => state.auth);
 
     useEffect(() => {
         dispatch(resetErrors());
-    }, []);
-
-    const [uniDrop, setUniDrop] = useState('hide');
-    const [uniSelected, setUniSelected] = useState(null);
-
+    }, []); 
+    
     // local state for form values
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
         email: '',
-        password: '',
+        password: '', 
         university: '',
         profilePicture: defaultPic,   // blob or default image
         pictureExt: '',               // jpg png
         profilePictureUrl: ''          // url for the blob
-    });
-
-    const universitySearch = (e) => {
-        dispatch(searchUniversity(e.target.value));
-    }
-
-    // server side filtering prevents request to be sent every time a key is pressed
-    const debouncedSearch = debounce(universitySearch, 400);
-
+    }); 
+    
 
     // tracks change of input on form
     const onChange = (e) => {
@@ -77,10 +66,14 @@ const Register = () => {
         }
     }
 
+    const getUniversity = (result) =>{  
+        setFormData({ ...formData, university : result }); 
+    }
+
     // trigger for when the user submits the form
     const onSubmit = (e) => {
         e.preventDefault();
-        dispatch(registerUser({ ...formData, university: uniSelected ? uniSelected[0] : '' }));
+        dispatch(registerUser({ ...formData }));
     };
 
     return (
@@ -117,8 +110,8 @@ const Register = () => {
                         </Col>
                     </Row>
                 </Container>
-
-                <div className={errors.university ? 'error' : ''} >
+                <UniversitySearch error={errors.university} getUniversity = {getUniversity}/>
+                {/* <div className={errors.university ? 'error' : ''} >
 
                     <input type='hidden' value={uniSelected ? uniSelected[0] : ''} />
                     <Label>University</Label>
@@ -145,7 +138,7 @@ const Register = () => {
                         }
                     </div>
                     <span className='error'>{errors.university} &nbsp;</span>
-                </div>
+                </div> */}
 
                 <div className={errors.email ? 'error' : ''} >
                     <Label>Email</Label>
