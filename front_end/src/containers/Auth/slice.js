@@ -80,7 +80,7 @@ export const searchUniversity = createAsyncThunk('auth/searchUniversities', asyn
 
   try { 
 
-    const response = await axios.get('/get_universities?name=' + name);
+    const response = await axios.post('/get_universities', {"name" : name});
 
     thunkAPI.fulfillWithValue(response.data.data);
     return response.data.data;

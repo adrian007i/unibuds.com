@@ -1,9 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Container, Button, Form, FormControl as Input, FormLabel as Label, Row, Col } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import imageCompression from 'browser-image-compression';
-import axios from 'axios';
+import { FormControl as Input, FormLabel as Label } from 'react-bootstrap';
 
 // CUSTOM
 import { searchUniversity } from './slice';
@@ -15,7 +12,6 @@ const UniversitySearch = () => {
 
     const dispatch = useDispatch();
     const { universities, universitiesPending } = useSelector(state => state.auth);
-
     const [uniDrop, setUniDrop] = useState('hide');
     const [uniSelected, setUniSelected] = useState(null);
 
