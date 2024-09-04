@@ -1,4 +1,4 @@
-import React, { useState, } from 'react';
+import React, { useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormControl as Input, FormLabel as Label } from 'react-bootstrap';
 
@@ -11,7 +11,8 @@ const UniversitySearch = ({ error, getUniversity }) => {
     const dispatch = useDispatch();
     const { universities, universitiesPending } = useSelector(state => state.auth);
     const [showResults, setShowResults] = useState('hide');
-    const [uniSelected, setUniSelected] = useState(null);
+    const [uniSelected, setUniSelected] = useState(null); 
+    const searchRef = useRef(null);
 
     const universitySearch = (e) => {
         setUniSelected(null);
@@ -22,7 +23,8 @@ const UniversitySearch = ({ error, getUniversity }) => {
     const universitySelect = (id, name) =>{
         setUniSelected([id, name]); 
         setShowResults('hide');
-        getUniversity(id);
+        getUniversity(id); 
+        searchRef.current.value = name;
     }
 
     // server side filtering prevents request to be sent every time a key is pressed
@@ -37,11 +39,12 @@ const UniversitySearch = ({ error, getUniversity }) => {
                 className='universitySearch'
                 placeholder='Search'
                 name='university'
+                id='university'
                 onKeyUp={(e) => {
-                    debouncedSearch(e);
-                }}
-                onFocus={() => setShowResults('')}
-                // onBlur={() => setShowResults('hide')}
+                    debouncedSearch(e);   
+                }}  
+                onFocus={() => setShowResults('')} 
+                ref={searchRef}
             />
 
             {/* renders the list of universites based on the search paramaters */}
