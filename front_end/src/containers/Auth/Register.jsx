@@ -94,14 +94,14 @@ const Register = () => {
                 <Container>
 
                     <Row>
-                        <Col style={{ paddingLeft: "0px" }}>
+                        <Col style={{ paddingLeft: '0px' }}>
                             <div className={errors.firstName ? 'error' : ''} >
                                 <Label>First Name</Label>
                                 <Input type='text' name='firstName' value={formData.firstName} onChange={onChange} />
                                 <span>{errors.firstName} &nbsp; </span>
                             </div>
                         </Col>
-                        <Col style={{ paddingRight: "0px" }}>
+                        <Col style={{ paddingRight: '0px' }}>
                             <div className={errors.lastName ? 'error' : ''} >
                                 <Label>Last Name</Label>
                                 <Input type='text' name='lastName' value={formData.lastName} onChange={onChange} />
@@ -110,35 +110,7 @@ const Register = () => {
                         </Col>
                     </Row>
                 </Container>
-                <UniversitySearch error={errors.university} getUniversity = {getUniversity}/>
-                {/* <div className={errors.university ? 'error' : ''} >
-
-                    <input type='hidden' value={uniSelected ? uniSelected[0] : ''} />
-                    <Label>University</Label>
-                    <Input type='text'
-                        className='universitySearch'
-                        placeholder='Search'
-                        name='university'
-                        onKeyUp={(e) => {
-                            debouncedSearch(e);
-                        }}
-                        onFocus={() => setUniDrop('')}
-                    />
-                    <div className={'universities ' + uniDrop}>
-                        {(universitiesPending && <div className='searchMessage'>Loading...</div>) ||
-                            (!universities && <div className='searchMessage'></div>) ||
-                            (universities.length === 0 && <div className='searchMessage'>No Matches Found</div>) ||
-                            (<div>
-                                {
-                                    universities.map((uni, i) => {
-                                        return <div key={i} onClick={() => { setUniSelected([uni._id, uni.name]); setUniDrop('hide') }} className='uni'>{uni.name}</div>
-                                    })
-                                }
-                            </div>)
-                        }
-                    </div>
-                    <span className='error'>{errors.university} &nbsp;</span>
-                </div> */}
+                <UniversitySearch error={errors.university} getUniversity = {getUniversity}/> 
 
                 <div className={errors.email ? 'error' : ''} >
                     <Label>Email</Label>

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormControl as Input, FormLabel as Label } from 'react-bootstrap';
 
@@ -6,13 +6,18 @@ import { FormControl as Input, FormLabel as Label } from 'react-bootstrap';
 import { searchUniversity } from './slice';
 import debounce from '../../utils/debounce'
 
-const UniversitySearch = ({ error, getUniversity }) => {
+const UniversitySearch = ({ error, getUniversity , defaultVal = null}) => {
 
     const dispatch = useDispatch();
     const { universities, universitiesPending } = useSelector(state => state.auth);
     const [showResults, setShowResults] = useState('hide');
     const [uniSelected, setUniSelected] = useState(null); 
     const searchRef = useRef(null);
+
+    useEffect(() =>{  
+        if(defaultVal)
+            universitySelect(defaultVal._id , defaultVal.name);
+    },[])
 
     const universitySearch = (e) => {
         setUniSelected(null);

@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Form, FormControl as Input, FormLabel as Label, Row, Col, Container } from 'react-bootstrap';
 import imageCompression from 'browser-image-compression';
-import axios from 'axios';
 
 import { setUserData } from './slice';
 import camera from '../../icons/camera.png';
 import { imgUploadConfig } from '../../utils/globals';
+import UniversitySearch from '../Auth/UniversitySearch';
 
 const User = () => {
 
@@ -20,7 +20,8 @@ const User = () => {
     const [proPicExt, setProPicExt] = useState('');
 
     useEffect(() => {
-        setFormData(data);
+        setFormData(data); 
+        
         if (data) {
             setProPicUrl(import.meta.env.VITE_S3_ENDPOINT + data.profilePicture);
         }
@@ -36,6 +37,10 @@ const User = () => {
         e.preventDefault();
         dispatch(setUserData({ formData, proPicBlob, proPicExt }));
     };
+
+    const getUniversity = (result) => {
+        setFormData({ ...formData, university: result });
+    }
 
     const handleChangeImage = e => {
 
@@ -75,7 +80,7 @@ const User = () => {
                                     className='profilePicPreview'
                                     htmlFor='proPicture'
                                     style={{ backgroundImage: `url(${proPicUrl})` }} >
-                                    <Input type='file' name='profilePicture' id='proPicture' accept="image/*" onChange={handleChangeImage} />
+                                    <Input type='file' name='profilePicture' id='proPicture' accept='image/*' onChange={handleChangeImage} />
                                     <img src={camera} />
                                 </label>
                             </div>
@@ -85,7 +90,7 @@ const User = () => {
                             <Row>
                                 <Col>
                                     <div className={errors.bio ? 'error' : ''} >
-                                        <Form.Control name="bio" as="textarea" rows={3} value={formData.bio} onChange={onChange} placeholder='Tell us about yourself' />
+                                        <Form.Control name='bio' as='textarea' rows={3} value={formData.bio} onChange={onChange} placeholder='Tell us about yourself' />
                                         <span>{errors.bio} &nbsp; </span>
                                     </div>
                                 </Col>
@@ -94,35 +99,35 @@ const User = () => {
                                 <Col>
                                     <div className={errors.firstName ? 'error' : ''} >
                                         <Label>First Name</Label>
-                                        <Input type="text" name="firstName" value={formData.firstName} onChange={onChange} />
+                                        <Input type='text' name='firstName' value={formData.firstName} onChange={onChange} />
                                         <span>{errors.firstName} &nbsp; </span>
                                     </div>
                                 </Col>
                                 <Col>
                                     <div className={errors.lastName ? 'error' : ''} >
                                         <Label>Last Name</Label>
-                                        <Input type="text" name="last_name" value={formData.lastName} onChange={onChange} />
+                                        <Input type='text' name='lastName' value={formData.lastName} onChange={onChange} />
                                         <span className='error'>{errors.lastName} &nbsp;</span>
                                     </div>
                                 </Col>
                             </Row>
 
                             <Row>
-                                <Col>
+                                <Col xs={6} >
                                     <div className={errors.age ? 'error' : ''} >
                                         <Label>DOB</Label>
-                                        <Input type="date" name="dob" value={formData.dob ? (formData.dob).slice(0, 10) : ""} onChange={onChange} />
+                                        <Input type='date' name='dob' value={formData.dob ? (formData.dob).slice(0, 10) : ''} onChange={onChange} />
                                         <span>{errors.age} &nbsp; </span>
                                     </div>
                                 </Col>
-                                <Col>
+                                <Col xs={6}>
                                     <div className={errors.gender ? 'error' : ''} >
                                         <Label>Gender</Label>
-                                        <Form.Select value={formData.gender} name="gender" onChange={onChange} >
-                                            <option value="">Select</option>
-                                            <option value="male">Male</option>
-                                            <option value="female">Female</option>
-                                            <option value="other">Other</option>
+                                        <Form.Select value={formData.gender} name='gender' onChange={onChange} >
+                                            <option value=''>Select</option>
+                                            <option value='male'>Male</option>
+                                            <option value='female'>Female</option>
+                                            <option value='other'>Other</option>
                                         </Form.Select>
                                         <span className='error'>{errors.gender} &nbsp;</span>
                                     </div>
@@ -133,47 +138,45 @@ const User = () => {
                                 <Col>
                                     <div className={errors.major ? 'error' : ''} >
                                         <Label>Major</Label>
-                                        <Input type="text" name="major" value={formData.major} onChange={onChange} />
+                                        <Input type='text' name='major' value={formData.major} onChange={onChange} />
                                         <span className='error'>{errors.major} &nbsp;</span>
                                     </div>
                                 </Col>
-                                <Col>
-                                    <div className={errors.campusLocation ? 'error' : ''} >
-                                        <Label>Campus Location</Label>
-                                        <Form.Select value={formData.campusLocation} name="campusLocation" onChange={onChange} >
-                                            <option value="">Select</option>
-                                            <option value="ccc">I gotta add these</option>
-                                        </Form.Select>
-                                        <span className='error'>{errors.campusLocation} &nbsp;</span>
-                                    </div>
+                            </Row>
 
+                            <Row>
+                                <Col>
+                                    <UniversitySearch error={errors.university} getUniversity={getUniversity} defaultVal = {formData.university} />
                                 </Col>
                             </Row>
+
+
+
                             <Row>
                                 <Col>
                                     <div className={errors.email ? 'error' : ''} >
                                         <Label>Email</Label>
-                                        <Input type="text" name="email" value={formData.email} onChange={onChange} />
+                                        <Input type='text' name='email' value={formData.email} onChange={onChange} />
                                         <span className='error'>{errors.email} &nbsp;</span>
                                     </div>
                                 </Col>
                             </Row>
 
-                            <Button variant="primary" type="submit" disabled={setUserPending}>
-                                {setUserPending && "Saving ..."}
-                                {!setUserPending && "Update"}
+                            <Button variant='primary' type='submit' disabled={setUserPending}>
+                                {setUserPending && 'Saving ...'}
+                                {!setUserPending && 'Update'}
                             </Button>
 
-                        </Container> 
+                        </Container>
 
                     </Form>
                 </div >
 
                 ||
-                 <div className="loader" style={{'textAlign':'center'}}>
-                        <br /><br /><br />
-                        <div className="lds-facebook"><div></div><div></div><div></div></div>
-                        <div>Loading Profile Data</div>
+                <div className='loader' style={{ 'textAlign': 'center' }}>
+                    <br /><br /><br />
+                    <div className='lds-facebook'><div></div><div></div><div></div></div>
+                    <div>Loading Profile Data</div>
                 </div>
             )}
 

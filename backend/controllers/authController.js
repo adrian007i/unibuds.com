@@ -47,9 +47,9 @@ module.exports.register = async (req, res) => {
         // create the jwt 
         res.status(201).json({ token: generateToken(newUser) });
 
-    } catch (error) { 
+    } catch (error) {
         console.log(error);
-        
+
         let errors = handleErrors(error, 'create');
         res.status(400).json(errors);
     }
@@ -81,7 +81,15 @@ module.exports.login = async (req, res) => {
  * @access  Private 
  */
 module.exports.get_user = async (req, res) => {
-    const user = await User.findOne({ _id: req.user._id }).select(['-password', '-__v', '-_id']);
+    const user = await User.findOne({ _id: req.user._id })
+        .select(['-password', '-__v', '-_id'])
+        .populate([
+            {
+                path: 'university',
+                select: 'name',
+            }
+        ]); 
+
     res.status(200).json(user);
 }
 
@@ -94,8 +102,8 @@ module.exports.set_user = async (req, res) => {
 
     if (user) {
 
-        const u = req.body.data; 
-        
+        const u = req.body.data;
+
         try {
             user.bio = u.bio;
             user.firstName = u.firstName;
@@ -157,9 +165,9 @@ module.exports.set_user = async (req, res) => {
  * @desc    Load universities on key press
  * @access  Private 
  */
-module.exports.get_universities = async (req, res) => { 
+module.exports.get_universities = async (req, res) => {
 
-    try {   
+    try {
         const data = await Universities.find({
             name: new RegExp(req.body.name, 'i')
         }).limit(10)
