@@ -102,7 +102,7 @@ module.exports.get_user = async (req, res) => {
 module.exports.set_user = async (req, res) => {
     const user = await User.findOne({ _id: req.user._id });
 
-    if (user) {
+    if (user) { 
 
         const u = req.body.data;
 
@@ -112,11 +112,13 @@ module.exports.set_user = async (req, res) => {
             user.lastName = u.lastName;
             user.dob = u.dob;
             user.gender = u.gender;
-            user.major = u.major;
-            user.campusLocation = u.campusLocation;
-            user.email = u.email;
-            user.university = new mongoose.Types.ObjectId(u.university);
-
+            user.major = u.major; 
+            user.email = u.email; 
+                    
+            if(u.university)
+                user.university = new mongoose.Types.ObjectId(u.university); 
+            else
+                user.university = '';
 
             // ENSURE THE PROFILE PICTURE WAS UPLOADED AND REBUILD THE PICTURE USING THE BUFFER
             if (req.file && req.file.buffer) {
