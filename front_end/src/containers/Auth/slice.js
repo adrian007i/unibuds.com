@@ -36,14 +36,12 @@ export const registerUser = createAsyncThunk('auth/registerUser', async (user, t
         'Content-Type': `multipart/form-data`,
       },
     });
-    if (!errors.isValid)
-      return thunkAPI.rejectWithValue(errors.errors);
 
     thunkAPI.fulfillWithValue(response.data)
     return response.data;
 
   } catch (error) {
-    return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(error.response.data);
   }
 
 });

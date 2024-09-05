@@ -17,8 +17,10 @@ module.exports.register = async (req, res) => {
     try {
         // let university = new mongoose.Types.ObjectId(u.university);
         let { email, password, firstName, lastName, pictureExt, university } = req.body;
-        university = new mongoose.Types.ObjectId(university);
-
+        
+        if(university)
+            university = new mongoose.Types.ObjectId(university);
+        
 
         let profilePicture = undefined;
 
