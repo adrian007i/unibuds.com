@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-import { object } from 'prop-types';
+import axios from 'axios'; 
+import Validate from '../../utils/validation';
 
 const initialState = {
   data: null,
@@ -25,6 +25,19 @@ export const getUserData = createAsyncThunk('auth/getUserData', async (user, thu
 // Set User profile data
 export const setUserData = createAsyncThunk('auth/setUserData', async ({ formData, proPicExt, proPicBlob }, thunkAPI) => {
   try {
+
+     // CLIENT SIDE VALIDATION FOR USER
+     const errors = new Validate({
+      'firstName': [formData.firstName, ['isEmpty', 'minLength'], 2],
+      'lastName': [formData.lastName, ['isEmpty', 'minLength'], 2],
+      'email': [formData.email, ['isEmpty', 'isValidEmail']],  
+      'university': [formData.university, ['isEmpty']]
+    }); 
+
+    if (!errors.isValid)
+      return thunkAPI.rejectWithValue(errors.errors);
+
+
     const response = await axios.post('/set_user',
       {
         profilePicture: proPicBlob,
