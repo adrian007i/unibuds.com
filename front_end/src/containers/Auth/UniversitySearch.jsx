@@ -39,7 +39,7 @@ const UniversitySearch = ({ error, getUniversity , defaultVal = null}) => {
         <div className={error ? 'error' : ''} >
 
             <input type='hidden' value={uniSelected ? uniSelected[0] : ''} />
-            <Label>University</Label>
+            <Label>University - Campus</Label>
             <Input type='text'
                 className='universitySearch'
                 placeholder='Search'

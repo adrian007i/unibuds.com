@@ -172,8 +172,12 @@ module.exports.set_user = async (req, res) => {
 module.exports.get_universities = async (req, res) => {
 
     try {
+        
+        // splits the university search name "university of south dakota" and creates a rejex for each
+        const regex = new RegExp(req.body.name.split(" ").map(part => `(?=.*${part})`).join(''), 'i'); 
+        
         const data = await Universities.find({
-            name: new RegExp(req.body.name, 'i')
+            name: regex
         }).limit(10)
 
         res.status(200).json({ "data": data });
