@@ -14,6 +14,43 @@
  
 <br /><br />
 
+# Setup AWS S3 Bucket
+
+1) Signup or Login to [AWS](https://us-east-1.console.aws.amazon.com/console/home?region=us-east-1)
+2) Create an S3 bucket
+3) Configure bucket permissions:
+    
+    We will be accessing the image via a public endpoint.
+
+    #### Set bucket Policy
+
+    ```
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Sid": "PublicReadGetObject",
+                "Effect": "Allow",
+                "Principal": "*",
+                "Action": "s3:GetObject",
+                "Resource": "arn:aws:s3:::unibuds/*"
+            }
+        ]
+    }
+    ```
+
+    #### Ensure "Block all public access" is turned off
+    ![alt text](../readme/public_aws_access.png)
+3) Create AWS Access Key with the permissions:
+    - AmazonS3FullAccess
+
+4) Add the following to your environment variables:
+    - S3BucketName
+    - AWS_KEY
+    - AWS_SECRET 
+
+
+
 # Deploying the API with Docker
 
 1) Ensure you have docker installed
@@ -27,12 +64,11 @@ Add a username and password for the MongoDB setup in the docker-compose.yml file
 
  
 <br />
-<a href="https://unibuds.vercel.app/">Live App</a>
-·
-<a href="mailto:adrianjohn.developer@gmail.com?subject=I found a bug">Report Bug</a>
-·
-<a href="mailto:adrianjohn.developer@gmail.com?subject=I want a new feature">Request Feature</a>
-</p> 
+
+[Live App](https://unibuds.vercel.app/) ·
+[Report Bug](mailto:adrianjohn.developer@gmail.com?subject=I%20found%20a%20bug) .
+[Report Bug](mailto:adrianjohn.developer@gmail.com?subject=I%20want%20a%20feature )
+
  
 
 ## Backend Tech
@@ -40,7 +76,7 @@ Add a username and password for the MongoDB setup in the docker-compose.yml file
 
 [![NodeJs][NodeJs]][NodeJs-url] [![redis][redis]][redis-url]   [![mongo][mongo]][Mongo-url] 
 
-[![docker][docker]][docker-url] [![vercel][vercel]][vercel-url] [![circleci][circleci]][circleci-url] 
+[![docker][docker]][docker-url] [![vercel][vercel]][vercel-url] [![circleci][circleci]][circleci-url]  [![aws][aws]][aws-url] 
  
  
  
@@ -71,6 +107,8 @@ Feel free to reach out!
 [vercel-url]: https://nextjs.org/
 [docker-url]: https://www.docker.com/
 [circleci-url]: https://circleci.com/
+[aws-url]: https://aws.com/
+
  
 [NodeJs]: https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white
 [mongo]: https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white
@@ -78,6 +116,6 @@ Feel free to reach out!
 [vercel]: https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=whit
 [docker]:https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white
 [circleci]:https://img.shields.io/badge/circleci-343434?style=for-the-badge&logo=circleci&logoColor=white
- 
+[aws]:https://img.shields.io/badge/Amazon_AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white
 
 

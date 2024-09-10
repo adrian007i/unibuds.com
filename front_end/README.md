@@ -18,17 +18,19 @@
 1) Ensure you have node installed
 2) Clone the repository 
 3) cd front_end
+4) Ensure you have an S3 bucket configured: See the Backend README.md 
+5) Add your S3 bucket endpoint to the frontend environment variables. eg:
+    - `VITE_S3_ENDPOINT='https://bucketName.s3.amazonaws.com/'`
 4) Run  `npm install`
 5) Run `npm run dev`
  
  
 <br />
-<a href="https://unibuds.vercel.app/">Live App</a>
-·
-<a href="mailto:adrianjohn.developer@gmail.com?subject=I found a bug">Report Bug</a>
-·
-<a href="mailto:adrianjohn.developer@gmail.com?subject=I want a new feature">Request Feature</a>
-</p> 
+
+[Live App](https://unibuds.vercel.app/) ·
+[Report Bug](mailto:adrianjohn.developer@gmail.com?subject=I%20found%20a%20bug) .
+[Report Bug](mailto:adrianjohn.developer@gmail.com?subject=I%20want%20a%20feature )
+
  
 
 ## Frontend Tech

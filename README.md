@@ -12,8 +12,6 @@
     </p> 
 </div>
 
-<!-- https://api.vercel.com/v1/integrations/deploy/prj_UIBsfCuFhOKKphQbBR5zh3GYukHc/b6liz4Bmi2 -->
-
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
@@ -48,17 +46,19 @@ Other Match making apps like Tinder and Bumble are mostly geared towards dating,
 </br></br>
 This is why I decided to create UniBuds! A free chat app that allows university students to connect with other students at their university  
   
-<br />
-<a href="https://unibuds.vercel.app/">Live App</a>
-·
-<a href="mailto:adrianjohn.developer@gmail.com?subject=I found a bug">Report Bug</a>
-·
-<a href="mailto:adrianjohn.developer@gmail.com?subject=I want a new feature">Request Feature</a>
-</p> 
+<br /> 
+
+[Live App](https://unibuds.vercel.app/) ·
+[Report Bug](mailto:adrianjohn.developer@gmail.com?subject=I%20found%20a%20bug) .
+[Report Bug](mailto:adrianjohn.developer@gmail.com?subject=I%20want%20a%20feature )
+
+
+
 <div  align="center">
     <img src="readme/home.png" alt="Logo"  height="500">
 </div>
  
+
 
 
 
@@ -69,18 +69,20 @@ This is why I decided to create UniBuds! A free chat app that allows university 
 
 [![NodeJs][NodeJs]][NodeJs-url] [![redis][redis]][redis-url]   [![mongo][mongo]][Mongo-url] 
 
-[![docker][docker]][docker-url] [![vercel][vercel]][vercel-url] [![circleci][circleci]][circleci-url] 
+[![docker][docker]][docker-url] [![vercel][vercel]][vercel-url] [![circleci][circleci]][circleci-url] [![aws][aws]][aws-url] 
 
 
-<a>#single-page-app &nbsp;</a>
-<a>#jwt &nbsp; </a>
-<a>#websocket &nbsp; </a>
-<a>#compression &nbsp; </a>
-<a>#real-time &nbsp; </a>
-<a>#cloud &nbsp;</a>
-<a>#git &nbsp;</a>
-<a>#CI/CD &nbsp;</a>
-
+[#single-page-app]() &#8202;
+[#jwt]() &#8202;
+[#websocket]() &#8202;
+[#compression]() &#8202;
+[#compression]() &#8202;
+[#real-time]() &#8202;
+[#cloud ]() &#8202;
+[#GIT]() &#8202;
+[#CI/CD]() &#8202;
+[# AWS S3 ]() &#8202;
+ 
 
 <!-- GETTING STARTED -->
 
@@ -118,6 +120,7 @@ Feel free to reach out!
 [vercel-url]: https://nextjs.org/
 [docker-url]: https://www.docker.com/
 [circleci-url]: https://circleci.com/
+[aws-url]: https://aws.com/
 
 
 [React]:https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
@@ -128,5 +131,6 @@ Feel free to reach out!
 [vercel]: https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=whit
 [docker]:https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white
 [circleci]:https://img.shields.io/badge/circleci-343434?style=for-the-badge&logo=circleci&logoColor=white
+[aws]:https://img.shields.io/badge/Amazon_AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white
  
 
