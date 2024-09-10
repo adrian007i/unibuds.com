@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 
 const { PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 const { s3Client } = require('../utils/awsConfig');
+require('dotenv').config();
 
 /** 
  * @desc    User registration with email verification
@@ -29,7 +30,7 @@ module.exports.register = async (req, res) => {
             profilePicture = getRandomFileName() + '.' + pictureExt;
 
             const params = {
-                Bucket: 'unibuds',
+                Bucket: process.env["S3BucketName"],
                 Key: profilePicture,
                 Body: req.file.buffer,
                 CacheControl: 'max-age:31536000'
@@ -126,7 +127,7 @@ module.exports.set_user = async (req, res) => {
                 // REMOVE THE OLD IMAGE
                 try {
                     s3Client.send(new DeleteObjectCommand({
-                        Bucket: 'unibuds',
+                        Bucket: process.env["S3BucketName"],
                         Key: user.profilePicture,
                     }));
                 }
@@ -141,7 +142,7 @@ module.exports.set_user = async (req, res) => {
                 // STORE USER PROFILE PICTURE IN S3
                 try {
                     await s3Client.send(new PutObjectCommand({
-                        Bucket: 'unibuds',
+                        Bucket: process.env["S3BucketName"],
                         Key: user.profilePicture,
                         Body: req.file.buffer,
                         CacheControl: 'max-age:31536000'
