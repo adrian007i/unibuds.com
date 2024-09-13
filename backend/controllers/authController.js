@@ -16,12 +16,21 @@ require('dotenv').config();
 module.exports.register = async (req, res) => {
 
     try {
-        // let university = new mongoose.Types.ObjectId(u.university);
-        let { email, password, firstName, lastName, pictureExt, university } = req.body;
+        let { email, password, firstName, lastName, pictureExt, university } = req.body; 
+        let universityObject;
         
-        if(university)
-            university = new mongoose.Types.ObjectId(university);
-        
+        if(university)  
+            
+            // ensure valid university ID
+            try{
+                university = new mongoose.Types.ObjectId(university); 
+                universityObject = await Universities.findById(university);
+                if (!universityObject)
+                    throw Error() 
+            }catch{
+                university = ""
+            } 
+                
 
         let profilePicture = undefined;
 
@@ -39,20 +48,21 @@ module.exports.register = async (req, res) => {
             // STORE USER PROFILE PICTURE IN S3
             try {
                 await s3Client.send(new PutObjectCommand(params));
-            } catch (err) {
-                console.error(err);
+            } catch (err) { 
                 res.status(500).json({ "profilePicture": "Failed to upload!" });
             }
         }
 
         const newUser = await User.create({ email, password, firstName, lastName, profilePicture, university });
+        
+        universityObject.users.push(newUser._id)
+        await universityObject.save()
 
         // create the jwt 
         res.status(201).json({ token: generateToken(newUser) });
 
-    } catch (error) {
-        console.log(error);
-
+    } catch (error) { 
+        console.log(error)
         let errors = handleErrors(error, 'create');
         res.status(400).json(errors);
     }
