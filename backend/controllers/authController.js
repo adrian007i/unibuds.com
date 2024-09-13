@@ -16,21 +16,21 @@ require('dotenv').config();
 module.exports.register = async (req, res) => {
 
     try {
-        let { email, password, firstName, lastName, pictureExt, university } = req.body; 
+        let { email, password, firstName, lastName, pictureExt, university } = req.body;
         let universityObject;
-        
-        if(university)  
-            
+
+        if (university)
+
             // ensure valid university ID
-            try{
-                university = new mongoose.Types.ObjectId(university); 
+            try {
+                university = new mongoose.Types.ObjectId(university);
                 universityObject = await Universities.findById(university);
                 if (!universityObject)
-                    throw Error() 
-            }catch{
+                    throw Error()
+            } catch {
                 university = ""
-            } 
-                
+            }
+
 
         let profilePicture = undefined;
 
@@ -48,20 +48,26 @@ module.exports.register = async (req, res) => {
             // STORE USER PROFILE PICTURE IN S3
             try {
                 await s3Client.send(new PutObjectCommand(params));
-            } catch (err) { 
+            } catch (err) {
                 res.status(500).json({ "profilePicture": "Failed to upload!" });
             }
         }
 
         const newUser = await User.create({ email, password, firstName, lastName, profilePicture, university });
+
+        const userIndex = universityObject.users.push(newUser._id);
         
-        universityObject.users.push(newUser._id)
-        await universityObject.save()
+        await universityObject.save();
+       
+        // async updates the user index in the list of universities 
+        newUser.universityIndex = userIndex - 1;
+        newUser.save()
+
 
         // create the jwt 
         res.status(201).json({ token: generateToken(newUser) });
 
-    } catch (error) { 
+    } catch (error) {
         console.log(error)
         let errors = handleErrors(error, 'create');
         res.status(400).json(errors);
@@ -101,7 +107,7 @@ module.exports.get_user = async (req, res) => {
                 path: 'university',
                 select: 'name',
             }
-        ]); 
+        ]);
 
     res.status(200).json(user);
 }
@@ -113,7 +119,10 @@ module.exports.get_user = async (req, res) => {
 module.exports.set_user = async (req, res) => {
     const user = await User.findOne({ _id: req.user._id });
 
-    if (user) { 
+    let oldUniversity = user.university._id.toString();
+    let newUniversity = req.body.data.university;
+
+    if (user) {
 
         const u = req.body.data;
 
@@ -123,14 +132,30 @@ module.exports.set_user = async (req, res) => {
             user.lastName = u.lastName;
             user.dob = u.dob;
             user.gender = u.gender;
-            user.major = u.major; 
-            user.email = u.email; 
-                    
-            if(u.university)
-                user.university = new mongoose.Types.ObjectId(u.university); 
-            else
-                user.university = '';
+            user.major = u.major;
+            user.email = u.email;
 
+
+            // only modify university values if they are different
+            if (oldUniversity !== newUniversity) {
+
+                let universityObject; 
+                
+                // ensure new university id is valid
+                try {
+                    u.university = new mongoose.Types.ObjectId(newUniversity);
+                    universityObject = await Universities.findById(u.university);
+                    
+                    if (!universityObject)
+                        throw Error()
+
+                } catch {
+                    u.university = ""
+                } 
+
+                user.university = u.university;
+            } 
+ 
             // ENSURE THE PROFILE PICTURE WAS UPLOADED AND REBUILD THE PICTURE USING THE BUFFER
             if (req.file && req.file.buffer) {
 
@@ -183,10 +208,10 @@ module.exports.set_user = async (req, res) => {
 module.exports.get_universities = async (req, res) => {
 
     try {
-        
+
         // splits the university search name "university of south dakota" and creates a rejex for each
-        const regex = new RegExp(req.body.name.split(" ").map(part => `(?=.*${part})`).join(''), 'i'); 
-        
+        const regex = new RegExp(req.body.name.split(" ").map(part => `(?=.*${part})`).join(''), 'i');
+
         const data = await Universities.find({
             name: regex
         }).limit(10)

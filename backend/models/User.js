@@ -60,6 +60,9 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   }, 
+  universityIndex:{
+    type: Number
+  },
   dateCreated: {
     type: Date,
     default: Date.now,
