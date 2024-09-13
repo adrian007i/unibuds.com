@@ -55,14 +55,13 @@ module.exports.register = async (req, res) => {
 
         const newUser = await User.create({ email, password, firstName, lastName, profilePicture, university });
 
+        // ASYNC push the user in their university
         const userIndex = universityObject.users.push(newUser._id);
-        
-        await universityObject.save();
-       
-        // async updates the user index in the list of universities 
-        newUser.universityIndex = userIndex - 1;
-        newUser.save()
+        universityObject.save();
 
+        // ASYNC push the user position in the university list
+        newUser.universityIndex = userIndex - 1;
+        newUser.save();
 
         // create the jwt 
         res.status(201).json({ token: generateToken(newUser) });
@@ -121,6 +120,7 @@ module.exports.set_user = async (req, res) => {
 
     let oldUniversity = user.university._id.toString();
     let newUniversity = req.body.data.university;
+    let universityObject;
 
     if (user) {
 
@@ -133,29 +133,26 @@ module.exports.set_user = async (req, res) => {
             user.dob = u.dob;
             user.gender = u.gender;
             user.major = u.major;
-            user.email = u.email;
-
+            user.email = u.email;  
 
             // only modify university values if they are different
             if (oldUniversity !== newUniversity) {
 
-                let universityObject; 
-                
-                // ensure new university id is valid
+                // ensure new university is valid
                 try {
                     u.university = new mongoose.Types.ObjectId(newUniversity);
                     universityObject = await Universities.findById(u.university);
-                    
+
                     if (!universityObject)
                         throw Error()
 
                 } catch {
                     u.university = ""
-                } 
+                }
 
                 user.university = u.university;
-            } 
- 
+            }
+
             // ENSURE THE PROFILE PICTURE WAS UPLOADED AND REBUILD THE PICTURE USING THE BUFFER
             if (req.file && req.file.buffer) {
 
@@ -190,7 +187,24 @@ module.exports.set_user = async (req, res) => {
             }
 
 
-            await user.save();
+            await user.save(); 
+
+            if (oldUniversity !== newUniversity) { 
+                
+                // ASYNC remove user from old university 
+                const userToRemove = await Universities.findById(oldUniversity);
+                userToRemove.users[user.universityIndex] = null;
+                userToRemove.save();  
+ 
+                // ASYNC push the user in their new university
+                const userIndex = universityObject.users.push(user._id);
+                universityObject.save();
+
+                // ASYNC push the user position in the university list
+                user.universityIndex = userIndex - 1;
+                user.save();
+            }
+
             res.status(200).json({ success: true, 'profilePicture': user.profilePicture });
 
         } catch (error) {
