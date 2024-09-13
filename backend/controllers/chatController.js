@@ -3,7 +3,7 @@ const User = require('../models/User')
 const mongoose = require('mongoose');
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-const MAX_MESSAGES = 3;
+const MAX_MESSAGES = 40;
 
 /**
  * @desc    Get all chats for a particular user
@@ -20,6 +20,9 @@ module.exports.get_chats = async (req, res) => {
         .skip(0)
         .limit(10)
         .sort({ 'lastMessage': 'desc' })
+        .select({
+            messages: { $slice: - MAX_MESSAGES }
+        })
         .populate([
             {
                 path: 'user1',

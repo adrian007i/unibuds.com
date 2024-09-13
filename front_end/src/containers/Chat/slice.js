@@ -1,6 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios'; 
 
+const MAX_MESSAGES_TRESH = 120; // once there is 120 messages  
+const ROLL_BACK_TO = 40;       // roll back to 40 messages
+
 const initialState = {
     data: null,
     loadingChats: false,
@@ -53,10 +56,18 @@ const chatSlice = createSlice({
         state.data.unshift(action.payload);
     },
     wsRecieveMessage: (state, action) => {
-      state.data[action.payload.index].messages.push(action.payload);
+      state.data[action.payload.index].messages.push(action.payload); 
+      const chat = state.data[action.payload.index];
+
+      if (chat.messages.length  >= MAX_MESSAGES_TRESH)
+        chat.messages = chat.messages.slice(chat.messages.length - ROLL_BACK_TO); 
     },
     wsSendMessage: (state, action) => {
-      state.data[action.payload.index].messages.push(action.payload);
+      state.data[action.payload.index].messages.push(action.payload); 
+      const chat = state.data[action.payload.index];
+
+      if (chat.messages.length  >= MAX_MESSAGES_TRESH)
+        chat.messages = chat.messages.slice(chat.messages.length - ROLL_BACK_TO); 
     },
   },
   extraReducers: (builder) => {

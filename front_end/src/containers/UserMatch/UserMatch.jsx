@@ -44,9 +44,11 @@ const UserMatch = () => {
                                 <div>Finding You A Buddy</div>
                             </div>
                             ||
-                            <button className='findBuddyBtn' onClick={() => dispatch(fetchMatch())}>
-                                Find a Uni Buddy
-                            </button>
+                           <div>
+                                <button className='findBuddyBtn' onClick={() => dispatch(fetchMatch())}>
+                                    Find a Uni Buddy
+                                </button>
+                           </div>
                         }
                     </div>
                     ||
