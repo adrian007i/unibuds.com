@@ -1,4 +1,5 @@
 const Chat = require('../models/Chat');
+const Universities = require('../models/Universities');
 const User = require('../models/User')
 const mongoose = require('mongoose');
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -44,9 +45,12 @@ module.exports.get_chats = async (req, res) => {
 module.exports.generateNewChat = async (req, res) => {
 
     try {
-        const user = await User.findById(req.user._id);
-
-        const usersCount = await User.countDocuments({});
+        const user = await User.findById(req.user._id); 
+        const result = await Universities.findById(user.university);
+  
+          
+        const userCount = result[0]?.userCount || 0; // Extract the count
+        console.log(`Number of users: ${userCount}`);
 
         const nextUser = await User
             .findOne()
@@ -56,7 +60,7 @@ module.exports.generateNewChat = async (req, res) => {
         
         // will eventually implement a better queuing system
         user.nextChatNumber = user.nextChatNumber + 1;
-        if (user.nextChatNumber >= usersCount)
+        if (user.nextChatNumber >= userCount)
             user.nextChatNumber = 0;
 
         await user.save();

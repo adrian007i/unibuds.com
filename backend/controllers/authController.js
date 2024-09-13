@@ -57,6 +57,7 @@ module.exports.register = async (req, res) => {
 
         // ASYNC push the user in their university
         const userIndex = universityObject.users.push(newUser._id);
+        universityObject.userSize = userIndex;
         universityObject.save();
 
         // ASYNC push the user position in the university list
@@ -192,12 +193,14 @@ module.exports.set_user = async (req, res) => {
             if (oldUniversity !== newUniversity) { 
                 
                 // ASYNC remove user from old university 
-                const userToRemove = await Universities.findById(oldUniversity);
-                userToRemove.users[user.universityIndex] = null;
-                userToRemove.save();  
- 
+                Universities.updateOne(
+                    { _id: oldUniversity },
+                    { $set: { [`users.${user.universityIndex}`]: null } }
+                ).exec()
+
                 // ASYNC push the user in their new university
-                const userIndex = universityObject.users.push(user._id);
+                const userIndex = universityObject.users.push(user._id); 
+                universityObject.userSize = userIndex;
                 universityObject.save();
 
                 // ASYNC push the user position in the university list
