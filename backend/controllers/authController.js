@@ -62,9 +62,7 @@ module.exports.register = async (req, res) => {
         // create the jwt 
         res.status(201).json({ token: generateToken(newUser) });
 
-    } catch (error) {
-        console.log(error);
-        
+    } catch (error) { 
         let errors = handleErrors(error, 'create');
         res.status(400).json(errors);
     }
@@ -225,7 +223,7 @@ module.exports.get_universities = async (req, res) => {
 
         const data = await Universities.find({
             name: regex
-        }).limit(10)
+        }).limit(10).select(['_id', 'name'])
 
         res.status(200).json({ "data": data });
     }
