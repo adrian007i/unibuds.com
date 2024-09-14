@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 
 const { PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 const { s3Client } = require('../utils/awsConfig');
+const {updateUserIndex} = require('../utils/updateUserIndex');
 require('dotenv').config();
 
 /** 
@@ -24,7 +25,7 @@ module.exports.register = async (req, res) => {
             // ensure valid university ID
             try {
                 university = new mongoose.Types.ObjectId(university);
-                universityObject = await Universities.findById(university).select(["_id","userSize"]);
+                universityObject = await Universities.findById(university).select(['_id']);
                 if (!universityObject)
                     throw Error()
             } catch {
@@ -54,25 +55,16 @@ module.exports.register = async (req, res) => {
         }
 
         const newUser = await User.create({ email, password, firstName, lastName, profilePicture, university });
-
-        // ASYNC save user position
-        newUser.universityIndex = universityObject.userSize;
-        newUser.save();
-
-        // ASYNC insert user in university list
-        Universities.updateOne(
-            { _id: universityObject._id },
-            { $set: { 
-                [`users.${newUser.universityIndex }`]: newUser._id }, 
-                userSize : universityObject.userSize + 1
-            }
-        ).exec()
+        
+        // ASYNC INSERT THE USER INTO THE NEW UNIVERSITIES->USERS
+        updateUserIndex(universityObject._id, newUser) 
 
         // create the jwt 
         res.status(201).json({ token: generateToken(newUser) });
 
     } catch (error) {
-        console.log(error)
+        console.log(error);
+        
         let errors = handleErrors(error, 'create');
         res.status(400).json(errors);
     }
@@ -124,6 +116,7 @@ module.exports.set_user = async (req, res) => {
     const user = await User.findOne({ _id: req.user._id });
 
     let oldUniversity = user.university._id.toString();
+    let oldUserIndex;
     let newUniversity = req.body.data.university;
     let universityObject;
 
@@ -138,7 +131,7 @@ module.exports.set_user = async (req, res) => {
             user.dob = u.dob;
             user.gender = u.gender;
             user.major = u.major;
-            user.email = u.email;  
+            user.email = u.email;
 
             // only modify university values if they are different
             if (oldUniversity !== newUniversity) {
@@ -146,10 +139,13 @@ module.exports.set_user = async (req, res) => {
                 // ensure new university is valid
                 try {
                     u.university = new mongoose.Types.ObjectId(newUniversity);
-                    universityObject = await Universities.findById(u.university).select(["_id","userSize"]);
+                    universityObject = await Universities.findById(u.university).select(["_id"]);
 
                     if (!universityObject)
                         throw Error()
+
+                    oldUserIndex = user.universityIndex;
+                    user.universityIndex = null;
 
                 } catch {
                     u.university = ""
@@ -192,28 +188,18 @@ module.exports.set_user = async (req, res) => {
             }
 
 
-            await user.save(); 
+            await user.save();
 
-            if (oldUniversity !== newUniversity) { 
-                
-                // ASYNC remove user from old university 
+            if (oldUniversity !== newUniversity) {
+
+                // ASYNC remove user from old university  
                 Universities.updateOne(
-                    { _id: oldUniversity },
-                    { $set: { [`users.${user.universityIndex}`]: null } }
+                    { _id: new mongoose.Types.ObjectId(oldUniversity) },
+                    { $set: { [`users.${oldUserIndex}`]: null } }
                 ).exec()
 
-                // ASYNC save user position
-                user.universityIndex = universityObject.userSize;
-                user.save();
-
-                // ASYNC insert user in university list
-                Universities.updateOne(
-                    { _id: universityObject._id },
-                    { $set: 
-                        {[`users.${ universityObject.userSize }`]: user._id}, 
-                        userSize : universityObject.userSize + 1
-                    }
-                ).exec()
+                // ASYNC INSERT THE USER INTO THE NEW UNIVERSITIES->USERS
+                updateUserIndex(universityObject._id , user)
             }
 
             res.status(200).json({ success: true, 'profilePicture': user.profilePicture });
@@ -248,4 +234,5 @@ module.exports.get_universities = async (req, res) => {
         res.status(403).json({ "errors": "something went wrong" });
     }
 
-} 
+}
+

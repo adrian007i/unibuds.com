@@ -8,12 +8,7 @@ const universitiesSchema = new Schema({
     required: [true, 'Required']
   }, 
   users: {
-    type:[Schema.Types.ObjectId],
-    default:[]
-  },
-  userSize:{
-    type: Number,
-    default:0
+    type:[Schema.Types.ObjectId], 
   }
 }); 
  

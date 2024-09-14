@@ -61,7 +61,8 @@ const userSchema = new mongoose.Schema({
     default: 0,
   }, 
   universityIndex:{
-    type: Number
+    type: Number,
+    default: null
   },
   dateCreated: {
     type: Date,
