@@ -24,7 +24,7 @@ module.exports.register = async (req, res) => {
             // ensure valid university ID
             try {
                 university = new mongoose.Types.ObjectId(university);
-                universityObject = await Universities.findById(university);
+                universityObject = await Universities.findById(university).select(["_id","userSize"]);
                 if (!universityObject)
                     throw Error()
             } catch {
@@ -55,14 +55,18 @@ module.exports.register = async (req, res) => {
 
         const newUser = await User.create({ email, password, firstName, lastName, profilePicture, university });
 
-        // ASYNC push the user in their university
-        const userIndex = universityObject.users.push(newUser._id);
-        universityObject.userSize = userIndex;
-        universityObject.save();
-
-        // ASYNC push the user position in the university list
-        newUser.universityIndex = userIndex - 1;
+        // ASYNC save user position
+        newUser.universityIndex = universityObject.userSize;
         newUser.save();
+
+        // ASYNC insert user in university list
+        Universities.updateOne(
+            { _id: universityObject._id },
+            { $set: { 
+                [`users.${newUser.universityIndex }`]: newUser._id }, 
+                userSize : universityObject.userSize + 1
+            }
+        ).exec()
 
         // create the jwt 
         res.status(201).json({ token: generateToken(newUser) });
@@ -142,7 +146,7 @@ module.exports.set_user = async (req, res) => {
                 // ensure new university is valid
                 try {
                     u.university = new mongoose.Types.ObjectId(newUniversity);
-                    universityObject = await Universities.findById(u.university);
+                    universityObject = await Universities.findById(u.university).select(["_id","userSize"]);
 
                     if (!universityObject)
                         throw Error()
@@ -198,14 +202,18 @@ module.exports.set_user = async (req, res) => {
                     { $set: { [`users.${user.universityIndex}`]: null } }
                 ).exec()
 
-                // ASYNC push the user in their new university
-                const userIndex = universityObject.users.push(user._id); 
-                universityObject.userSize = userIndex;
-                universityObject.save();
-
-                // ASYNC push the user position in the university list
-                user.universityIndex = userIndex - 1;
+                // ASYNC save user position
+                user.universityIndex = universityObject.userSize;
                 user.save();
+
+                // ASYNC insert user in university list
+                Universities.updateOne(
+                    { _id: universityObject._id },
+                    { $set: 
+                        {[`users.${ universityObject.userSize }`]: user._id}, 
+                        userSize : universityObject.userSize + 1
+                    }
+                ).exec()
             }
 
             res.status(200).json({ success: true, 'profilePicture': user.profilePicture });
