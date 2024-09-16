@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Navigate, NavLink , useNavigate } from 'react-router-dom';
+import { Navigate, NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 // CUSTOM 
@@ -8,33 +8,33 @@ import './userMatch.css';
 import '../../loader.css'
 import buddy from '../../icons/buddy.png';
 
-import { fetchMatch, acceptMatch , clearNewChat} from './slice';
+import { fetchMatch, acceptMatch, clearNewChat } from './slice';
 import { addNewChat } from '../Chat/slice';
 
 const UserMatch = () => {
 
-    const { isPending, matchedUser,  newChat } = useSelector(state => state.match)
-    const dispatch = useDispatch(); 
+    const { isPending, matchedUser, newChat } = useSelector(state => state.match)
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    useEffect(() =>{
-        if(newChat){
+    useEffect(() => {
+        if (newChat) {
             dispatch(addNewChat(newChat));
-            navigate('/chat/'+newChat._id);
+            navigate('/chat/' + newChat._id);
             dispatch(clearNewChat());
-        }  
-    },[newChat])
+        }
+    }, [newChat])
 
-    const acceptMatchSubmit = async (user) =>{   
-        dispatch(acceptMatch(user)); 
-        
-        
+    const acceptMatchSubmit = async (user) => {
+        dispatch(acceptMatch(user));
+
+
     }
 
     return (
         <>
             <div className='match'>
-                {matchedUser === null &&
+                {(matchedUser === null || matchedUser.error ) &&
                     <div className='findBuddy'>
                         <img src={buddy} alt="" className='findABuddyIcon' />
 
@@ -44,11 +44,12 @@ const UserMatch = () => {
                                 <div>Finding You A Buddy</div>
                             </div>
                             ||
-                           <div>
+                            <div>
                                 <button className='findBuddyBtn' onClick={() => dispatch(fetchMatch())}>
                                     Find a Uni Buddy
-                                </button>
-                           </div>
+                                </button> 
+                                <div className='text-danger'>{matchedUser && matchedUser.error ? matchedUser.error : ''}</div>
+                            </div>
                         }
                     </div>
                     ||
@@ -56,10 +57,11 @@ const UserMatch = () => {
                         <div className='text-center'>
                             <label
                                 className='profilePicPreview'
-                                style={{ backgroundImage: `url(${
-                                    matchedUser.profilePicture ? 
-                                    import.meta.env.VITE_S3_ENDPOINT + matchedUser.profilePicture :
-                                    '/proPicDefault.jpg'})` }} >
+                                style={{
+                                    backgroundImage: `url(${matchedUser.profilePicture ?
+                                        import.meta.env.VITE_S3_ENDPOINT + matchedUser.profilePicture :
+                                        '/proPicDefault.jpg'})`
+                                }} >
                             </label>
                         </div>
                         <div className='profileDetails'>
@@ -72,13 +74,13 @@ const UserMatch = () => {
                                 {matchedUser.gender}
                             </p>
                             <p className='bio'>
-                                {matchedUser.bio} 
+                                {matchedUser.bio}
                             </p>
 
                             <button className='startChatBtn' onClick={() => acceptMatchSubmit(matchedUser)}>
                                 Start Chat
                             </button>
-                            
+
                             <button className='skipChatBtn' onClick={() => dispatch(fetchMatch())}>
                                 Skip
                             </button>

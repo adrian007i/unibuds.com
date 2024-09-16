@@ -44,29 +44,53 @@ module.exports.get_chats = async (req, res) => {
  */
 module.exports.generateNewChat = async (req, res) => {
 
+
+    // db.ap_pages.find({
+    //     $or: [{
+    //         _id: {
+    //             $in: [ObjectId('5d3595d9022a3de52f62ce79'), ObjectId('5d3595d9022a3de52f62ce7d')]
+    //         }
+    //     }, {
+    //         user_id: '5c80f410c1b9eb3d8fbf541d'
+    //     }]
+    // })
+
     try {
+        // find the user
         const user = await User.findById(req.user._id); 
-        const result = await Universities.findById(user.university);
-  
-          
-        const userCount = result[0]?.userCount || 0; // Extract the count
-        console.log(`Number of users: ${userCount}`);
+        const userOldNextChatNumber = user.nextChatNumber;
 
-        const nextUser = await User
-            .findOne()
-            .skip(user.nextChatNumber)
-            .select(['_id', 'firstName', 'lastName', 'gender', 'campusLocation', 'major', 'bio', 'profilePicture'])
+        let result;
 
-        
-        // will eventually implement a better queuing system
-        user.nextChatNumber = user.nextChatNumber + 1;
-        if (user.nextChatNumber >= userCount)
-            user.nextChatNumber = 0;
+        while (true) {
 
-        await user.save();
+            // find the user next match id
+            const matchUserId = await Universities.findById(user.university, { users: { $slice: [user.nextChatNumber, 1] } });
 
-        res.status(200).json({ 'success': true, 'user': nextUser });
+            // we found a match 
+            if (matchUserId.users.length > 0 && req.user._id !== matchUserId.users[0].toString()) {
+                result = await User.findById(matchUserId.users[0]);
+                user.nextChatNumber = user.nextChatNumber + 1;
+                break;
+            }
+            // no more users to match with
+            else if (matchUserId.users.length === 0) {
+                result = { error: "No more users to match with. Try Later!" };
+                break;
+            }
+            // cant match with ourself
+            else if (req.user._id === matchUserId.users[0].toString()){
+                user.nextChatNumber = user.nextChatNumber + 1;
+            }
+        }
+
+        if (userOldNextChatNumber !== user.nextChatNumber)
+            await user.save();
+ 
+
+        res.status(200).json({ 'success': true, 'user': result }); 
     } catch (e) {
+        console.log(e)
         res.status(400).json({ 'success': false });
     }
 
