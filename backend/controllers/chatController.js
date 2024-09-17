@@ -42,12 +42,13 @@ module.exports.get_chats = async (req, res) => {
  * @desc    Generates a random chat for the user
  * @access  Private 
  */
-module.exports.generateNewChat = async (req, res) => { 
+module.exports.generateNewChat = async (req, res) => {
 
     try {
         // find the user
-        const user = await User.findById(req.user._id);
-        const userOldNextChatNumber = user.nextChatNumber; 
+        const user = await User.findById(req.user._id).select(['_id', 'nextChatNumber', 'university']);
+        // console.log(user)
+        const userOldNextChatNumber = user.nextChatNumber;
 
         let result;
 
@@ -56,23 +57,20 @@ module.exports.generateNewChat = async (req, res) => {
             // find the user next match id
             const matchUserId = await Universities.findById(user.university, { users: { $slice: [user.nextChatNumber, 1] } });
 
-            // we found a match 
-            if (matchUserId.users.length > 0 && req.user._id !== matchUserId.users[0].toString()) {
-                result = await User.findById(matchUserId.users[0]);
-                user.nextChatNumber = user.nextChatNumber + 1;
-                break;
-            }
             // no more users to match with
-            else if (matchUserId.users.length === 0) {
+            if (matchUserId.users.length === 0) {
                 result = { error: "No more users to match with. Try Later!" };
                 break;
             }
-            // cant match with ourself
-            else if (req.user._id === matchUserId.users[0].toString()) {
-                user.nextChatNumber = user.nextChatNumber + 1;
-                continue;
-            }
 
+            user.nextChatNumber = user.nextChatNumber + 1;
+
+            // user left this university or user is trying match with themself
+            if (matchUserId.users[0] === null || user._id.equals(matchUserId.users[0]._id))
+                continue;
+
+            result = await User.findById(matchUserId.users[0]);
+            break;
 
         }
 
@@ -102,9 +100,14 @@ module.exports.acceptNewChat = async (req, res) => {
         const chat = await Chat.create({ user1, user2, last_messsage });
 
         // ASYNC - set the chat id in the user document
-        User.updateMany(
-            { _id: { $in: [user1, user2] } },
-            { $push: { chats: chat._id } }
+        User.updateOne(
+            { _id: user1 },
+            { $push: { chats: chat._id, userMatches: user2._id } }
+        ).exec();
+
+        User.updateOne(
+            { _id: user2 },
+            { $push: { chats: chat._id, userMatches: user1._id } }
         ).exec();
 
         res.status(200).json(
