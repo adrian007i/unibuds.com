@@ -42,23 +42,12 @@ module.exports.get_chats = async (req, res) => {
  * @desc    Generates a random chat for the user
  * @access  Private 
  */
-module.exports.generateNewChat = async (req, res) => {
-
-
-    // db.ap_pages.find({
-    //     $or: [{
-    //         _id: {
-    //             $in: [ObjectId('5d3595d9022a3de52f62ce79'), ObjectId('5d3595d9022a3de52f62ce7d')]
-    //         }
-    //     }, {
-    //         user_id: '5c80f410c1b9eb3d8fbf541d'
-    //     }]
-    // })
+module.exports.generateNewChat = async (req, res) => { 
 
     try {
         // find the user
-        const user = await User.findById(req.user._id); 
-        const userOldNextChatNumber = user.nextChatNumber;
+        const user = await User.findById(req.user._id);
+        const userOldNextChatNumber = user.nextChatNumber; 
 
         let result;
 
@@ -79,16 +68,19 @@ module.exports.generateNewChat = async (req, res) => {
                 break;
             }
             // cant match with ourself
-            else if (req.user._id === matchUserId.users[0].toString()){
+            else if (req.user._id === matchUserId.users[0].toString()) {
                 user.nextChatNumber = user.nextChatNumber + 1;
+                continue;
             }
+
+
         }
 
         if (userOldNextChatNumber !== user.nextChatNumber)
             await user.save();
- 
 
-        res.status(200).json({ 'success': true, 'user': result }); 
+
+        res.status(200).json({ 'success': true, 'user': result });
     } catch (e) {
         console.log(e)
         res.status(400).json({ 'success': false });
@@ -103,10 +95,17 @@ module.exports.generateNewChat = async (req, res) => {
 module.exports.acceptNewChat = async (req, res) => {
 
     try {
+
         const user1 = new mongoose.Types.ObjectId(req.user._id);
         const user2 = new mongoose.Types.ObjectId(req.params.chat_id);
         const last_messsage = Date.now();
         const chat = await Chat.create({ user1, user2, last_messsage });
+
+        // ASYNC - set the chat id in the user document
+        User.updateMany(
+            { _id: { $in: [user1, user2] } },
+            { $push: { chats: chat._id } }
+        ).exec();
 
         res.status(200).json(
             {

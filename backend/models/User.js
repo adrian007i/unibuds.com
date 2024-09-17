@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const { isEmail } = require('validator');
 const bcrypt = require('bcrypt'); 
 const Schema = mongoose.Schema; 
+const chatSchema = require('./Chat')
 
 // USER PROFILE
 const userSchema = new mongoose.Schema({
@@ -59,14 +60,18 @@ const userSchema = new mongoose.Schema({
   nextChatNumber: {
     type: Number,
     default: 0,
-  }, 
-  universityIndex:{
-    type: Number,
-    default: null
   },
   dateCreated: {
     type: Date,
     default: Date.now,
+  }, 
+  chats: {
+    type: [Schema.Types.ObjectId],
+    ref: 'Chat'
+  }, 
+  userMatches: {
+    type: [Schema.Types.ObjectId],
+    ref: 'User'
   }, 
 });
 

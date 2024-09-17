@@ -7,7 +7,6 @@ const mongoose = require('mongoose');
 
 const { PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 const { s3Client } = require('../utils/awsConfig');
-const {updateUserIndex} = require('../utils/updateUserIndex');
 require('dotenv').config();
 
 /** 
@@ -55,14 +54,17 @@ module.exports.register = async (req, res) => {
         }
 
         const newUser = await User.create({ email, password, firstName, lastName, profilePicture, university });
-        
+
         // ASYNC INSERT THE USER INTO THE NEW UNIVERSITIES->USERS
-        updateUserIndex(universityObject._id, newUser) 
+        Universities.updateOne(
+            { _id: universityObject._id },
+            { $push: { users: newUser._id } }
+        ).exec()
 
         // create the jwt 
         res.status(201).json({ token: generateToken(newUser) });
 
-    } catch (error) { 
+    } catch (error) {
         let errors = handleErrors(error, 'create');
         res.status(400).json(errors);
     }
@@ -114,7 +116,6 @@ module.exports.set_user = async (req, res) => {
     const user = await User.findOne({ _id: req.user._id });
 
     let oldUniversity = user.university._id.toString();
-    let oldUserIndex;
     let newUniversity = req.body.data.university;
     let universityObject;
 
@@ -141,9 +142,6 @@ module.exports.set_user = async (req, res) => {
 
                     if (!universityObject)
                         throw Error()
-
-                    oldUserIndex = user.universityIndex;
-                    user.universityIndex = null;
 
                 } catch {
                     u.university = ""
@@ -190,14 +188,17 @@ module.exports.set_user = async (req, res) => {
 
             if (oldUniversity !== newUniversity) {
 
-                // ASYNC remove user from old university  
+                // ASYNC INSERT THE USER INTO THE NEW UNIVERSITIES->USERS 
                 Universities.updateOne(
-                    { _id: new mongoose.Types.ObjectId(oldUniversity) },
-                    { $set: { [`users.${oldUserIndex}`]: null } }
+                    { _id: universityObject._id },
+                    { $push: { users: user._id } }
                 ).exec()
 
-                // ASYNC INSERT THE USER INTO THE NEW UNIVERSITIES->USERS
-                updateUserIndex(universityObject._id , user)
+                // ASYNC remove user from old university  
+                Universities.updateOne(
+                    { _id: new mongoose.Types.ObjectId(oldUniversity), users: user._id },
+                    { $set: { "users.$": null } }
+                ).exec() 
             }
 
             res.status(200).json({ success: true, 'profilePicture': user.profilePicture });

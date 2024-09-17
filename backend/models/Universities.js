@@ -9,6 +9,7 @@ const universitiesSchema = new Schema({
   }, 
   users: {
     type:[Schema.Types.ObjectId], 
+    ref: 'User'
   }
 }); 
  
