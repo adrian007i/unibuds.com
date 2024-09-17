@@ -4,7 +4,7 @@ const User = require('../models/User')
 const mongoose = require('mongoose');
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-const MAX_MESSAGES = 40;
+const MAX_MESSAGES = process.env.MAX_MESSAGES;
 
 /**
  * @desc    Get all chats for a particular user
@@ -12,29 +12,27 @@ const MAX_MESSAGES = 40;
  */
 module.exports.get_chats = async (req, res) => {
 
-    const _id = new mongoose.Types.ObjectId(req.user._id);
-
-    const chats = await Chat
-        .find({
-            $or: [{ user1: _id }, { user2: _id }]
-        })
-        .skip(0)
-        .limit(10)
-        .sort({ 'lastMessage': 'desc' })
-        .select({
-            messages: { $slice: - MAX_MESSAGES }
-        })
-        .populate([
-            {
-                path: 'user1',
-                select: 'firstName profilePicture',
+    const user = await User.findById(req.user._id)
+    .select(['chats'])
+    .populate([ 
+        {
+            path: 'chats',
+            options: { 
+                limit: 10  ,
+                sort: { lastMessage: -1 },  
+                select : {
+                    messages: { $slice: - MAX_MESSAGES },
+                }, 
+                populate : [
+                   { path: 'user1', select: 'firstName profilePicture',},
+                   { path: 'user2', select: 'firstName profilePicture',} // need to optimize this
+                ]
             },
-            {
-                path: 'user2',
-                select: 'firstName profilePicture',
-            }
-        ])
-    res.status(200).json({ 'success': true, 'chats': chats });
+            
+        }  
+    ]); 
+ 
+    res.status(200).json({ 'success': true, 'chats': user.chats });
 
 }
 
@@ -56,7 +54,7 @@ module.exports.generateNewChat = async (req, res) => {
 
             // find the user next match id
             const matchUserId = await Universities.findById(user.university, { users: { $slice: [user.nextChatNumber, 1] } });
-
+            
             // no more users to match with
             if (matchUserId.users.length === 0) {
                 result = { error: "No more users to match with. Try Later!" };

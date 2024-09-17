@@ -8,6 +8,8 @@ const mongoose = require('mongoose');
 const { PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 const { s3Client } = require('../utils/awsConfig');
 require('dotenv').config();
+const MAX_MESSAGES = process.send.MAX_MESSAGES
+
 
 /** 
  * @desc    User registration with email verification
@@ -79,7 +81,7 @@ module.exports.login = async (req, res) => {
     const { email, password } = req.body;
 
     // find the user by email
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select(['email', 'password']);
 
     // ensure the password is correct
     if (user && (await user.matchPassword(password)))
@@ -96,8 +98,8 @@ module.exports.login = async (req, res) => {
  * @access  Private 
  */
 module.exports.get_user = async (req, res) => {
-    const user = await User.findOne({ _id: req.user._id })
-        .select(['-password', '-__v', '-_id'])
+    const user = await User.findById(req.user._id)
+        .select(['-password', '-__v', '-_id', '-userMatches','-chats' ])
         .populate([
             {
                 path: 'university',
@@ -113,7 +115,7 @@ module.exports.get_user = async (req, res) => {
  * @access  Private 
  */
 module.exports.set_user = async (req, res) => {
-    const user = await User.findOne({ _id: req.user._id });
+    const user = await User.findById(req.user._id).select(['-chats','-userMatches']);
 
     let oldUniversity = user.university._id.toString();
     let newUniversity = req.body.data.university;
@@ -184,7 +186,7 @@ module.exports.set_user = async (req, res) => {
             }
 
 
-            await user.save();
+            await user.save();  
 
             if (oldUniversity !== newUniversity) {
 
@@ -198,7 +200,7 @@ module.exports.set_user = async (req, res) => {
                 Universities.updateOne(
                     { _id: new mongoose.Types.ObjectId(oldUniversity), users: user._id },
                     { $set: { "users.$": null } }
-                ).exec() 
+                ).exec()
             }
 
             res.status(200).json({ success: true, 'profilePicture': user.profilePicture });
