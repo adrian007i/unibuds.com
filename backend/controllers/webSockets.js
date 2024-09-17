@@ -17,6 +17,7 @@ const storeMessage = async (message, user, status) => {
             const sender = (user === chat.user1.toString() ? 1 : 2);
 
             // STORE THE MESSAGE IN THE NEXT CIRCULAR ARRAY POSITION
+            // TODO, DO NOT BRING MESSAGES INTO MEMORY
             chat.messages.push({ sender: sender, msg: message.body }); 
 
             chat.save();

@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 const { PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 const { s3Client } = require('../utils/awsConfig');
 require('dotenv').config();
-const MAX_MESSAGES = process.send.MAX_MESSAGES
+const MAX_MESSAGES = process.env.MAX_MESSAGES
 
 
 /** 
