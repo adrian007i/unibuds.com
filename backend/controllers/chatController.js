@@ -13,25 +13,25 @@ const MAX_MESSAGES = process.env.MAX_MESSAGES;
 module.exports.get_chats = async (req, res) => {
 
     const user = await User.findById(req.user._id)
-    .select(['chats'])
-    .populate([ 
-        {
-            path: 'chats',
-            options: { 
-                limit: 10  ,
-                sort: { lastMessage: -1 },  
-                select : {
-                    messages: { $slice: - MAX_MESSAGES },
-                }, 
-                populate : [
-                   { path: 'user1', select: 'firstName profilePicture',},
-                   { path: 'user2', select: 'firstName profilePicture',} // need to optimize this
-                ]
-            },
-            
-        }  
-    ]); 
- 
+        .select(['chats'])
+        .populate([
+            {
+                path: 'chats',
+                options: {
+                    limit: 10,
+                    sort: { lastMessage: -1 },
+                    select: {
+                        messages: { $slice: - MAX_MESSAGES },
+                    },
+                    populate: [
+                        { path: 'user1', select: 'firstName profilePicture', },
+                        { path: 'user2', select: 'firstName profilePicture', } // need to optimize this
+                    ]
+                },
+
+            }
+        ]); 
+    
     res.status(200).json({ 'success': true, 'chats': user.chats });
 
 }
@@ -45,7 +45,6 @@ module.exports.generateNewChat = async (req, res) => {
     try {
         // find the user
         const user = await User.findById(req.user._id).select(['_id', 'nextChatNumber', 'university']);
-        // console.log(user)
         const userOldNextChatNumber = user.nextChatNumber;
 
         let result;
@@ -66,15 +65,23 @@ module.exports.generateNewChat = async (req, res) => {
             // user left this university or user is trying match with themself
             if (matchUserId.users[0] === null || user._id.equals(matchUserId.users[0]._id))
                 continue;
+ 
+            // check if the user has already matched
+            const alreadyMatched = await User.countDocuments(
+                { _id: req.user._id, userMatches: matchUserId.users[0] }
+            );
 
-            result = await User.findById(matchUserId.users[0]);
+            if (alreadyMatched)
+                continue;
+
+            result = await User.findById(matchUserId.users[0]).select(['firstName', 'lastName', 'major','bio','profilePicture']);
             break;
-
+ 
         }
 
         if (userOldNextChatNumber !== user.nextChatNumber)
             await user.save();
-
+ 
 
         res.status(200).json({ 'success': true, 'user': result });
     } catch (e) {

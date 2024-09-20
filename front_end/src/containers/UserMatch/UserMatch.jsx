@@ -66,12 +66,8 @@ const UserMatch = () => {
                         </div>
                         <div className='profileDetails'>
                             <h1>{matchedUser.firstName}</h1>
-                            <p>
-                                {matchedUser.campusLocation}
-                                <span className='bullet'>&#8226;</span>
+                            <p> 
                                 {matchedUser.major}
-                                <span className='bullet'>&#8226;</span>
-                                {matchedUser.gender}
                             </p>
                             <p className='bio'>
                                 {matchedUser.bio}
