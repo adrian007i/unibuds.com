@@ -14,7 +14,7 @@ const User = () => {
     const { data, errors, setUserPending } = useSelector(state => state.user);
 
     // local state for form values
-    const [formData, setFormData] = useState();
+    const [formData, setFormData] = useState(null);
     const [proPicUrl, setProPicUrl] = useState('');
     const [proPicBlob, setProPicBlob] = useState(null);
     const [proPicExt, setProPicExt] = useState('');
@@ -35,7 +35,8 @@ const User = () => {
     // USER SUBMIT THE PROFILE UPDATE
     const onSubmit = (e) => {
         e.preventDefault();
-        dispatch(setUserData({ formData, proPicBlob, proPicExt }));
+        dispatch(setUserData({ formData, proPicBlob, proPicExt })); 
+        setFormData(formData);
     };
 
     const getUniversity = (result) => {
@@ -158,6 +159,16 @@ const User = () => {
                                         <Label>Email</Label>
                                         <Input type='text' name='email' value={formData.email} onChange={onChange} />
                                         <span className='error'>{errors.email} &nbsp;</span>
+                                    </div>
+                                </Col>
+                            </Row> 
+                            
+                            <Row>
+                                <Col>
+                                    <div className={errors.password ? 'error' : ''} >
+                                        <Label>Change Password</Label>
+                                        <Input type='password' name='password' value={formData.password || ''}  onChange={onChange} />
+                                        <span className='error'>{errors.password} &nbsp;</span>
                                     </div>
                                 </Col>
                             </Row>

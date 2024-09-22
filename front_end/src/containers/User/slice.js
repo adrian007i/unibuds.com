@@ -49,7 +49,7 @@ export const setUserData = createAsyncThunk('auth/setUserData', async ({ formDat
           'Content-Type': `multipart/form-data`,
         },
       });
-    thunkAPI.fulfillWithValue({formData, profilePicture : response.profilePicture}); 
+    thunkAPI.fulfillWithValue({formData, profilePicture : response.data.profilePicture}); 
     return {formData, profilePicture : response.data.profilePicture};
 
   } catch (error) {
@@ -81,6 +81,7 @@ const userSlice = createSlice({
       })
       .addCase(setUserData.fulfilled, (state, action) => {
         state.data = action.payload.formData;
+        state.data.password = undefined;
         state.data.profilePicture = action.payload.profilePicture;
         state.setUserPending = false;
       })

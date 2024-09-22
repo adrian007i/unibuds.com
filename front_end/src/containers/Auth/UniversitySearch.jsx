@@ -19,7 +19,7 @@ const UniversitySearch = ({ error, getUniversity , defaultVal = null}) => {
             universitySelect(defaultVal._id , defaultVal.name);
     },[])
 
-    const universitySearch = (e) => {
+    const searching = (e) => {
         setUniSelected(null);
         getUniversity('');
         dispatch(searchUniversity(e.target.value));
@@ -27,13 +27,13 @@ const UniversitySearch = ({ error, getUniversity , defaultVal = null}) => {
 
     const universitySelect = (id, name) =>{
         setUniSelected([id, name]); 
-        setShowResults('hide');
+        setShowResults('hide'); 
         getUniversity(id); 
         searchRef.current.value = name;
     }
 
     // server side filtering prevents request to be sent every time a key is pressed
-    const debouncedSearch = debounce(universitySearch, 400);
+    const debouncedSearch = debounce(searching, 400);
 
     return (
         <div className={error ? 'error' : ''} >

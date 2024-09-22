@@ -134,6 +134,11 @@ module.exports.set_user = async (req, res) => {
             user.major = u.major;
             user.email = u.email;
 
+            // check if password was changed
+            if (u.password){
+                user.password = u.password
+            } 
+
             // only modify university values if they are different
             if (oldUniversity !== newUniversity) {
 
