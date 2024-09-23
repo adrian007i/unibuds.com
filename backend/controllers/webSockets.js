@@ -1,28 +1,20 @@
 const mongoose = require('mongoose');
-const Chat = require('../models/Chat'); 
+const Chat = require('../models/Chat');
 
-const storeMessage = async (message, user, status) => {
+const storeMessage = async (message, user, recieverOnline) => {
 
-    try { 
-        let chat;
-
+    try {
         if (message.chatId) {
 
-            const chatId = new mongoose.Types.ObjectId(message.chatId);
 
-            chat = await Chat.findById(chatId); 
-            if (!chat) throw ('Invalid Chat ID') 
-
-            // DETERMINE THE SENDER OF THE MESSAGE  
-            const sender = (user === chat.user1.toString() ? 1 : 2);
-
-            // STORE THE MESSAGE IN THE NEXT CIRCULAR ARRAY POSITION
-            // TODO, DO NOT BRING MESSAGES INTO MEMORY
-            chat.messages.push({ sender: sender, msg: message.body }); 
-
-            chat.save();
+            await Chat.findByIdAndUpdate(message.chatId, {
+                $push: { messages: { sender: message.amIUser1 ? 1 : 2, msg: message.body } }
+            },
+                { select: { messages: 0, _id: 0, user1: 0, user2: 0, lastMessage:0, msgIndex:0 , __v : 0} }
+            ).exec()
+            
         }
-    } catch (error) {}
+    } catch (error) { }
 
 };
 

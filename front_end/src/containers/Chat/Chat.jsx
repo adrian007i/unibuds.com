@@ -45,6 +45,7 @@ const Chat = ({ ws, user }) => {
             {
                 'body': newMsg,
                 'reciever': amIuser1 ? data[chatIndex].user2._id : data[chatIndex].user1._id,
+                'amIUser1': amIuser1,
                 'chatId': data[chatIndex]._id
             }
         ));
