@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Container, Button, Form, FormControl as Input, FormLabel as Label, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import imageCompression from 'browser-image-compression'; 
+import imageCompression from 'browser-image-compression';
 
 // CUSTOM
 import { registerUser, resetErrors } from './slice';
@@ -17,20 +17,20 @@ const Register = () => {
 
     useEffect(() => {
         dispatch(resetErrors());
-    }, []); 
-    
+    }, []);
+
     // local state for form values
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
         email: '',
-        password: '', 
+        password: '',
         university: '',
         profilePicture: defaultPic,   // blob or default image
         pictureExt: '',               // jpg png
         profilePictureUrl: ''          // url for the blob
-    }); 
-    
+    });
+
 
     // tracks change of input on form
     const onChange = (e) => {
@@ -66,8 +66,8 @@ const Register = () => {
         }
     }
 
-    const getUniversity = (result) =>{  
-        setFormData({ ...formData, university : result }); 
+    const getUniversity = (result) => {
+        setFormData({ ...formData, university: result });
     }
 
     // trigger for when the user submits the form
@@ -110,18 +110,24 @@ const Register = () => {
                         </Col>
                     </Row>
                 </Container>
-                <UniversitySearch error={errors.university} getUniversity = {getUniversity}/> 
+                <UniversitySearch error={errors.university} getUniversity={getUniversity} />
 
                 <div className={errors.email ? 'error' : ''} >
                     <Label>Email</Label>
                     <Input type='text' name='email' value={formData.email} onChange={onChange} />
-                    <span className='error'>{errors.email} &nbsp;</span>
+                    <span className='error'> 
+                        {errors.email !== 'This email exist already' &&
+                            <span>{errors.email}</span> ||
+                            <span>{errors.email} <Link to='/login' className='text-danger'>login here</Link></span>
+                        }
+                        &nbsp;
+                    </span>
                 </div>
 
                 <div className={errors.password ? 'error' : ''} >
                     <Label>Password</Label>
                     <Input type='password' name='password' value={formData.password} onChange={onChange} />
-                    <span className='error'>{errors.password} &nbsp;</span>
+
                 </div>
 
                 <br />

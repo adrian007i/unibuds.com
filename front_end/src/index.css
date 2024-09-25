@@ -208,3 +208,12 @@ label {
 .searchMessage{
   text-align: center;
 }
+
+
+.buttonLikeLink{
+  background: none; 
+  outline: none;
+  border: none;
+  text-decoration: underline;
+  color:#0d6efd
+}

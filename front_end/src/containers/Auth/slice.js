@@ -11,7 +11,10 @@ const initialState = {
   errors: {},
   isPending: false,
   universities: null,
-  universitiesPending: false
+  universitiesPending: false,
+  resetLinkPending: false,
+  resetLinkSent: false,
+  resetLinkError: ""
 };
 
 // Register User
@@ -26,7 +29,7 @@ export const registerUser = createAsyncThunk('auth/registerUser', async (user, t
       'password': [user.password, ['isEmpty', 'minLength'], 6],
       'profilePicture': [user.profilePictureUrl, ['validPicture']],
       'university': [user.university, ['isEmpty']]
-    }); 
+    });
 
     if (!errors.isValid)
       return thunkAPI.rejectWithValue(errors.errors);
@@ -41,7 +44,7 @@ export const registerUser = createAsyncThunk('auth/registerUser', async (user, t
     return response.data;
 
   } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+    return thunkAPI.rejectWithValue(error.response.data);
   }
 
 });
@@ -71,14 +74,14 @@ export const loginUser = createAsyncThunk('auth/loginUser', async (user, thunkAP
 
 export const searchUniversity = createAsyncThunk('auth/searchUniversities', async (name, thunkAPI) => {
 
-  if (name.length < 3){
+  if (name.length < 3) {
     thunkAPI.fulfillWithValue(null);
     return null;
   }
 
-  try { 
+  try {
 
-    const response = await axios.post('/get_universities', {"name" : name});
+    const response = await axios.post('/get_universities', { "name": name });
 
     thunkAPI.fulfillWithValue(response.data.data);
     return response.data.data;
@@ -87,6 +90,25 @@ export const searchUniversity = createAsyncThunk('auth/searchUniversities', asyn
     thunkAPI.rejectWithValue(e.response.data);
   }
 });
+
+export const sendResetUrl = createAsyncThunk('auth/sendResetUrl/', async (email, thunkAPI) => {
+
+  try {
+    const errors = new Validate({
+      'email': [email, ['isEmpty', 'isValidEmail']],
+    });
+
+    if (!errors.isValid)
+      return thunkAPI.rejectWithValue(errors.errors);
+
+    await axios.post('/send_reset_url', {email: email});
+    return  
+  }
+  catch (error) {
+    return thunkAPI.rejectWithValue(error.response.data)
+  }
+});
+
 
 const authSlice = createSlice({
   name: 'auth',
@@ -146,7 +168,22 @@ const authSlice = createSlice({
       .addCase(searchUniversity.rejected, (state, action) => {
         state.isPending = false;
         state.errors = action.payload;
-      });
+      })
+      .addCase(sendResetUrl.pending, (state) => {
+        state.resetLinkSent = false;
+        state.resetLinkPending = true;
+        state.resetLinkError = "";
+      })
+      .addCase(sendResetUrl.fulfilled, (state) => { 
+        state.resetLinkPending = false;
+        state.resetLinkSent = true;
+      })
+      .addCase(sendResetUrl.rejected, (state, action) => {
+        console.log(action.payload);
+        
+        state.resetLinkError = action.payload.message;
+        state.resetLinkPending = false;
+      })
   },
 });
 

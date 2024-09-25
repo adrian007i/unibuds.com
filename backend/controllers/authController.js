@@ -99,7 +99,7 @@ module.exports.login = async (req, res) => {
  */
 module.exports.get_user = async (req, res) => {
     const user = await User.findById(req.user._id)
-        .select(['-password', '-__v', '-_id', '-userMatches','-chats' ])
+        .select(['-password', '-__v', '-_id', '-userMatches', '-chats'])
         .populate([
             {
                 path: 'university',
@@ -111,11 +111,32 @@ module.exports.get_user = async (req, res) => {
 }
 
 /**
+ * @desc Send the user a password reset URL via email
+ * @access Public
+ */
+
+module.exports.send_reset_url = async (req, res) => {
+
+    try {
+        const user = await User.findOne({ email: req.body.email }); 
+        
+        if (user) {
+            // send the email
+            res.status(200).json();
+        } else {
+            throw ("This email is not registered with UniBuds");
+        }
+    } catch (e) { 
+        res.status(401).json({ message: e });
+    }
+}
+
+/**
  * @desc    Update user data
  * @access  Private 
  */
 module.exports.set_user = async (req, res) => {
-    const user = await User.findById(req.user._id).select(['-chats','-userMatches']);
+    const user = await User.findById(req.user._id).select(['-chats', '-userMatches']);
 
     let oldUniversity = user.university._id.toString();
     let newUniversity = req.body.data.university;
@@ -135,9 +156,9 @@ module.exports.set_user = async (req, res) => {
             user.email = u.email;
 
             // check if password was changed
-            if (u.password){
+            if (u.password) {
                 user.password = u.password
-            } 
+            }
 
             // only modify university values if they are different
             if (oldUniversity !== newUniversity) {
@@ -191,7 +212,7 @@ module.exports.set_user = async (req, res) => {
             }
 
 
-            await user.save();  
+            await user.save();
 
             if (oldUniversity !== newUniversity) {
 

@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Form, FormControl as Input, FormLabel as Label } from 'react-bootstrap';
-import { Link } from 'react-router-dom';  
+import { Link } from 'react-router-dom';
 
 import { loginUser, resetErrors } from './slice';
 
 const Login = () => {
-    
-    const dispatch = useDispatch(); 
-    const {errors, isPending} = useSelector((state) => state.auth);  
+
+    const dispatch = useDispatch();
+    const { errors, isPending } = useSelector((state) => state.auth);
 
 
-    useEffect(() =>{
-        dispatch(resetErrors());  
-    },[])
+    useEffect(() => {
+        dispatch(resetErrors());
+    }, [])
 
     // local state for form values
     const [formData, setFormData] = useState({
@@ -44,8 +44,13 @@ const Login = () => {
                 <div className={errors.password ? 'error' : ''} >
                     <Label>Password</Label>
                     <Input type='password' name='password' value={formData.password} onChange={onChange} />
-                    <span className='error'>{errors.password} &nbsp;</span>
+                    <span className='error'>{errors.password}</span>
+                    <div> 
+                        <Link to='/forgetPassword'>Forgot Password?</Link>
+                    </div>
+                    <br /> 
                 </div>
+
 
                 <Button variant='primary' type='submit' disabled={isPending}>
                     {isPending && 'Verifying ...'}
@@ -56,6 +61,7 @@ const Login = () => {
                 </div>
             </Form>
             <br />
+
             <p>Don&#39;t have an account? <Link to='/register'> Sign up</Link></p>
 
         </>

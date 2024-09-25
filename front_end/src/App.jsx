@@ -11,6 +11,7 @@ import User from './containers/User/User';
 import Chats from './containers/Chat/Chats';
 import Chat from './containers/Chat/Chat';
 import UserMatch from './containers/UserMatch/UserMatch';
+import ForgetPassword from './containers/Auth/ForgetPassword';
 
 import PrivateRoute from './utils/PrivateRoute';
 import PublicRoute from './utils/PublicRoute';
@@ -115,6 +116,7 @@ function App({ ws }) {
           <Route path='/' element={<PublicRoute component={Home} />} />
           <Route path='/register' element={<PublicRoute component={Register} />} />
           <Route path='/login' element={<PublicRoute component={Login} />} />
+          <Route path='/forgetPassword' element={<PublicRoute component={ForgetPassword} />} />
 
           <Route path='/profile' element={<PrivateRoute component={User} />} />
           <Route path='/chats' element={<PrivateRoute component={Chats} />} />
