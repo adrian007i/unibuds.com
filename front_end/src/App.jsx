@@ -12,6 +12,7 @@ import Chats from './containers/Chat/Chats';
 import Chat from './containers/Chat/Chat';
 import UserMatch from './containers/UserMatch/UserMatch';
 import ForgetPassword from './containers/Auth/ForgetPassword';
+import ResetPasswordLink from './containers/Auth/ResetPasswordLink'
 
 import PrivateRoute from './utils/PrivateRoute';
 import PublicRoute from './utils/PublicRoute';
@@ -104,7 +105,7 @@ function App({ ws }) {
         <Link to='/' style={{ color: 'inherit', textDecoration: 'none' }}>
           <div> 
            <div className='text-center'>
-           <img src='./logo.svg' width='50px' className='logo' />
+           <img src='/logo.svg' width='50px' className='logo' />
            <h1 >UniBuds</h1>
            </div>
           </div>  
@@ -117,6 +118,7 @@ function App({ ws }) {
           <Route path='/register' element={<PublicRoute component={Register} />} />
           <Route path='/login' element={<PublicRoute component={Login} />} />
           <Route path='/forgetPassword' element={<PublicRoute component={ForgetPassword} />} />
+          <Route path='/resetPasswordLink/:userId/:userToken' element={<PublicRoute component={ResetPasswordLink} /> } />
 
           <Route path='/profile' element={<PrivateRoute component={User} />} />
           <Route path='/chats' element={<PrivateRoute component={Chats} />} />

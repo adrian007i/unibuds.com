@@ -10,7 +10,7 @@ const ForgetPassword = () => {
     const dispatch = useDispatch();
     const [email, setEmail] = useState("");
 
-    const onSubmit = (e) => { 
+    const onSubmit = (e) => {
         e.preventDefault();
         dispatch(sendResetUrl(email));
     }
@@ -26,15 +26,18 @@ const ForgetPassword = () => {
                         You will recieve a password reset link shortly.
                     </p>
                 </div>
+
                 <br />
 
                 <Form onSubmit={onSubmit}>
 
-                    <div >
-                        <Input type='text' name='email' placeholder='Enter Email Address' onChange={e => setEmail(e.target.value)} />
-                        <div className='text-danger'>{resetLinkError}</div>
+                    <div className={resetLinkError ? 'error' : ''} > 
+                        <Input type='text' className='text-center' name='email' value={email} onChange={e => setEmail(e.target.value)} placeholder='Enter Email Address' />
+                        <div className='error text-center '>
+                            <span>{resetLinkError}</span> 
+                        </div>
                     </div>
-                    <div className='mt-3'>
+                    <div className='mt-3 text-center'>
                         {
                             resetLinkSent && <div>Reset Link Sent <button className='buttonLikeLink' type='submit'> Send Again </button></div>
                             || !resetLinkPending && <Button variant='primary' type='submit'> Send Link </Button>

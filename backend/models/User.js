@@ -73,6 +73,10 @@ const userSchema = new mongoose.Schema({
     type: [Schema.Types.ObjectId],
     ref: 'User'
   }, 
+  passwordResetToken:{
+    type: String,
+    default: null
+  }
 });
 
 userSchema.methods.matchPassword = async function (enteredPassword) {

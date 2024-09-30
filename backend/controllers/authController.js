@@ -4,6 +4,7 @@ const handleErrors = require('../validation/User');
 const generateToken = require('../utils/generateToken');
 const getRandomFileName = require('../utils/getRandomFileName');
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const { PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 const { s3Client } = require('../utils/awsConfig');
@@ -118,15 +119,24 @@ module.exports.get_user = async (req, res) => {
 module.exports.send_reset_url = async (req, res) => {
 
     try {
-        const user = await User.findOne({ email: req.body.email }); 
+        const user = await User.findOne({ email: req.body.email }).select(['passwordResetToken']); 
         
         if (user) {
-            // send the email
+            const salt = await bcrypt.genSalt();
+            let resetToken =  await bcrypt.hash(getRandomFileName(), salt);  
+            resetToken = resetToken.replace(/\//g, "sl");
+            user.passwordResetToken = resetToken; 
+            
+            await user.save() 
+            console.log(`http://localhost:5173/resetPasswordLink/${user.id.toString()}/${user.passwordResetToken}`);
+            
             res.status(200).json();
         } else {
             throw ("This email is not registered with UniBuds");
         }
     } catch (e) { 
+        console.log(e);
+        
         res.status(401).json({ message: e });
     }
 }
