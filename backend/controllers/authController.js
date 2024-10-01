@@ -154,7 +154,7 @@ module.exports.set_password = async (req, res) => {
             user.passwordResetToken = null;
 
             await user.save();
-            res.status(200).json({ token: generateToken(user) });
+            res.status(200).json();
 
         } else {
             throw ("Invalid Password Reset Link");
