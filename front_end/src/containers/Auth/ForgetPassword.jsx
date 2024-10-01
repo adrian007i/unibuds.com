@@ -29,6 +29,14 @@ const ForgetPassword = () => {
 
                 <br />
 
+                {/* 
+                
+                NEED TO DO BACKEND FUNCTION TO VERIFY USER AND TOKEN
+                AND INTEGRATE WITH FRONT END
+                FIND EMAIL BROKER TO SEND OUT THE RESET LINK
+                
+                */}
+
                 <Form onSubmit={onSubmit}>
 
                     <div className={resetLinkError ? 'error' : ''} > 

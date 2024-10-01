@@ -14,4 +14,5 @@ router.get('/get_user' , protect , authControler.get_user);
 router.post('/set_user' , protect , upload.single('profilePicture'), authControler.set_user);
 router.post('/get_universities' , authControler.get_universities);
 router.post('/send_reset_url', authControler.send_reset_url);
+router.post('/set_password', authControler.set_password);
 module.exports = router;

@@ -115,31 +115,55 @@ module.exports.get_user = async (req, res) => {
  * @desc Send the user a password reset URL via email
  * @access Public
  */
-
 module.exports.send_reset_url = async (req, res) => {
 
     try {
-        const user = await User.findOne({ email: req.body.email }).select(['passwordResetToken']); 
-        
+        const user = await User.findOne({ email: req.body.email }).select(['passwordResetToken']);
+
         if (user) {
             const salt = await bcrypt.genSalt();
-            let resetToken =  await bcrypt.hash(getRandomFileName(), salt);  
+            let resetToken = await bcrypt.hash(getRandomFileName(), salt);
             resetToken = resetToken.replace(/\//g, "sl");
-            user.passwordResetToken = resetToken; 
-            
-            await user.save() 
+            user.passwordResetToken = resetToken;
+
+            await user.save()
             console.log(`http://localhost:5173/resetPasswordLink/${user.id.toString()}/${user.passwordResetToken}`);
-            
+
             res.status(200).json();
         } else {
             throw ("This email is not registered with UniBuds");
         }
-    } catch (e) { 
+    } catch (e) {
         console.log(e);
-        
+
         res.status(401).json({ message: e });
     }
 }
+
+/**
+ * @desc Set password via the secure password reset link
+ * @access Public
+ */
+module.exports.set_password = async (req, res) => {
+
+    try {
+        const user = await User.findById(req.body.userId).select(['passwordResetToken', 'password']);  
+        
+        if (user && user.passwordResetToken != null && user.passwordResetToken === req.body.userToken) {
+            user.password = req.body.password;
+            user.passwordResetToken = null;
+
+            await user.save();
+            res.status(200).json({ token: generateToken(user) });
+
+        } else {
+            throw ("Invalid Password Reset Link");
+        }
+    } catch (e) {
+        res.status(401).json({ message: e });
+    }
+}
+
 
 /**
  * @desc    Update user data

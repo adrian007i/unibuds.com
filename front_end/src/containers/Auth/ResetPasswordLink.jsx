@@ -1,19 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Form, FormControl as Input, FormLabel as Label } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
-import { resetPassword } from './slice';
+import { resetPassword  } from './slice';
 
-const ResetPasswordLink = ({ userLink, userToken }) => {
+const ResetPasswordLink = () => {
+
+    const dispatch = useDispatch(); 
+    const navigate = useNavigate();
 
     const [password, setPassword] = useState("");
     const { resetPasswordPending, resetPasswordError, resetPasswordSuccess } = useSelector(state => state.auth)
-    const dispatch = useDispatch();
+
+    const { userId, userToken } = useParams(); 
 
     const onSubmit = (e) => {
         e.preventDefault();
-        dispatch(resetPassword(password));
+        dispatch(resetPassword({password, userId, userToken}));
+    } 
+
+    if(resetPasswordSuccess === true){
+        navigate('/login');
     }
 
     return (
@@ -21,7 +29,7 @@ const ResetPasswordLink = ({ userLink, userToken }) => {
             <Form onSubmit={onSubmit}>
                 <br /><br />
                 <div className={resetPasswordError ? 'error' : ''} >
-                    <Input type='text' className='text-center' name='password' value={password} onChange={e => setPassword(e.target.value)} placeholder='Enter New Password' />
+                    <Input type='password' className='text-center' name='password' value={password} onChange={e => setPassword(e.target.value)} placeholder='Enter New Password' />
                     <div className='error text-center '>
                         <span>{resetPasswordError}</span>
                     </div>

@@ -17,7 +17,7 @@ const initialState = {
   resetLinkError: "",
   resetPasswordPending: false,
   resetPasswordError: "",
-  resetPasswordSuccess: false
+  resetPasswordSuccess: false, 
 };
 
 // Register User
@@ -112,18 +112,19 @@ export const sendResetUrl = createAsyncThunk('auth/sendResetUrl/', async (email,
   }
 });
 
-export const resetPassword = createAsyncThunk('auth/sendResetUrl', async (password, thunkAPI) => {
+export const resetPassword = createAsyncThunk('auth/sendResetUrl', async (data, thunkAPI) => {
 
   try {
     const errors = new Validate({
-      'password': [password, ['isEmpty', 'minLength'], 6],
+      'password': [data.password, ['isEmpty', 'minLength'], 6],
     });
 
     if (!errors.isValid)
       return thunkAPI.rejectWithValue(errors.errors.password);
 
-    await axios.post('/savePassword', { password: password });
-    return
+    const response = await axios.post('/set_password', data);
+    thunkAPI.fulfillWithValue(response.data)
+    return response.data;
   }
   catch (error) {
     return thunkAPI.rejectWithValue(error.response.data.message)
@@ -148,7 +149,7 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.errors = {}
       state.isPending = false
-    }
+    }, 
   },
   extraReducers: (builder) => {
     builder
@@ -208,9 +209,10 @@ const authSlice = createSlice({
         state.resetPasswordSuccess = false;
         state.resetPasswordError = "";
       })
-      .addCase(resetPassword.fulfilled, (state) => {
+      .addCase(resetPassword.fulfilled, (state, action) => {
         state.resetPasswordPending = false;
         state.resetPasswordSuccess = true;
+        state.resetpasswordJWT = action.payload.token
       })
       .addCase(resetPassword.rejected, (state, action) => {
         state.resetPasswordError = action.payload;
