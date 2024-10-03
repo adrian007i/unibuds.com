@@ -47,7 +47,12 @@ const ForgetPassword = () => {
                     </div>
                     <div className='mt-3 text-center'>
                         {
-                            resetLinkSent && <div>Reset Link Sent <button className='buttonLikeLink' type='submit'> Send Again </button></div>
+                            resetLinkSent && 
+                            <div>Reset Link Sent &nbsp;
+                                <button className='buttonLikeLink' type='submit'>  Send Again </button>
+                                <br />
+                                <div className='p-5 text-danger'>Check your spam/junk folder if you do not see the reset link in your inbox.</div>
+                            </div>
                             || !resetLinkPending && <Button variant='primary' type='submit'> Send Link </Button>
                             || <Button variant='primary disabled' type='button'> Sending ...</Button>
                         }

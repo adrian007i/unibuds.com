@@ -7,7 +7,11 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const { PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
-const { s3Client } = require('../utils/awsConfig');
+const { SendEmailCommand } = require("@aws-sdk/client-ses");
+
+const { s3Client, sesClient } = require('../utils/awsConfig');
+const { passwordReset } = require('../email/formatEmail');
+
 require('dotenv').config();
 const MAX_MESSAGES = process.env.MAX_MESSAGES
 
@@ -126,16 +130,26 @@ module.exports.send_reset_url = async (req, res) => {
             resetToken = resetToken.replace(/\//g, "sl");
             user.passwordResetToken = resetToken;
 
-            await user.save()
-            console.log(`http://localhost:5173/resetPasswordLink/${user.id.toString()}/${user.passwordResetToken}`);
+            await user.save();
+            const resetLink = `${process.env.FRONT_END_ENDPOINT}/resetPasswordLink/${user.id.toString()}/${user.passwordResetToken}`;
 
-            res.status(200).json();
+            // use aws ses to send a password reset url
+
+            const sendEmailCommand = new SendEmailCommand(passwordReset(resetLink, req.body.email));
+
+            sesClient.send(sendEmailCommand)
+                .then(() => {
+                    res.status(200).json();
+                })
+                .catch((error) => {
+                    res.status(401).json({ message: "Server Issue: Contact adrianjohn.developer@gmail.com"});
+                });
+
+
         } else {
-            throw ("This email is not registered with UniBuds");
+            throw ('This email is not registered with UniBuds');
         }
     } catch (e) {
-        console.log(e);
-
         res.status(401).json({ message: e });
     }
 }
@@ -147,8 +161,8 @@ module.exports.send_reset_url = async (req, res) => {
 module.exports.set_password = async (req, res) => {
 
     try {
-        const user = await User.findById(req.body.userId).select(['passwordResetToken', 'password']);  
-        
+        const user = await User.findById(req.body.userId).select(['passwordResetToken', 'password']);
+
         if (user && user.passwordResetToken != null && user.passwordResetToken === req.body.userToken) {
             user.password = req.body.password;
             user.passwordResetToken = null;
