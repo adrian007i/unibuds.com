@@ -13,8 +13,10 @@ services:
       - mongo  
 
   mongo:
-    image: mongo 
-    restart: always 
-    
+    container_name: mongodb_container
+    build: /data/. 
     ports:
        - "27017:27017"
+
+
+     
