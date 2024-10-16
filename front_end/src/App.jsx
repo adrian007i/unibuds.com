@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Routes, Route, Link, NavLink } from 'react-router-dom';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
+import { Alert } from 'react-bootstrap';
 
 // UI COMPONENTS
 import Register from './containers/Auth/Register';
@@ -19,18 +20,19 @@ import PublicRoute from './utils/PublicRoute';
 
 // ICONS
 import signOut from './icons/signout.png';
-import chat from './icons/chat.png'; 
+import chat from './icons/chat.png';
 import search from './icons/search.png';
 
 import { defaultPic } from './utils/globals';
 import { logoutUser } from './containers/Auth/slice';
-import { wsRecieveMessage , getChat} from './containers/Chat/slice';
+import { wsRecieveMessage, getChat } from './containers/Chat/slice';
 
 function App({ ws }) {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
   const { data } = useSelector((state) => state.user);
   const chats = useSelector((state) => state.chat.data);
+  const [profileAlert, setProfileAlert] = useState(true);
 
   if (ws) {
     ws.onopen = function (event) {
@@ -44,23 +46,23 @@ function App({ ws }) {
 
     ws.onmessage = function (event) {
       const message = JSON.parse(event.data)
-      const chatIndex = chats.findIndex(chat => chat._id === message.chatId) 
+      const chatIndex = chats.findIndex(chat => chat._id === message.chatId)
 
-      if(chatIndex === -1){
-        dispatch(getChat({ 
+      if (chatIndex === -1) {
+        dispatch(getChat({
           'msg': message.body,
           'sender': 1,
           'chatId': message.chatId
         }));
 
-      }else{
+      } else {
         dispatch(wsRecieveMessage({
           'index': chatIndex,
           'msg': message.body,
           'sender': auth.tokenData._id === chats[chatIndex].user1._id ? 2 : 1,
           'chatId': message.chatId
         }));
-      } 
+      }
     }
   }
 
@@ -71,6 +73,15 @@ function App({ ws }) {
 
   return (
     <div className='main'>
+      {data && (!data.bio || !data.major) &&
+        <div>
+          {auth.isAuthenticated && profileAlert &&
+            <Alert variant="danger" onClose={() => setProfileAlert(false)} dismissible>
+              Profile Incomplete
+            </Alert>
+          }
+        </div>
+      }
 
       {(auth.isAuthenticated &&
         <div className='nav'>
@@ -79,7 +90,7 @@ function App({ ws }) {
               <img src='/logo.svg' height='35px' alt='' className='logo' />
             </a>
           </div>
-          <div id='right'> 
+          <div id='right'>
             <NavLink to='/chats' className={({ isActive }) => (isActive ? 'active' : '')}>
               <img src={chat} alt='chat' title='chat' />
             </NavLink >
@@ -90,7 +101,7 @@ function App({ ws }) {
 
               {/* SET USER PROFILE PICTURE */}
               {(data &&
-                <img className='navProPic' src={import.meta.env.VITE_S3_ENDPOINT +  data.profilePicture} title='profile' />
+                <img className='navProPic' src={import.meta.env.VITE_S3_ENDPOINT + data.profilePicture} title='profile' />
               ) ||
                 <img className='navProPic' src={defaultPic} title='profile' />
               }
@@ -103,12 +114,12 @@ function App({ ws }) {
         </div>
       ) ||
         <Link to='/' style={{ color: 'inherit', textDecoration: 'none' }}>
-          <div> 
-           <div className='text-center'>
-           <img src='/logo.svg' width='50px' className='logo' />
-           <h1 >UniBuds</h1>
-           </div>
-          </div>  
+          <div>
+            <div className='text-center'>
+              <img src='/logo.svg' width='50px' className='logo' />
+              <h1 >UniBuds</h1>
+            </div>
+          </div>
         </Link>
       }
 
@@ -118,7 +129,7 @@ function App({ ws }) {
           <Route path='/register' element={<PublicRoute component={Register} />} />
           <Route path='/login' element={<PublicRoute component={Login} />} />
           <Route path='/forgetPassword' element={<PublicRoute component={ForgetPassword} />} />
-          <Route path='/resetPasswordLink/:userId/:userToken' element={<PublicRoute component={ResetPasswordLink} /> } />
+          <Route path='/resetPasswordLink/:userId/:userToken' element={<PublicRoute component={ResetPasswordLink} />} />
 
           <Route path='/profile' element={<PrivateRoute component={User} />} />
           <Route path='/chats' element={<PrivateRoute component={Chats} />} />
