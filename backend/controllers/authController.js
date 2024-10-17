@@ -24,6 +24,7 @@ module.exports.register = async (req, res) => {
 
     try {
         let { email, password, firstName, lastName, pictureExt, university } = req.body;
+        email = email.toLowerCase();
         let universityObject;
 
         if (university)
@@ -83,7 +84,8 @@ module.exports.register = async (req, res) => {
  * @access  Public 
  */
 module.exports.login = async (req, res) => {
-    const { email, password } = req.body;
+    let { email, password } = req.body;
+    email = email.toLowerCase();
 
     // find the user by email
     const user = await User.findOne({ email }).select(['email', 'password']);
@@ -131,7 +133,7 @@ module.exports.send_reset_url = async (req, res) => {
             user.passwordResetToken = resetToken;
 
             await user.save();
-            const resetLink = `${process.env.FRONT_END_ENDPOINT}/resetPasswordLink/${user.id.toString()}/${user.passwordResetToken}`;
+            const resetLink = `${process.env.ALLOWED_ORGINS}/resetPasswordLink/${user.id.toString()}/${user.passwordResetToken}`;
 
             // use aws ses to send a password reset url
 
@@ -201,7 +203,7 @@ module.exports.set_user = async (req, res) => {
             user.dob = u.dob;
             user.gender = u.gender;
             user.major = u.major;
-            user.email = u.email;
+            user.email = u.email.toLowerCase();
 
             // check if password was changed
             if (u.password) {
