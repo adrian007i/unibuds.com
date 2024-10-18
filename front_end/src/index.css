@@ -234,3 +234,7 @@ label {
 a{
   text-decoration: none;
 }
+
+.capitalize{
+  text-transform: capitalize;
+}
