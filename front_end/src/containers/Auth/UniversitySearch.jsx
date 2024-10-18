@@ -41,7 +41,7 @@ const UniversitySearch = ({ error, getUniversity , defaultVal = null}) => {
             <input type='hidden' value={uniSelected ? uniSelected[0] : ''} />
             <Label>University - Campus</Label>
             <Input type='text'
-                className='universitySearch'
+                className='universitySearch capitalize'
                 placeholder='Search'
                 name='university'
                 id='university'
@@ -60,7 +60,7 @@ const UniversitySearch = ({ error, getUniversity , defaultVal = null}) => {
                     (<div>
                         {
                             universities.map((uni, i) => {
-                                return <div key={i} onClick={()=> universitySelect(uni._id, uni.name)} className='uni'>{uni.name}</div>
+                                return <div key={i} onClick={()=> universitySelect(uni._id, uni.name)} className='uni capitalize'>{uni.name}</div>
                             })
                         }
                     </div>)
