@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Navigate, NavLink, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 // CUSTOM 
 import './userMatch.css';
@@ -23,12 +22,10 @@ const UserMatch = () => {
             navigate('/chat/' + newChat._id);
             dispatch(clearNewChat());
         }
-    }, [newChat])
+    }, [newChat]);
 
     const acceptMatchSubmit = async (user) => {
         dispatch(acceptMatch(user));
-
-
     }
 
     return (
