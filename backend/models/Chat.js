@@ -1,17 +1,17 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema; 
- 
+const Schema = mongoose.Schema;
+
 // SCHEMA DEFINATION FOR A MESSAGE
 const messageSchema = new mongoose.Schema({
   sender: {
-    type: Number, 
+    type: Number,
     required: [true, 'Required']
-  }, 
+  },
   msg: {
     type: String,
     required: [true, 'Required'],
     maxlength: [200, 'Max Length Exceeded'],
-  }, 
+  },
   timestamp: {
     type: Date,
     default: Date.now
@@ -31,19 +31,26 @@ const chatSchema = new Schema({
     required: [true, 'Required']
   },
   msgIndex: {
-    type: Number, 
+    type: Number,
     default: 0
   },
   messages: {
     type: [messageSchema]
   },
   lastMessage: {
-    type: Date, 
-
+    type: Date,
+  },
+  userA_Unread: {
+    type: Number,
+    default: 0
+  },
+  userB_Unread: {
+    type: Number,
+    default: 0
   }
-}); 
+});
 
-chatSchema.pre('save', function(next) {
+chatSchema.pre('save', function (next) {
   this.lastMessage = Date.now();
   next();
 });

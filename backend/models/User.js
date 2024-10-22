@@ -76,7 +76,12 @@ const userSchema = new mongoose.Schema({
   passwordResetToken:{
     type: String,
     default: null
-  }
+  },
+  
+  unreadMessages: {
+    type: Number,
+    default: 0
+  },
 });
 
 userSchema.methods.matchPassword = async function (enteredPassword) {
