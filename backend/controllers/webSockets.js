@@ -6,13 +6,22 @@ const storeMessage = async (message, user, recieverOnline) => {
     try {
         if (message.chatId) {
 
-
-            await Chat.findByIdAndUpdate(message.chatId, {
-                $push: { messages: { sender: message.amIUser1 ? 1 : 2, msg: message.body } }
-            },
-                { select: { messages: 0, _id: 0, user1: 0, user2: 0, lastMessage:0, msgIndex:0 , __v : 0} }
-            ).exec()
-            
+            // if the reciever is not online, we specify they have unread messages
+            if (!recieverOnline) {
+                Chat.findByIdAndUpdate(message.chatId, {
+                    $push: { messages: { sender: message.amIUser1 ? 1 : 2, msg: message.body } },
+                    [`user${message.amIUser1 ? 'B' : 'A'}_Unread`]: true
+                },
+                    { select: ['_id'] }
+                ).exec()
+            }
+            else {
+                Chat.findByIdAndUpdate(message.chatId, {
+                    $push: { messages: { sender: message.amIUser1 ? 1 : 2, msg: message.body } },
+                },
+                    { select: ['_id'] }
+                ).exec()
+            }
         }
     } catch (error) { }
 
