@@ -32,7 +32,7 @@ const Chat = ({ ws }) => {
         if (chatIndex !== null) {
 
             setAmIUser1(authUserId == data[chatIndex].user1._id);
-            setOtherUser((amIuser1 ? data[chatIndex].user2 : data[chatIndex].user1));
+            setOtherUser((amIuser1 ? data[chatIndex].user1 : data[chatIndex].user2));
 
             if (data[chatIndex].messages.length === 0) {
                 ws.send(JSON.stringify(
