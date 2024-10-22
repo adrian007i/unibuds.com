@@ -41,12 +41,12 @@ const chatSchema = new Schema({
     type: Date,
   },
   userA_Unread: {
-    type: Number,
-    default: 0
+    type: Boolean,
+    default: false
   },
   userB_Unread: {
-    type: Number,
-    default: 0
+    type: Boolean,
+    default: false
   }
 });
 
