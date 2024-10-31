@@ -50,14 +50,14 @@ const Main = () => {
       dispatch(setCurrentUser(localStorage.getItem('jwtToken')));
     }
 
-    if (isAuthenticated){
-        dispatch(getChats(tokenData._id));
-        dispatch(getUserData());
-        ws = new ReconnectingWebSocket(WSS + BASE_BACKEND_URL + 'web_socket_endpoint/' + '?auth=' + localStorage.getItem('jwtToken'));
+    if (isAuthenticated) {
+      dispatch(getChats(tokenData._id));
+      dispatch(getUserData());
+      ws = new ReconnectingWebSocket(WSS + BASE_BACKEND_URL + 'web_socket_endpoint/' + '?auth=' + localStorage.getItem('jwtToken'));
     }
 
   }, [isAuthenticated]);
- 
+
 
   return <App ws={ws} />
 }
