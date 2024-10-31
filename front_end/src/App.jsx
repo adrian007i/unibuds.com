@@ -31,8 +31,7 @@ function App({ ws }) {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
   const { data } = useSelector((state) => state.user);
-  const chats = useSelector((state) => state.chat.data);
-  const [profileAlert, setProfileAlert] = useState(true);
+  const chats = useSelector((state) => state.chat.data); 
 
   if (ws) {
     ws.onopen = function (event) {
@@ -73,15 +72,7 @@ function App({ ws }) {
 
   return (
     <div className='main'>
-      {data && (!data.bio || !data.major) &&
-        <div>
-          {auth.isAuthenticated && profileAlert &&
-            <Alert variant="danger" onClose={() => setProfileAlert(false)} dismissible>
-              Profile Incomplete
-            </Alert>
-          }
-        </div>
-      }
+     {/* !data.bio || !data.major */}
 
       {(auth.isAuthenticated &&
         <div className='nav'>
@@ -93,6 +84,8 @@ function App({ ws }) {
           <div id='right'>
             <NavLink to='/chats' className={({ isActive }) => (isActive ? 'active' : '')}>
               <img src={chat} alt='chat' title='chat' />
+              
+              <span className='newChats'>10</span>
             </NavLink >
             <NavLink to='/find_a_buddy' className={({ isActive }) => (isActive ? 'active' : '')}>
               <img src={search} alt='search' title='find a buddy' />

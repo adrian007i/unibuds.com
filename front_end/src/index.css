@@ -238,3 +238,19 @@ a{
 .capitalize{
   text-transform: capitalize;
 }
+
+.newChats{
+  display: block; 
+  background: #f20000;
+  color: white;
+  position: fixed;
+  width: 15px;
+  height: 15px;
+  font-size: 10px;
+  text-align: center;
+  font-weight: bold;
+  border-radius: 50%;
+  position: absolute;
+  right: 140px;
+  top: 30px;
+}
