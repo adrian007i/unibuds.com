@@ -7,6 +7,7 @@ import { thunk } from 'redux-thunk';
 
 const initialState = {
   tokenData: null,
+  tokenDataPending: false,
   isAuthenticated: false,
   errors: {},
   isPending: false,
@@ -17,7 +18,7 @@ const initialState = {
   resetLinkError: "",
   resetPasswordPending: false,
   resetPasswordError: "",
-  resetPasswordSuccess: false, 
+  resetPasswordSuccess: false,
 };
 
 // Register User
@@ -139,9 +140,13 @@ const authSlice = createSlice({
     resetErrors: (state) => {
       state.errors = {}
     },
+    setTokenDataPending : (state) => {
+      state.tokenDataPending = true
+    },
     setCurrentUser: (state, action) => {
       state.tokenData = loadAppData(action.payload);
       state.isAuthenticated = state.tokenData ? true : false;
+      state.tokenDataPending = false;
     },
     logoutUser: (state) => {
       destoryAppData();
@@ -149,7 +154,7 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.errors = {}
       state.isPending = false
-    }, 
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -221,6 +226,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { setCurrentUser, logoutUser, resetErrors } = authSlice.actions;
+export const { setCurrentUser, logoutUser, resetErrors, setTokenDataPending } = authSlice.actions;
 
 export default authSlice.reducer;
