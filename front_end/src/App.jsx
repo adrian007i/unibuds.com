@@ -31,7 +31,7 @@ function App({ ws }) {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
   const { data } = useSelector((state) => state.user);
-  const chats = useSelector((state) => state.chat.data); 
+  const { data: chats, unreadChats } = useSelector((state) => state.chat);
 
   if (ws) {
     ws.onopen = function (event) {
@@ -44,8 +44,8 @@ function App({ ws }) {
     };
 
     ws.onmessage = function (event) {
-      const message = JSON.parse(event.data)
-      const chatIndex = chats.findIndex(chat => chat._id === message.chatId)
+      const message = JSON.parse(event.data);
+      const chatIndex = chats.findIndex(chat => chat._id === message.chatId);
 
       if (chatIndex === -1) {
         dispatch(getChat({
@@ -72,7 +72,7 @@ function App({ ws }) {
 
   return (
     <div className='main'>
-     {/* !data.bio || !data.major */}
+      {/* !data.bio || !data.major */}
 
       {(auth.isAuthenticated &&
         <div className='nav'>
@@ -82,9 +82,9 @@ function App({ ws }) {
             </a>
           </div>
           <div id='right'>
-            <NavLink to='/chats' className={({ isActive }) => (isActive ? 'active' : '')}> 
-              <span className='newChats'>10</span>
-              <img src={chat} alt='chat' title='chat' /> 
+            <NavLink to='/chats' className={({ isActive }) => (isActive ? 'active' : '')}>
+              {unreadChats !== 0 && <span className='newChats'>{unreadChats}</span>}
+              <img src={chat} alt='chat' title='chat' />
             </NavLink >
             <NavLink to='/find_a_buddy' className={({ isActive }) => (isActive ? 'active' : '')}>
               <img src={search} alt='search' title='find a buddy' />
