@@ -57,3 +57,14 @@
     text-align: center;
     margin-top: 100px;
 }
+
+.last_message{
+    font-size: 12px;
+    font-weight: 100; 
+    font-family: monospace;
+}
+
+.new_message{
+    color: rgb(0, 255, 115);
+    font-weight: 800;
+}
