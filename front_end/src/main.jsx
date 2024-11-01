@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider, useSelector } from 'react-redux';
 import { store } from './state/store';
@@ -35,13 +35,12 @@ else {
 
 axios.defaults.baseURL = HTTPS + BASE_BACKEND_URL;
 
-let ws = null;
-
 const Main = () => {
 
-  const dispatch = useDispatch();
-  const { isAuthenticated, tokenData, tokenDataPending } = useSelector(state => state.auth)
 
+  let [ws, setWs] = useState(null);
+  const dispatch = useDispatch();
+  const { isAuthenticated, tokenData, tokenDataPending } = useSelector(state => state.auth);
 
   useEffect(() => {
 
@@ -50,13 +49,14 @@ const Main = () => {
       dispatch(setCurrentUser(localStorage.getItem('jwtToken')));
     }
 
-    if (isAuthenticated) {
+    if (isAuthenticated && !ws) {
       dispatch(getChats(tokenData._id));
       dispatch(getUserData());
-      ws = new ReconnectingWebSocket(WSS + BASE_BACKEND_URL + 'web_socket_endpoint/' + '?auth=' + localStorage.getItem('jwtToken'));
-    }
 
-  }, [isAuthenticated]);
+      setWs(new ReconnectingWebSocket(WSS + BASE_BACKEND_URL + 'web_socket_endpoint/' + '?auth=' + localStorage.getItem('jwtToken')))
+    }
+    
+  }, [isAuthenticated, ws]);
 
 
   return <App ws={ws} />
