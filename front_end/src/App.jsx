@@ -82,10 +82,9 @@ function App({ ws }) {
             </a>
           </div>
           <div id='right'>
-            <NavLink to='/chats' className={({ isActive }) => (isActive ? 'active' : '')}>
-              <img src={chat} alt='chat' title='chat' />
-              
+            <NavLink to='/chats' className={({ isActive }) => (isActive ? 'active' : '')}> 
               <span className='newChats'>10</span>
+              <img src={chat} alt='chat' title='chat' /> 
             </NavLink >
             <NavLink to='/find_a_buddy' className={({ isActive }) => (isActive ? 'active' : '')}>
               <img src={search} alt='search' title='find a buddy' />
