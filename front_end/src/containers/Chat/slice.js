@@ -19,13 +19,15 @@ export const getChats = createAsyncThunk('auth/getChats', async (user, thunkAPI)
     const response = await axios.get('/get_chats/');
 
     let totalUnread = 0;
-    response.data.chats.forEach((e, i) => {
+    response.data.chats.forEach((e, i) => { 
+      
 
-      let userUnread = user === e.user1.id ? e.userA_Unread : e.userB_Unread;
+      let userUnread = user === e.user1._id ? e.userA_Unread : e.userB_Unread;
 
       if (userUnread)
         totalUnread = totalUnread + 1
     }); 
+ 
 
     const chats = {
       'data' : response.data.chats,
