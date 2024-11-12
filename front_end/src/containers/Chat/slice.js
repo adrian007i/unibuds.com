@@ -19,21 +19,20 @@ export const getChats = createAsyncThunk('auth/getChats', async (user, thunkAPI)
     const response = await axios.get('/get_chats/');
 
     let totalUnread = 0;
-    response.data.chats.forEach((e, i) => { 
-      
+    response.data.chats.forEach((e, i) => {
 
       let userUnread = user === e.user1._id ? e.userA_Unread : e.userB_Unread;
 
       if (userUnread)
         totalUnread = totalUnread + 1
-    }); 
- 
+    });
+
 
     const chats = {
-      'data' : response.data.chats,
+      'data': response.data.chats,
       'unread': totalUnread
     }
-    
+
     thunkAPI.fulfillWithValue(chats);
     return chats;
   } catch (error) {
@@ -78,6 +77,22 @@ const chatSlice = createSlice({
     wsRecieveMessage: (state, action) => {
       state.data[action.payload.index].messages.push(action.payload);
       const chat = state.data[action.payload.index];
+
+      if (!window.location.pathname.includes(action.payload.chatId)) {
+
+        // mark the message as unread if the chat is closed
+        if (action.payload.sender === 1) {
+          if (!chat.userB_Unread) {
+            chat.userB_Unread = true;
+            state.unreadChats += 1
+          }
+        } else {
+          if (!chat.userA_Unread) {
+            chat.userAUnread = true;
+            state.unreadChats += 1
+          }
+        }
+      } 
 
       if (chat.messages.length >= MAX_MESSAGES_TRESH)
         chat.messages = chat.messages.slice(chat.messages.length - ROLL_BACK_TO);
