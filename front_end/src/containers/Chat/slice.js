@@ -102,7 +102,7 @@ const chatSlice = createSlice({
       })
       .addCase(getChats.fulfilled, (state, action) => {
         state.data = action.payload.data;
-        state.unreadChats = action.payload.unread;
+        state.unreadChats = action.payload.unread; 
         state.loadingChats = false;
       })
       .addCase(getChats.rejected, (state, action) => {
@@ -110,7 +110,8 @@ const chatSlice = createSlice({
         state.loadingChats = false;
       })
       .addCase(getChat.fulfilled, (state, action) => {
-        state.data.unshift(action.payload)
+        state.data.unshift(action.payload);
+        state.unreadChats = state.unreadChats + 1;
       })
   },
 });

@@ -102,7 +102,7 @@ module.exports.acceptNewChat = async (req, res) => {
         const user1 = new mongoose.Types.ObjectId(req.user._id);
         const user2 = new mongoose.Types.ObjectId(req.params.chat_id);
         const last_messsage = Date.now();
-        const chat = await Chat.create({ user1, user2, last_messsage });
+        const chat = await Chat.create({ user1, user2, last_messsage, userB_Unread:true });
 
         // ASYNC - set the chat id in the user document
         User.updateOne(
