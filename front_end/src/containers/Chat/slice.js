@@ -78,20 +78,9 @@ const chatSlice = createSlice({
       state.data[action.payload.index].messages.push(action.payload);
       const chat = state.data[action.payload.index];
 
-      if (!window.location.pathname.includes(action.payload.chatId)) {
-
-        // mark the message as unread if the chat is closed
-        if (action.payload.sender === 1) {
-          if (!chat.userB_Unread) {
-            chat.userB_Unread = true;
-            state.unreadChats += 1
-          }
-        } else {
-          if (!chat.userA_Unread) {
-            chat.userAUnread = true;
-            state.unreadChats += 1
-          }
-        }
+      if(action.payload.unread){
+        chat[action.payload.unread] = true;
+        state.unreadChats += 1;
       } 
 
       if (chat.messages.length >= MAX_MESSAGES_TRESH)

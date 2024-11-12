@@ -55,11 +55,29 @@ function App({ ws }) {
         }));
 
       } else {
+
+        const sender = auth.tokenData._id === chats[chatIndex].user1._id ? 2 : 1;
+        let unread = null;
+
+        if (!window.location.pathname.includes(chats[chatIndex]._id)) {          
+
+          // mark the message as unread if the chat is closed
+          if (sender === 1) {
+            if (!chats[chatIndex].userB_Unread)
+              unread = 'userB_Unread';
+
+          } else {
+            if (!chat.userA_Unread)
+              unread = 'userA_Unread';
+          }
+        }
+
         dispatch(wsRecieveMessage({
           'index': chatIndex,
           'msg': message.body,
-          'sender': auth.tokenData._id === chats[chatIndex].user1._id ? 2 : 1,
-          'chatId': message.chatId
+          'sender': sender,
+          'chatId': message.chatId,
+          'unread' : unread
         }));
       }
     }
