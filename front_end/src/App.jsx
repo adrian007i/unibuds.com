@@ -43,10 +43,12 @@ function App({ ws }) {
 
     };
 
+    // message recieved via web socket protocol
     ws.onmessage = function (event) {
       const message = JSON.parse(event.data);
       const chatIndex = chats.findIndex(chat => chat._id === message.chatId);
 
+      // the user recieved a new chat request.
       if (chatIndex === -1) {
         dispatch(getChat({
           'msg': message.body,
@@ -56,20 +58,38 @@ function App({ ws }) {
 
       } else {
 
+        // identify sender if user 1 or user 2
         const sender = auth.tokenData._id === chats[chatIndex].user1._id ? 2 : 1;
         let unread = null;
 
-        if (!window.location.pathname.includes(chats[chatIndex]._id)) {          
+        // check if the chat is open based on the url 
+        if (!window.location.pathname.includes(chats[chatIndex]._id)) {
 
           // mark the message as unread if the chat is closed
+          // Sender === 1 means I am userB
           if (sender === 1) {
             if (!chats[chatIndex].userB_Unread)
               unread = 'userB_Unread';
 
-          } else {
-            if (!chat.userA_Unread)
+          } 
+          // sender === 2 means i am useA
+          else {
+            if (!chats[chatIndex].userA_Unread)
               unread = 'userA_Unread';
           }
+          // if the message is unread by the user, a ws message will be send back to the server to update the database
+          // for example chat.UserX_Unread = true
+          if (unread) {
+            ws.send(JSON.stringify(
+              {
+                'type': 2,
+                'chatId': chats[chatIndex]._id,
+                'userUnread': unread,
+                'newUnread': true
+              }
+            ));
+          }
+
         }
 
         dispatch(wsRecieveMessage({
@@ -77,7 +97,7 @@ function App({ ws }) {
           'msg': message.body,
           'sender': sender,
           'chatId': message.chatId,
-          'unread' : unread
+          'unread': unread
         }));
       }
     }

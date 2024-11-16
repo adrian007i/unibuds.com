@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const enableWs = require('express-ws');
-const storeMessage = require('./controllers/webSockets');
+const { storeMessage, updateUnreadStatus } = require('./controllers/webSockets');
 
 // CUSTOM IMPORTS
 const { protectRaw } = require('./middleware/authMiddleware');
@@ -33,11 +33,11 @@ mongoose.connect(process.env.mongoURI)
 
   //SETUP WEB SOCKET CONNECTION AT /wss
   .then(result => {
-    app.ws('/web_socket_endpoint', async function (ws, req) { 
-      
+    app.ws('/web_socket_endpoint', async function (ws, req) {
+
       // ensure user JWT and user ID is valid when authenticating 
       let protect = await protectRaw(req.query.auth);
-       
+
       if (!protect.authenticated) {
         ws.close();
         return;
@@ -53,21 +53,30 @@ mongoose.connect(process.env.mongoURI)
       ws.on('message', function (msg) {
 
         const data = JSON.parse(msg);
-        
-        
-        if (clients[data.reciever]) {
 
-          clients[data.reciever].send(msg);
-          storeMessage(data, protect.user._id , true);
+        // used for actual messages
+        if (data.type === 1) {
+          if (clients[data.reciever]) {
 
-        } else {
-          storeMessage(data, protect.user._id, false);
+            clients[data.reciever].send(msg);
+            storeMessage(data, protect.user._id, true);
+
+          } else {
+            storeMessage(data, protect.user._id, false);
+          }
         }
+        // used for updating read/unread status
+        else if (data.type === 2) {
+          updateUnreadStatus(data);
+        }
+
+
+
       });
 
       // Remove the client from the clients list when it disconnects
-      ws.on('close', function () { 
-        
+      ws.on('close', function () {
+
         clients[userKey] = undefined;
       });
 
@@ -76,7 +85,7 @@ mongoose.connect(process.env.mongoURI)
     app
   })
   .then((result) => app.listen(4000))
-  // .catch((err) => console.log(err));
+// .catch((err) => console.log(err));
 
 
 

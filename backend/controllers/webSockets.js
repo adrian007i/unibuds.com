@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Chat = require('../models/Chat');
 
-const storeMessage = async (message, user, recieverOnline) => {
+module.exports.storeMessage = async (message, user, recieverOnline) => {
 
     try {
         if (message.chatId) {
@@ -27,5 +27,17 @@ const storeMessage = async (message, user, recieverOnline) => {
 
 };
 
+module.exports.updateUnreadStatus = (data) => {
 
-module.exports = storeMessage;
+    try {
+
+        const { userUnread, newUnread, chatId } = data;
+        Chat.findByIdAndUpdate(chatId, {
+            [userUnread]: newUnread
+        },
+            { select: ['_id'] }
+        ).exec()
+    } catch (error) { 
+        console.log(error); 
+    }
+}

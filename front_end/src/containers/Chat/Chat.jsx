@@ -37,6 +37,7 @@ const Chat = ({ ws }) => {
             if (data[chatIndex].messages.length === 0) {
                 ws.send(JSON.stringify(
                     {
+                        "type":1,
                         'body': data[chatIndex].user1.firstName + ' started a chat',
                         'reciever': data[chatIndex].user2._id,
                         'amIUser1': 1,
@@ -65,6 +66,7 @@ const Chat = ({ ws }) => {
 
         ws.send(JSON.stringify(
             {
+                'type': 1,
                 'body': newMsg,
                 'reciever': amIuser1 ? data[chatIndex].user2._id : data[chatIndex].user1._id,
                 'amIUser1': amIuser1,
