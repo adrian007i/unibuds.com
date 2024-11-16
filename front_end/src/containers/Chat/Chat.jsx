@@ -63,7 +63,7 @@ const Chat = ({ ws }) => {
             console.log(data);
             console.log(authUserId,data[chatIndex].user1._id)
             
-            if (authUserId == data[chatIndex].user1._id) {
+            if (authUserId !== data[chatIndex].user1._id) {
                 if (data[chatIndex].userB_Unread)
                     userUnread = 'userB_Unread';
             }
