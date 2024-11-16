@@ -20,13 +20,16 @@ const Chat = ({ ws }) => {
     const [amIuser1, setAmIUser1] = useState(null);
     const [otherUser, setOtherUser] = useState(null);
 
+
     // sets the chat index once the data loads
     useEffect(() => {
-        if (data && chatIndex === null)
+        if (data && chatIndex === null) {
             setChatIndex(data.findIndex(chat => chat._id === chatId));
+        }
+
     }, [data]);
 
-    // if there are no messages, auto send once once the user acepted the chat
+
     useEffect(() => {
 
         if (chatIndex !== null) {
@@ -34,17 +37,19 @@ const Chat = ({ ws }) => {
             setAmIUser1(authUserId == data[chatIndex].user1._id);
             setOtherUser((amIuser1 ? data[chatIndex].user1 : data[chatIndex].user2));
 
+            // if there are no messages, auto send once once the user acepted the chat
             if (data[chatIndex].messages.length === 0) {
                 ws.send(JSON.stringify(
                     {
-                        "type":1,
+                        "type": 1,
                         'body': data[chatIndex].user1.firstName + ' started a chat',
                         'reciever': data[chatIndex].user2._id,
                         'amIUser1': 1,
                         'chatId': data[chatIndex]._id
                     }
-                )); 
-                
+                ));
+
+                // add to local redux state
                 dispatch(wsSendMessage({
                     'index': chatIndex,
                     'msg': data[chatIndex].user1.firstName + ' started a chat',
@@ -52,6 +57,29 @@ const Chat = ({ ws }) => {
                     'chatId': data[chatIndex]._id
                 }));
             }
+
+            // check if the user has unread message
+            let userUnread;
+            if (authUserId == data[chatIndex].user1._id)
+                if (data[chatIndex].userB_Unread)
+                    userUnread = 'userB_Unread';
+
+                else
+                    if (data[chatIndex].userA_Unread)
+                        userUnread = 'userA_Unread';
+
+            // if user didnt read yet. we update the redux state and database via ws request
+            if (userUnread) {
+                ws.send(JSON.stringify(
+                    {
+                        'type': 2,
+                        'chatId': data[chatIndex]._id,
+                        'userUnread': userUnread,
+                        'newUnread': false
+                    }
+                ));
+            }
+
         }
 
 

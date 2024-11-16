@@ -31,7 +31,8 @@ module.exports.updateUnreadStatus = (data) => {
 
     try {
 
-        const { userUnread, newUnread, chatId } = data;
+        const { userUnread, newUnread, chatId } = data; 
+        
         Chat.findByIdAndUpdate(chatId, {
             [userUnread]: newUnread
         },
