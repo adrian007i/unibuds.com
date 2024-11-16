@@ -60,9 +60,6 @@ const Chat = ({ ws }) => {
 
             // check if the user has unread message
             let userUnread;
-            console.log(data);
-            console.log(authUserId,data[chatIndex].user1._id)
-            
             if (authUserId !== data[chatIndex].user1._id) {
                 if (data[chatIndex].userB_Unread)
                     userUnread = 'userB_Unread';
@@ -70,9 +67,7 @@ const Chat = ({ ws }) => {
             else {
                 if (data[chatIndex].userA_Unread)
                     userUnread = 'userA_Unread';
-            }
-
-            console.log(authUserId == data[chatIndex].user1._id);
+            } 
 
 
             // if user didnt read yet. we update the redux state and database via ws request
