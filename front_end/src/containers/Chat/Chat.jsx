@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button, FormControl as Input } from 'react-bootstrap';
 import { NavLink, useParams } from 'react-router-dom';
 
-import { wsSendMessage } from './slice';
+import { wsSendMessage, setUnreadStatus } from './slice';
 
 import './chat.css';
 
@@ -41,7 +41,7 @@ const Chat = ({ ws }) => {
             if (data[chatIndex].messages.length === 0) {
                 ws.send(JSON.stringify(
                     {
-                        "type": 1,
+                        'type': 1,
                         'body': data[chatIndex].user1.firstName + ' started a chat',
                         'reciever': data[chatIndex].user2._id,
                         'amIUser1': 1,
@@ -60,16 +60,27 @@ const Chat = ({ ws }) => {
 
             // check if the user has unread message
             let userUnread;
-            if (authUserId == data[chatIndex].user1._id)
+            console.log(data);
+            console.log(authUserId,data[chatIndex].user1._id)
+            
+            if (authUserId == data[chatIndex].user1._id) {
                 if (data[chatIndex].userB_Unread)
                     userUnread = 'userB_Unread';
+            }
+            else {
+                if (data[chatIndex].userA_Unread)
+                    userUnread = 'userA_Unread';
+            }
 
-                else
-                    if (data[chatIndex].userA_Unread)
-                        userUnread = 'userA_Unread';
+            console.log(authUserId == data[chatIndex].user1._id);
+
 
             // if user didnt read yet. we update the redux state and database via ws request
             if (userUnread) {
+
+                // updating the redux state 
+                dispatch(setUnreadStatus({ chatIndex, userUnread }))
+                // websocket msg to update database values
                 ws.send(JSON.stringify(
                     {
                         'type': 2,

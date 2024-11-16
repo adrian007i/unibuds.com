@@ -93,6 +93,10 @@ const chatSlice = createSlice({
       if (chat.messages.length >= MAX_MESSAGES_TRESH)
         chat.messages = chat.messages.slice(chat.messages.length - ROLL_BACK_TO);
     },
+    setUnreadStatus: (state, action) => {  
+      state.data[action.payload.chatIndex][action.payload.userUnread] = false;
+      state.unreadChats -= 1;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -116,6 +120,6 @@ const chatSlice = createSlice({
   },
 });
 
-export const { wsSendMessage, wsRecieveMessage, addNewChat } = chatSlice.actions;
+export const { wsSendMessage, wsRecieveMessage, addNewChat, setUnreadStatus } = chatSlice.actions;
 
 export default chatSlice.reducer;
