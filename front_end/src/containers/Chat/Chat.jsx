@@ -117,15 +117,26 @@ const Chat = ({ ws }) => {
         setNewMsg('')
     };
 
+    const block = ()=>{
+        const user = otherUser.firstName.toLowerCase();
+        if (prompt(`Type "${user}" to permanently block`).toLowerCase() === user){ 
+
+        }else{
+            alert("Invalid User")
+        }
+    }
+
     if (chatIndex !== null && otherUser !== null) {
         return (
             <>
                 <div className='user'>
-                    <NavLink className='chat chat_small' to='/chats'>
-                        <div className='propic'><img src={otherUser && import.meta.env.VITE_S3_ENDPOINT + otherUser.profilePicture} alt='' /></div>
-                        <div className='name'>{otherUser && otherUser.firstName}</div>
-
-                    </NavLink>
+                    <div className='chat'>
+                        <NavLink  to='/chats'>
+                            <div className='propic'><img src={otherUser && import.meta.env.VITE_S3_ENDPOINT + otherUser.profilePicture} alt='' /></div>
+                            <div className='name'>{otherUser && otherUser.firstName}</div> 
+                        </NavLink> 
+                        <Button className='btn btn-danger' style={{"margin-left":'auto'}}>Block</Button> 
+                    </div> 
                 </div>
                 <div className='messages'>
                     {data[chatIndex].messages.map((msg, index) => {

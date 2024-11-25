@@ -35,26 +35,33 @@ const Chats = ({ user }) => {
                             const otherUser = user._id === chat.user1._id ? chat.user2 : chat.user1;
                             const newMessage = (user._id === chat.user1._id && chat.userA_Unread) || (user._id === chat.user2._id && chat.userB_Unread)
 
-                            return (<NavLink key={index} className='chat' to={'/chat/' + chat._id}>
-                                {/*  */}
-                                <div className='propic'>
-                                    <img src={import.meta.env.VITE_S3_ENDPOINT + otherUser.profilePicture} alt='' />
-                                </div>
-                                <div className='name'>
-                                    {otherUser.firstName}
-                                    <span className='newMsg'> 
-                                            
-                                    </span> 
-                                    <div>
+                            return (
+                                <div className='user'>
+                                    <div className='chat'>
+                                        <NavLink key={index} to={'/chat/' + chat._id}>
+                                            {/*  */}
+                                            <div className='propic'>
+                                                <img src={import.meta.env.VITE_S3_ENDPOINT + otherUser.profilePicture} alt='' />
+                                            </div>
+                                            <div className='name'>
+                                                {otherUser.firstName}
+                                                <span className='newMsg'>
 
-                                    </div>
-                                    <div className={newMessage ? 'last_message new_message' : 'last_message'}>
-                                        {chat.messages.length > 0 && chat.messages.at(-1).msg}
-                                    </div>
+                                                </span>
+                                                <div>
 
+                                                </div>
+                                                <div className={newMessage ? 'last_message new_message' : 'last_message'}>
+                                                    {chat.messages.length > 0 && chat.messages.at(-1).msg}
+                                                </div>
+
+                                            </div>
+                                            <div className='msg_time'>{formatDate(chat.lastMessage)}</div>
+                                        </NavLink>
+                                    </div>
                                 </div>
-                                <div className='msg_time'>{formatDate(chat.lastMessage)}</div>
-                            </NavLink>)
+
+                            )
                         }
                         )}
                 </div>
