@@ -36,7 +36,7 @@ const Chats = ({ user }) => {
                             const newMessage = (user._id === chat.user1._id && chat.userA_Unread) || (user._id === chat.user2._id && chat.userB_Unread)
 
                             return (
-                                <div className='user'>
+                                <div className='user' key={index}>
                                     <div className='chat'>
                                         <NavLink key={index} to={'/chat/' + chat._id}>
                                             {/*  */}

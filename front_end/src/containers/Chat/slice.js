@@ -56,11 +56,12 @@ export const getChat = createAsyncThunk('auth/getChat', async (chat, thunkAPI) =
   }
 });
 
-export const sendMessage = createAsyncThunk('auth/sendMessage', async (msg, thunkAPI) => {
+export const blockUser = createAsyncThunk('auth/blockUser', async (data, thunkAPI) => { 
+
   try {
-    await axios.post('/send_message/', msg);
-    thunkAPI.fulfillWithValue(msg);
-    return msg;
+    await axios.post('/block_user/', data);
+    thunkAPI.fulfillWithValue(data);
+    return data;
 
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data);
@@ -117,6 +118,12 @@ const chatSlice = createSlice({
         state.data.unshift(action.payload);
         state.unreadChats = state.unreadChats + 1;
       })
+      .addCase(blockUser.fulfilled, (state, action) => {
+        state.data.splice(action.payload.arr_id,1); 
+      })
+      .addCase(blockUser.rejected, (state, action) => {
+        state.data.splice(action.payload.arr_id,1);
+      }) 
   },
 });
 

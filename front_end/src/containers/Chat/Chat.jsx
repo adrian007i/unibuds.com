@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, FormControl as Input } from 'react-bootstrap';
 import { NavLink, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-import { wsSendMessage, setUnreadStatus } from './slice';
+import { wsSendMessage, setUnreadStatus, blockUser } from './slice';
 
 import './chat.css';
 
@@ -12,6 +13,7 @@ const Chat = ({ ws }) => {
 
     const dispatch = useDispatch();
     const { chatId } = useParams();
+    const navigate = useNavigate();
     const data = useSelector(state => state.chat.data);
     const authUserId = useSelector(state => state.auth.tokenData._id);
 
@@ -117,9 +119,15 @@ const Chat = ({ ws }) => {
         setNewMsg('')
     };
 
+    // if the user blocks the other user
     const block = ()=>{
         const user = otherUser.firstName.toLowerCase();
         if (prompt(`Type "${user}" to permanently block`).toLowerCase() === user){ 
+            navigate('/chats');
+            dispatch(blockUser({
+                "arr_id" : chatIndex,
+                "db_id": data[chatIndex]._id 
+            }));
 
         }else{
             alert("Invalid User")
@@ -135,7 +143,7 @@ const Chat = ({ ws }) => {
                             <div className='propic'><img src={otherUser && import.meta.env.VITE_S3_ENDPOINT + otherUser.profilePicture} alt='' /></div>
                             <div className='name'>{otherUser && otherUser.firstName}</div> 
                         </NavLink> 
-                        <Button className='btn btn-danger' style={{"margin-left":'auto'}}>Block</Button> 
+                        <Button className='btn btn-danger' onClick={block}>Block</Button> 
                     </div> 
                 </div>
                 <div className='messages'>
