@@ -36,8 +36,8 @@ const Chat = ({ ws }) => {
 
         if (chatIndex !== null) {
 
-            setAmIUser1(authUserId == data[chatIndex].user1._id);
-            setOtherUser((amIuser1 ? data[chatIndex].user1 : data[chatIndex].user2));
+            setAmIUser1(authUserId == data[chatIndex].user1._id);  
+            setOtherUser(authUserId == data[chatIndex].user1._id ? data[chatIndex].user2 : data[chatIndex].user1);
 
             // if there are no messages, auto send once once the user acepted the chat
             if (data[chatIndex].messages.length === 0) {
@@ -149,6 +149,7 @@ const Chat = ({ ws }) => {
                     </div> 
                 </div>
                 <div className='messages'>
+                    <small>{JSON.stringify(otherUser)}</small>
                     {data[chatIndex].messages.map((msg, index) => {
 
                         // we are using flex box reverse direction, so contents must iterated in reverse
