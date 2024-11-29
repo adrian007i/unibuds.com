@@ -167,3 +167,20 @@ module.exports.get_chat = async (req, res) => {
     }
 
 }
+
+/**
+ * @desc    Remove Chat from userMatches for user 1 and user 2
+ * @access  Private 
+ */
+module.exports.block_user = async (req, res) => {
+
+    try{
+        User.updateMany(
+            { _id: { $in: [req.body.user1, req.body.user2] } },
+            { $pull: { chats: req.body.db_id } }
+        ).exec();
+    } catch {
+
+    } 
+    res.status(200).json({ 'success': true });  
+}

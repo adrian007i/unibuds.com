@@ -47,6 +47,10 @@ const chatSchema = new Schema({
   userB_Unread: {
     type: Boolean,
     default: false
+  },
+  blocked: {
+    type: Boolean,
+    default: false
   }
 });
 

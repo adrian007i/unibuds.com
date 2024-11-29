@@ -126,7 +126,9 @@ const Chat = ({ ws }) => {
             navigate('/chats');
             dispatch(blockUser({
                 "arr_id" : chatIndex,
-                "db_id": data[chatIndex]._id 
+                "db_id": data[chatIndex]._id,
+                "user1": data[chatIndex].user1._id,
+                "user2": data[chatIndex].user2._id
             }));
 
         }else{
